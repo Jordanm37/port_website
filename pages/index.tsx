@@ -61,12 +61,12 @@ const Home: NextPage = () => {
             icon={<ImMail4 />}
           />
           <SocialButton
-            url="https://www.linkedin.com/in/jordan-moshcovitis/"
+            url="https://www.linkedin.com/in/jordan-m-ab5a4010b/"
             ariaLabel="LinkedIn"
             icon={<ImLinkedin2 />}
           />
           <SocialButton
-            url="https://github.com/JordanMoshcovitis/"
+            url="https://github.com/Jordanm37/"
             ariaLabel="Github"
             icon={<ImGithub />}
           />
