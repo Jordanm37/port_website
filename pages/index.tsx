@@ -44,7 +44,7 @@ const Home: NextPage = () => {
             </VStack>
           </HStack>
           <chakra.a
-            href="\Jordan_M_Resume_2023.pdf"
+            href="\JORDAN_MOSHCOVITIS_Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             textDecoration="underline"
