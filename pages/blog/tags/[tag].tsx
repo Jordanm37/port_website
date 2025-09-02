@@ -16,13 +16,17 @@ const TagPage: NextPage<TagPageProps> = ({ tag, posts }) => {
       <ul>
         {posts.map((p) => (
           <li key={p.slug}>
-            <Link href={`/blog/${p.slug}`}>{p.title}</Link>
+            <Link href={`/blog/${p.slug}`}>
+              <a>{p.title}</a>
+            </Link>
             {p.date ? ` — ${p.date}` : null}
           </li>
         ))}
       </ul>
       <p>
-        <Link href="/blog">← Back to Blog</Link>
+        <Link href="/blog">
+          <a>← Back to Blog</a>
+        </Link>
       </p>
     </main>
   );

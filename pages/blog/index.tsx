@@ -22,7 +22,9 @@ const BlogIndexPage: NextPage<BlogIndexProps> = ({ entries }) => {
       <ul>
         {entries.map((p) => (
           <li key={p.slug}>
-            <Link href={`/blog/${p.slug}`}>{p.title}</Link>
+            <Link href={`/blog/${p.slug}`}>
+              <a>{p.title}</a>
+            </Link>
             {p.date ? ` — ${p.date}` : null}
           </li>
         ))}
@@ -33,7 +35,9 @@ const BlogIndexPage: NextPage<BlogIndexProps> = ({ entries }) => {
           new Set(entries.flatMap((e) => e.tags || []))
         ).map((t) => (
           <span key={t} style={{ marginRight: 8 }}>
-            <Link href={`/blog/tags/${t}`}>#{t}</Link>
+            <Link href={`/blog/tags/${t}`}>
+              <a>#{t}</a>
+            </Link>
           </span>
         ))}
       </p>

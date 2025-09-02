@@ -6,6 +6,12 @@ pre[class*="language-"] {
   color: #d4d4d4;
   border-radius: 6px;
 }
+.line-numbers .line-numbers-rows {
+  border-right: 1px solid #444;
+}
+.line-numbers-rows > span:before {
+  color: #666;
+}
 
 code[class*="language-"] {
   background: transparent;

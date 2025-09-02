@@ -30,7 +30,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           li: (p: any) => <chakra.li my={1} {...p} />,
           a: (p: any) => <chakra.a color="blue.500" textDecoration="underline" {...p} />,
           code: (p: any) => <chakra.code px={1} py={0.5} bg="gray.700" color="white" borderRadius={4} {...p} />,
-          pre: (p: any) => <chakra.pre my={4} {...p} />,
+          pre: (p: any) => <chakra.pre my={4} className="line-numbers" {...p} />,
+          img: (p: any) => <chakra.img maxW="100%" borderRadius={6} my={2} {...p} />,
         }}
       >
         <Component {...pageProps} />

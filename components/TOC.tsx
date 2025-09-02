@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 
 type TocItem = { id: string; text: string; level: number };
 
@@ -22,7 +21,7 @@ export default function TOC() {
       <ul>
         {items.map((i) => (
           <li key={i.id} style={{ marginLeft: (i.level - 1) * 12 }}>
-            <Link href={`#${i.id}`}>{i.text}</Link>
+            <a href={`#${i.id}`}>{i.text}</a>
           </li>
         ))}
       </ul>
