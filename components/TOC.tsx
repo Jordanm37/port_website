@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+"use client";
+import { useEffect, useState } from "react";
 
 type TocItem = { id: string; text: string; level: number };
 
@@ -6,7 +7,7 @@ export default function TOC() {
   const [items, setItems] = useState<TocItem[]>([]);
 
   useEffect(() => {
-    const heads = Array.from(document.querySelectorAll('h1, h2, h3')) as HTMLHeadingElement[];
+    const heads = Array.from(document.querySelectorAll("h1, h2, h3")) as HTMLHeadingElement[];
     const toc = heads.map((h) => ({
       id: h.id,
       text: h.innerText,
@@ -28,5 +29,3 @@ export default function TOC() {
     </nav>
   );
 }
-
-

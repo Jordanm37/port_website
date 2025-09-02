@@ -2,11 +2,9 @@
  * @type {import('next-sitemap').IConfig}
  */
 module.exports = {
-  siteUrl: 'https://port-website-indol.vercel.app',
+  siteUrl: "https://port-website-indol.vercel.app",
   generateRobotsTxt: true,
-  changefreq: 'weekly',
+  changefreq: "weekly",
   priority: 0.7,
   sitemapSize: 5000,
 };
-
-

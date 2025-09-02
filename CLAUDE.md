@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Commands
 
 - `npm run dev` - Start development server
-- `npm run build` - Build the application 
+- `npm run build` - Build the application
 - `npm run postbuild` - Generate sitemap and RSS feed (runs automatically after build)
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
@@ -23,7 +23,7 @@ This is a Next.js 12 personal portfolio website for Jordan Moshcovitis built wit
 ### Key Files & Directories
 
 - `pages/` - Next.js pages including blog posts as `.mdx` files
-- `components/SocialButton.tsx` - Reusable social media button component  
+- `components/SocialButton.tsx` - Reusable social media button component
 - `scripts/generate-rss.js` - RSS feed generation script
 - `next.config.js` - Next.js configuration with MDX support
 - `next-sitemap.config.js` - Sitemap generation configuration
@@ -32,6 +32,7 @@ This is a Next.js 12 personal portfolio website for Jordan Moshcovitis built wit
 ### Content Management
 
 Blog posts are written as MDX files in `pages/blog/` with frontmatter:
+
 - Supports tags for categorization
 - Date-based sorting
 - Tag-based filtering via `/blog/tags/[tag]` routes
@@ -40,7 +41,8 @@ Blog posts are written as MDX files in `pages/blog/` with frontmatter:
 ### Deployment
 
 Configured for GitHub Pages deployment via GitHub Actions workflow. The build process:
-1. Installs dependencies 
+
+1. Installs dependencies
 2. Builds Next.js app
 3. Generates sitemap and RSS feed
 4. Exports static HTML

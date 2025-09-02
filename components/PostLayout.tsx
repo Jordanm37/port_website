@@ -1,7 +1,7 @@
-import Head from 'next/head';
-import { ReactNode } from 'react';
-import { chakra, Heading, Text } from '@chakra-ui/react';
-import TOC from './TOC';
+import Head from "next/head";
+import { ReactNode } from "react";
+import { chakra, Heading, Text } from "@chakra-ui/react";
+import TOC from "./TOC";
 
 type PostLayoutProps = {
   children: ReactNode;
@@ -16,9 +16,11 @@ type PostLayoutProps = {
 };
 
 export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
-  const title = frontmatter?.title || 'Post';
-  const description = frontmatter?.description || frontmatter?.summary || '';
-  const url = frontmatter?.slug ? `https://port-website-indol.vercel.app/blog/${frontmatter.slug}` : undefined;
+  const title = frontmatter?.title || "Post";
+  const description = frontmatter?.description || frontmatter?.summary || "";
+  const url = frontmatter?.slug
+    ? `https://port-website-indol.vercel.app/blog/${frontmatter.slug}`
+    : undefined;
   return (
     <chakra.main p={4} maxW="720px" mx="auto">
       <Head>
@@ -31,13 +33,19 @@ export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
         {title ? <meta name="twitter:title" content={title} /> : null}
         {description ? <meta name="twitter:description" content={description} /> : null}
       </Head>
-      {frontmatter?.title ? <Heading as="h1" size="xl" mb={4}>{frontmatter.title}</Heading> : null}
-      {frontmatter?.date ? <Text color="gray.500" mb={4}>{frontmatter.date}</Text> : null}
+      {frontmatter?.title ? (
+        <Heading as="h1" size="xl" mb={4}>
+          {frontmatter.title}
+        </Heading>
+      ) : null}
+      {frontmatter?.date ? (
+        <Text color="gray.500" mb={4}>
+          {frontmatter.date}
+        </Text>
+      ) : null}
       <TOC />
       <chakra.div my={4} />
       <div>{children}</div>
     </chakra.main>
   );
 }
-
-

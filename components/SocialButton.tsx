@@ -4,16 +4,10 @@ import { IconButton } from "@chakra-ui/react";
 interface SocialButtonProps {
   url: string;
   ariaLabel: string;
-  icon:
-    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-    | undefined;
+  icon: React.ReactElement<any, string | React.JSXElementConstructor<any>> | undefined;
 }
 
-const SocialButton: React.FC<SocialButtonProps> = ({
-  url,
-  ariaLabel,
-  icon,
-}) => {
+const SocialButton: React.FC<SocialButtonProps> = ({ url, ariaLabel, icon }) => {
   return (
     <IconButton
       colorScheme="teal"

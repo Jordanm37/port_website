@@ -7,21 +7,22 @@
     "build": "next build",
     "postbuild": "next-sitemap && node scripts/generate-rss.js",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^1.1.7",
-    "@chakra-ui/react": "^1.8.5",
-    "@emotion/react": "^11",
-    "@emotion/styled": "^11",
+    "@chakra-ui/icons": "2.2.4",
+    "@chakra-ui/react": "2.10.9",
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.1",
     "@mdx-js/loader": "3.1.1",
     "@mdx-js/react": "3.1.1",
     "@next/mdx": "15.5.2",
-    "framer-motion": "^6",
+    "framer-motion": "11.18.2",
     "gray-matter": "4.0.3",
-    "next": "12.1.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "next": "15.5.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-icons": "^4.3.1",
     "rehype-prism-plus": "2.0.1",
     "remark-frontmatter": "5.0.0",
@@ -31,12 +32,26 @@
     "rss": "1.2.2"
   },
   "devDependencies": {
-    "@types/node": "17.0.19",
-    "@types/react": "17.0.39",
-    "eslint": "8.9.0",
-    "eslint-config-next": "12.1.0",
+    "@types/node": "22.7.4",
+    "@types/react": "18.2.37",
+    "eslint": "9.34.0",
+    "eslint-config-next": "15.5.2",
+    "husky": "9.1.7",
+    "lint-staged": "15.2.10",
     "next-sitemap": "4.2.3",
-    "typescript": "4.5.5"
+    "prettier": "3.3.3",
+    "typescript": "5.5.4"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx,md,mdx,css,json}": [
+      "prettier --write"
+    ]
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": false,
+    "trailingComma": "es5",
+    "printWidth": 100
   },
   "engines": {
     "node": ">=22 <23"
