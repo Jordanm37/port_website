@@ -5,7 +5,6 @@ import { default as NextImage } from "next/image";
 import { ImLinkedin2, ImMail4, ImGithub } from "react-icons/im";
 import SocialButton from "../components/SocialButton";
 
-import ProfileImage from "../public/images/jordan-profile-pic.jpg";
 
 const Image = chakra(NextImage, {
   shouldForwardProp: (prop) =>
@@ -22,11 +21,10 @@ const Home: NextPage = () => {
       </Head>
       <VStack>
         <Image
-          src={ProfileImage}
+          src="/images/jordan-profile-pic.jpg"
           alt="Picture of Jordan"
           width={156}
           height={170}
-          placeholder="blur"
         />
         <Box textAlign="center">
           <chakra.h1 fontSize="140%">
@@ -38,19 +36,27 @@ const Home: NextPage = () => {
                 Physicist, Mathematician, Researcher, Teacher
               </chakra.p>
               <chakra.p color="gray.500">
-                Optical Nanoscale-Metasurfaces, Finanical Mathematics, Solidity,
+                Optical Nanoscale-Metasurfaces, Financial Mathematics, Solidity,
                 Chatbots
               </chakra.p>
             </VStack>
           </HStack>
           <chakra.a
-            href="\JORDAN_MOSHCOVITIS_Resume.pdf"
+            href="/JORDAN_MOSHCOVITIS_Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             textDecoration="underline"
             color="blue.500"
           >
             View my CV
+          </chakra.a>
+          <chakra.span> · </chakra.span>
+          <chakra.a
+            href="/blog"
+            textDecoration="underline"
+            color="blue.500"
+          >
+            Blog
           </chakra.a>
         </Box>
         <Divider paddingTop={3} width="150%" />
