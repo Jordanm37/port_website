@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { ReactNode } from 'react';
 import { chakra, Heading, Text } from '@chakra-ui/react';
+import TOC from './TOC';
 
 type PostLayoutProps = {
   children: ReactNode;
@@ -31,7 +32,9 @@ export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
         {description ? <meta name="twitter:description" content={description} /> : null}
       </Head>
       {frontmatter?.title ? <Heading as="h1" size="xl" mb={4}>{frontmatter.title}</Heading> : null}
-      {frontmatter?.date ? <Text color="gray.500" mb={6}>{frontmatter.date}</Text> : null}
+      {frontmatter?.date ? <Text color="gray.500" mb={4}>{frontmatter.date}</Text> : null}
+      <TOC />
+      <chakra.div my={4} />
       <div>{children}</div>
     </chakra.main>
   );
