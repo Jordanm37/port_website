@@ -9,6 +9,7 @@ export interface BlogCardProps {
   excerpt?: string;
   tags?: string[];
   date?: string | null;
+  readingTime?: number | null;
 }
 
 function formatDate(iso?: string | null): string | undefined {
@@ -18,7 +19,14 @@ function formatDate(iso?: string | null): string | undefined {
   return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
 }
 
-export const BlogCard: React.FC<BlogCardProps> = ({ href, title, excerpt, tags, date }) => {
+export const BlogCard: React.FC<BlogCardProps> = ({
+  href,
+  title,
+  excerpt,
+  tags,
+  date,
+  readingTime,
+}) => {
   return (
     <Card
       as={LinkBox}
@@ -32,7 +40,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({ href, title, excerpt, tags, 
         </LinkOverlay>
       </Heading>
       {excerpt ? (
-        <Text color="muted" noOfLines={2} mb={4}>
+        <Text color="muted" noOfLines={3} mb={4}>
           {excerpt}
         </Text>
       ) : null}
@@ -45,6 +53,11 @@ export const BlogCard: React.FC<BlogCardProps> = ({ href, title, excerpt, tags, 
         {date ? (
           <Text fontSize="sm" color="muted">
             {formatDate(date)}
+          </Text>
+        ) : null}
+        {typeof readingTime === "number" ? (
+          <Text fontSize="sm" color="muted">
+            · {Math.max(1, Math.round(readingTime))} min read
           </Text>
         ) : null}
       </HStack>
