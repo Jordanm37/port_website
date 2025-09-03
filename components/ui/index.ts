@@ -18,4 +18,6 @@ export { Prose } from "./Prose";
 export type { ProseProps } from "./Prose";
 export { CTAButton } from "./CTAButton";
 export type { CTAButtonProps } from "./CTAButton";
+export { Reveal } from "./Reveal";
+export type { RevealProps } from "./Reveal";
 export { default as MdxImage } from "./MdxImage";

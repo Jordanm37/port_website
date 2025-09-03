@@ -14,6 +14,7 @@ import NextLink from "next/link";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { SkipLink } from "../ui";
+import { useScrollNav } from "../../hooks/useScrollNav";
 import { NavLink } from "../ui/NavLink";
 
 export interface MainLayoutProps {
@@ -22,6 +23,7 @@ export interface MainLayoutProps {
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const scrolled = useScrollNav(12);
 
   return (
     <Box>
@@ -35,9 +37,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         borderBottomWidth="1px"
         borderColor="border"
         backdropFilter="saturate(180%) blur(10px)"
+        transition="all 200ms cubic-bezier(.2,.8,.2,1)"
       >
         <Container maxW="container.xl" px={{ base: 4, md: 6 }}>
-          <Flex h={16} align="center" justify="space-between">
+          <Flex h={scrolled ? 14 : 16} align="center" justify="space-between">
             <NavLink href="/" exact fontWeight={700} _hover={{ textDecoration: "none" }}>
               Jordan Moshcovitis
             </NavLink>
