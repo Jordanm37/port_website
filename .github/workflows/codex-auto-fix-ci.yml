@@ -113,6 +113,19 @@ jobs:
           npm run typecheck || true
           npm run build || true
 
+      - name: Check Vercel preview deployment (optional)
+        if: ${{ secrets.VERCEL_TOKEN != '' && github.event.workflow_run.pull_requests[0] }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          echo "Checking Vercel preview status (if a deployment exists)..."
+          npm i -g vercel@latest
+          # Attempt to fetch latest deployment for the PR branch
+          BRANCH="${{ github.event.workflow_run.head_branch }}"
+          vercel ls --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID" --confirm | head -n 50 | cat || true
+
       - name: Commit and push changes (if any)
         run: |
           if [ -n "$(git status --porcelain)" ]; then
