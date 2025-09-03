@@ -19,6 +19,10 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Narrowed, stable references for inner closures
+    const canvasEl: HTMLCanvasElement = canvas;
+    const ctxEl: CanvasRenderingContext2D = ctx;
+
     let width = 0;
     let height = 0;
     let dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
@@ -28,11 +32,11 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
     let mouse = { x: -9999, y: -9999 };
 
     function resize() {
-      width = canvas.clientWidth;
-      height = canvas.clientHeight;
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      width = canvasEl.clientWidth;
+      height = canvasEl.clientHeight;
+      canvasEl.width = Math.floor(width * dpr);
+      canvasEl.height = Math.floor(height * dpr);
+      ctxEl.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       // seed particles based on area
       const target = Math.floor(((width * height) / 10000) * density);
@@ -48,9 +52,9 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
     }
 
     function draw() {
-      ctx.clearRect(0, 0, width, height);
+      ctxEl.clearRect(0, 0, width, height);
       // faint background noise
-      ctx.fillStyle = "rgba(0,0,0,0)";
+      ctxEl.fillStyle = "rgba(0,0,0,0)";
 
       // update & draw particles
       const lineDist = 100; // px
@@ -81,15 +85,15 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
         else if (p.y > height) p.y -= height;
 
         // draw point
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 1.1, 0, Math.PI * 2);
-        ctx.fillStyle = color;
-        ctx.fill();
+        ctxEl.beginPath();
+        ctxEl.arc(p.x, p.y, 1.1, 0, Math.PI * 2);
+        ctxEl.fillStyle = color;
+        ctxEl.fill();
       }
 
       // draw connections
-      ctx.strokeStyle = color;
-      ctx.globalAlpha = 0.5;
+      ctxEl.strokeStyle = color;
+      ctxEl.globalAlpha = 0.5;
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         for (let j = i + 1; j < particles.length; j++) {
@@ -99,21 +103,21 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
           const d2 = dx * dx + dy * dy;
           if (d2 < lineDist * lineDist) {
             const a = 1 - Math.sqrt(d2) / lineDist;
-            ctx.globalAlpha = Math.max(0, a * 0.6);
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(q.x, q.y);
-            ctx.stroke();
+            ctxEl.globalAlpha = Math.max(0, a * 0.6);
+            ctxEl.beginPath();
+            ctxEl.moveTo(p.x, p.y);
+            ctxEl.lineTo(q.x, q.y);
+            ctxEl.stroke();
           }
         }
       }
-      ctx.globalAlpha = 1;
+      ctxEl.globalAlpha = 1;
 
       rafRef.current = requestAnimationFrame(draw);
     }
 
     function onPointerMove(e: PointerEvent) {
-      const rect = canvas.getBoundingClientRect();
+      const rect = canvasEl.getBoundingClientRect();
       mouse.x = e.clientX - rect.left;
       mouse.y = e.clientY - rect.top;
     }
