@@ -91,23 +91,35 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
         ctxEl.fill();
       }
 
-      // draw connections
+      // draw connections - with performance optimization
       ctxEl.strokeStyle = color;
       ctxEl.globalAlpha = 0.5;
-      for (let i = 0; i < particles.length; i++) {
+      const maxConnections = Math.min(particles.length, 50); // Limit total connections for performance
+      const lineDist2 = lineDist * lineDist;
+      let connectionsDrawn = 0;
+      
+      for (let i = 0; i < particles.length && connectionsDrawn < maxConnections; i++) {
         const p = particles[i];
-        for (let j = i + 1; j < particles.length; j++) {
+        // Only check a subset of particles for each particle to reduce O(n²) complexity
+        const checkCount = Math.min(8, particles.length - i - 1);
+        for (let k = 1; k <= checkCount; k++) {
+          const j = i + k;
+          if (j >= particles.length) break;
+          
           const q = particles[j];
           const dx = p.x - q.x;
           const dy = p.y - q.y;
           const d2 = dx * dx + dy * dy;
-          if (d2 < lineDist * lineDist) {
+          
+          if (d2 < lineDist2) {
             const a = 1 - Math.sqrt(d2) / lineDist;
             ctxEl.globalAlpha = Math.max(0, a * 0.6);
             ctxEl.beginPath();
             ctxEl.moveTo(p.x, p.y);
             ctxEl.lineTo(q.x, q.y);
             ctxEl.stroke();
+            connectionsDrawn++;
+            if (connectionsDrawn >= maxConnections) break;
           }
         }
       }

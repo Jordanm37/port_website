@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import PostLayout from "./PostLayout";
-import { getPrevNext, getOrderedPosts } from "../lib/blog";
+import { getPrevNext, getOrderedPosts, BlogMeta } from "../lib/blog";
 
 type PostLayoutWrapperProps = {
   children: ReactNode;
@@ -18,7 +18,7 @@ export default function PostLayoutWrapper({ children, frontmatter }: PostLayoutW
   // This component will only run on the server during static generation
   // since it imports filesystem-dependent functions
   let navigation = { prev: null, next: null };
-  let relatedPosts: any[] = [];
+  let relatedPosts: BlogMeta[] = [];
 
   if (typeof window === "undefined" && frontmatter?.slug) {
     // Only run on server
