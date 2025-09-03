@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useMemo, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
 export type RevealOptions = {
   rootMargin?: string;
@@ -17,13 +17,10 @@ export function useRevealOnScroll<T extends HTMLElement = HTMLElement>({
 } {
   const ref = useRef<T>(null);
   const [isVisible, setVisible] = useState(false);
-  const reduceMotion = useMemo(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    []
-  );
+  const reduceMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   useEffect(() => {
     const el = ref.current;
@@ -32,22 +29,26 @@ export function useRevealOnScroll<T extends HTMLElement = HTMLElement>({
       setVisible(true);
       return;
     }
+    let timeoutId: number | undefined;
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             if (delayMs) {
-              const t = window.setTimeout(() => setVisible(true), delayMs);
-              return () => window.clearTimeout(t);
+              timeoutId = window.setTimeout(() => setVisible(true), delayMs);
+            } else {
+              setVisible(true);
             }
-            setVisible(true);
           }
         });
       },
       { root: null, rootMargin, threshold }
     );
     io.observe(el);
-    return () => io.disconnect();
+    return () => {
+      io.disconnect();
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
   }, [rootMargin, threshold, delayMs, reduceMotion]);
 
   const style: React.CSSProperties = reduceMotion

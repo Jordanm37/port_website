@@ -6,7 +6,7 @@ export interface RevealProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const Reveal: React.FC<RevealProps> = ({ delay = 0, children, style, ...rest }) => {
-  const { ref, style: s } = useRevealOnScroll({ delayMs: delay });
+  const { ref, style: s } = useRevealOnScroll<HTMLDivElement>({ delayMs: delay });
   return (
     <div ref={ref} style={{ ...s, ...style }} {...rest}>
       {children}
