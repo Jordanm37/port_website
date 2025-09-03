@@ -2,9 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, ui-improvement]
   pull_request:
-    branches: [main]
+    # run on all PRs regardless of base branch
+    branches: ["**"]
 
 jobs:
   build:

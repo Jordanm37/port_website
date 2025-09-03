@@ -15,9 +15,10 @@ import {
 import { useClipboard } from "@chakra-ui/react";
 import { FaTwitter, FaLinkedin } from "react-icons/fa";
 import NextLink from "next/link";
-import { getPrevNext } from "../lib/blog";
+import { getPrevNext, getOrderedPosts } from "../lib/blog";
 import { MainLayout } from "./layout";
 import TOC from "./TOC";
+import { ReadingProgress } from "./ui/ReadingProgress";
 
 type PostLayoutProps = {
   children: ReactNode;
@@ -41,7 +42,8 @@ export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
   const nav = frontmatter?.slug ? getPrevNext(frontmatter.slug) : { prev: null, next: null };
   return (
     <MainLayout>
-      <Container maxW="container.lg" px={{ base: 4, md: 6 }}>
+      <ReadingProgress />
+      <Container maxW="container.lg" px={{ base: 4, md: 6 }} bg="readingBg">
         <chakra.main p={0} mx="auto">
           <Head>
             <title>{title}</title>
@@ -59,7 +61,11 @@ export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
             </Heading>
           ) : null}
           <HStack spacing={3} mb={6} align="center">
-            {frontmatter?.date ? <Text color="muted">{frontmatter.date}</Text> : null}
+            {frontmatter?.date ? (
+              <Text as="time" color="muted" fontSize="sm">
+                Last updated: {frontmatter.date}
+              </Text>
+            ) : null}
             {frontmatter?.tags?.map((t) => (
               <Tag key={t} size="sm">
                 {t}
@@ -120,6 +126,21 @@ export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
               <span />
             )}
           </Flex>
+          <Box mt={8}>
+            <Heading as="h2" size="lg" mb={3}>
+              Related posts
+            </Heading>
+            <HStack spacing={4} wrap="wrap">
+              {getOrderedPosts()
+                .filter((p) => p.slug !== (frontmatter?.slug || ""))
+                .slice(0, 4)
+                .map((p) => (
+                  <NextLink key={p.slug} href={`/blog/${p.slug}`}>
+                    {p.title}
+                  </NextLink>
+                ))}
+            </HStack>
+          </Box>
         </chakra.main>
       </Container>
     </MainLayout>
