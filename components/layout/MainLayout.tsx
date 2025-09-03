@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { SkipLink } from "../ui";
 import { NavLink } from "../ui/NavLink";
 
@@ -41,6 +42,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               Jordan Moshcovitis
             </NavLink>
             <HStack spacing={4} align="center">
+              <NavLink href="/about">About</NavLink>
+              <NavLink href="/talks">Talks</NavLink>
               <NavLink href="/blog">Blog</NavLink>
               <NavLink
                 href="/JORDAN_MOSHCOVITIS_Resume.pdf"
@@ -49,6 +52,20 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               >
                 CV
               </NavLink>
+              <IconButton
+                as={ChakraLink}
+                href="https://github.com/Jordanm37"
+                aria-label="GitHub"
+                icon={<FaGithub />}
+                variant="ghost"
+              />
+              <IconButton
+                as={ChakraLink}
+                href="https://www.linkedin.com/in/jordan-m-ab5a4010b/"
+                aria-label="LinkedIn"
+                icon={<FaLinkedin />}
+                variant="ghost"
+              />
               <IconButton
                 aria-label="Toggle color mode"
                 variant="ghost"

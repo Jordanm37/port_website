@@ -11,7 +11,14 @@ export type MdxImageProps = {
   alt?: string;
 } & Partial<Pick<ImageProps, "width" | "height" | "sizes">>;
 
-export const MdxImage: React.FC<MdxImageProps> = ({ src, alt = "", width, height, sizes }) => {
+export const MdxImage: React.FC<MdxImageProps> = ({
+  src,
+  alt = "",
+  width,
+  height,
+  sizes,
+  ...rest
+}) => {
   return (
     <ChakraNextImage
       src={src}
@@ -22,6 +29,8 @@ export const MdxImage: React.FC<MdxImageProps> = ({ src, alt = "", width, height
       style={{ width: "100%", height: "auto" }}
       borderRadius="md"
       my={2}
+      loading="lazy"
+      {...rest}
     />
   );
 };
