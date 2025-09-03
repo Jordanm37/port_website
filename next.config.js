@@ -22,4 +22,7 @@ const withMDX = require("@next/mdx")({
 module.exports = withMDX({
   reactStrictMode: true,
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  images: {
+    formats: ["image/avif", "image/webp"],
+  },
 });
