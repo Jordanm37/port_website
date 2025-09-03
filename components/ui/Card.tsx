@@ -15,8 +15,8 @@ export const Card: React.FC<CardProps> = ({ children, ...props }) => {
       p={6}
       bg="bg"
       boxShadow="sm"
-      transition="all 200ms"
-      _hover={{ boxShadow: "md", transform: "translateY(-1px)" }}
+      transition="transform 200ms, box-shadow 200ms"
+      _hover={{ boxShadow: "md", transform: "translateY(-2px) scale(1.01)" }}
       {...props}
     >
       {children}

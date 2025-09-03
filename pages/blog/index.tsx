@@ -12,6 +12,8 @@ type PostEntry = {
   title: string;
   date: string | null;
   tags: string[];
+  summary?: string | null;
+  readingTime?: number | null;
 };
 
 type BlogIndexProps = {
@@ -34,9 +36,10 @@ const BlogIndexPage: NextPage<BlogIndexProps> = ({ entries }) => {
               key={p.slug}
               href={`/blog/${p.slug}`}
               title={p.title}
-              excerpt={undefined}
-              tag={p.tags[0]}
-              readingTime={p.date || undefined}
+              excerpt={p?.summary as any}
+              tags={p.tags}
+              date={p.date}
+              readingTime={p.readingTime}
             />
           ))}
         </SimpleGrid>
@@ -68,12 +71,15 @@ export const getStaticProps: GetStaticProps<BlogIndexProps> = async () => {
     .map((name) => {
       const fullPath = path.join(dir, name);
       const raw = fs.readFileSync(fullPath, "utf8");
-      const { data } = matter(raw);
+      const { data, content } = matter(raw);
       const slug = name.replace(/\.mdx$/, "");
       const title = (data.title as string) || slug.replace(/-/g, " ");
       const date = (data.date as string | undefined) || null;
       const tags = (data.tags as string[]) || [];
-      return { slug, title, date, tags };
+      const summary = (data.summary as string | undefined) || null;
+      const words = content.trim().split(/\s+/).length;
+      const readingTime = Math.ceil(words / 200);
+      return { slug, title, date, tags, summary, readingTime };
     })
     .sort((a, b) => {
       const ad = a.date ? Date.parse(a.date) : 0;

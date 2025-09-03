@@ -1,5 +1,16 @@
 import React from "react";
-import { Box, Container, Flex, HStack, IconButton, Text, useColorMode } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Flex,
+  HStack,
+  IconButton,
+  Text,
+  useColorMode,
+  Divider,
+  Link as ChakraLink,
+} from "@chakra-ui/react";
+import NextLink from "next/link";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { SkipLink } from "../ui";
 import { NavLink } from "../ui/NavLink";
@@ -62,27 +73,34 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             gap={4}
           >
             <Text color="muted">© {new Date().getFullYear()} Jordan Moshcovitis</Text>
-            <HStack spacing={4}>
-              <ChakraLink as={NextLink} href="/" _hover={{ textDecoration: "none", opacity: 0.8 }}>
-                Home
-              </ChakraLink>
-              <ChakraLink
-                as={NextLink}
-                href="/blog"
-                _hover={{ textDecoration: "none", opacity: 0.8 }}
-              >
-                Blog
-              </ChakraLink>
-              <ChakraLink
-                as={NextLink}
-                href="/JORDAN_MOSHCOVITIS_Resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                _hover={{ textDecoration: "none", opacity: 0.8 }}
-              >
-                CV
-              </ChakraLink>
-            </HStack>
+            <Box w="full">
+              <Divider my={4} />
+              <HStack spacing={4} color="muted">
+                <ChakraLink
+                  as={NextLink}
+                  href="/"
+                  _hover={{ textDecoration: "none", opacity: 0.8 }}
+                >
+                  Home
+                </ChakraLink>
+                <ChakraLink
+                  as={NextLink}
+                  href="/blog"
+                  _hover={{ textDecoration: "none", opacity: 0.8 }}
+                >
+                  Blog
+                </ChakraLink>
+                <ChakraLink
+                  as={NextLink}
+                  href="/JORDAN_MOSHCOVITIS_Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  _hover={{ textDecoration: "none", opacity: 0.8 }}
+                >
+                  CV
+                </ChakraLink>
+              </HStack>
+            </Box>
           </Flex>
         </Container>
       </Box>

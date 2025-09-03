@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { ReactNode } from "react";
-import { chakra, Heading, Text, Container, HStack, Box } from "@chakra-ui/react";
+import { chakra, Heading, Text, Container, HStack, Box, Tag } from "@chakra-ui/react";
 import { MainLayout } from "./layout";
 import TOC from "./TOC";
 
@@ -41,16 +41,21 @@ export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
               {frontmatter.title}
             </Heading>
           ) : null}
-          {frontmatter?.date ? (
-            <Text color="muted" mb={6}>
-              {frontmatter.date}
-            </Text>
-          ) : null}
+          <HStack spacing={3} mb={6} align="center">
+            {frontmatter?.date ? <Text color="muted">{frontmatter.date}</Text> : null}
+            {frontmatter?.tags?.map((t) => (
+              <Tag key={t} size="sm">
+                {t}
+              </Tag>
+            ))}
+          </HStack>
           <Box position="relative">
             <TOC />
           </Box>
           <chakra.div my={4} />
-          <div>{children}</div>
+          <Box sx={frontmatter?.title ? { "h1:first-of-type": { display: "none" } } : undefined}>
+            {children}
+          </Box>
         </chakra.main>
       </Container>
     </MainLayout>
