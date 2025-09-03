@@ -16,4 +16,6 @@ export { Figure } from "./Figure";
 export type { FigureProps } from "./Figure";
 export { Prose } from "./Prose";
 export type { ProseProps } from "./Prose";
+export { CTAButton } from "./CTAButton";
+export type { CTAButtonProps } from "./CTAButton";
 export { default as MdxImage } from "./MdxImage";
