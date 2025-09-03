@@ -43,7 +43,7 @@ export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
   return (
     <MainLayout>
       <ReadingProgress />
-      <Container maxW="container.lg" px={{ base: 4, md: 6 }}>
+      <Container maxW="container.lg" px={{ base: 4, md: 6 }} bg="readingBg">
         <chakra.main p={0} mx="auto">
           <Head>
             <title>{title}</title>

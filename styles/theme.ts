@@ -77,6 +77,7 @@ const semanticTokens = {
     muted: { default: "neutral.600", _dark: "neutral.400" },
     border: { default: "neutral.200", _dark: "neutral.700" },
     link: { default: "primary.600", _dark: "primary.300" },
+    readingBg: { default: "neutral.50", _dark: "neutral.800" },
   },
 };
 
@@ -135,8 +136,7 @@ const components = {
       transition: "color 120ms",
       _hover: { textDecoration: "none", opacity: 0.9 },
       _focusVisible: {
-        outline: "2px solid",
-        outlineColor: "link",
+        outline: "2px solid currentColor",
         outlineOffset: "2px",
       },
     },
