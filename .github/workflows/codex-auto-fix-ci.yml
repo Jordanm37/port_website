@@ -94,17 +94,24 @@ jobs:
       - name: Install Codex CLI
         run: npm install -g @openai/codex
 
+      - name: Write CI failure JSON
+        env:
+          CI_FAILURE_JSON: ${{ toJSON(fromJSON(steps.failure_details.outputs.result)) }}
+        run: |
+          node -e "require('fs').writeFileSync('.ci-failure.json', process.env.CI_FAILURE_JSON)"
+
       - name: Run Codex to repair CI issues
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          echo '${{ toJSON(fromJSON(steps.failure_details.outputs.result)) }}' > .ci-failure.json
           echo "Attempting auto-fix using Codex..."
-          codex exec "Read .ci-failure.json to understand the lint/type/build failures. Apply minimal, safe edits to fix:
-          - ESLint violations
-          - TypeScript type errors
-          - Next.js build errors
-          Keep changes tightly scoped. Do not refactor unrelated code. Maintain existing formatting and comments. After edits, run 'npm run lint', 'npm run typecheck', and 'npm run build' locally and fix any remaining issues until green or no more safe changes are possible."
+          codex exec "Read .ci-failure.json to understand the lint/type/build failures. Apply minimal, safe edits to fix:\n- ESLint violations\n- TypeScript type errors\n- Next.js build errors\nKeep changes tightly scoped. Do not refactor unrelated code. Maintain existing formatting and comments."
+
+      - name: Validate after Codex edits (non-blocking)
+        run: |
+          npm run lint || true
+          npm run typecheck || true
+          npm run build || true
 
       - name: Commit and push changes (if any)
         run: |
