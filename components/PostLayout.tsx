@@ -15,10 +15,15 @@ import {
 import { useClipboard } from "@chakra-ui/react";
 import { FaTwitter, FaLinkedin } from "react-icons/fa";
 import NextLink from "next/link";
-import { getPrevNext, getOrderedPosts } from "../lib/blog";
 import { MainLayout } from "./layout";
 import TOC from "./TOC";
 import { ReadingProgress } from "./ui/ReadingProgress";
+
+type BlogMeta = {
+  slug: string;
+  title: string;
+  date: string | null;
+};
 
 type PostLayoutProps = {
   children: ReactNode;
@@ -30,16 +35,21 @@ type PostLayoutProps = {
     tags?: string[];
     slug?: string;
   };
+  navigation?: {
+    prev: BlogMeta | null;
+    next: BlogMeta | null;
+  };
+  relatedPosts?: BlogMeta[];
 };
 
-export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
+export default function PostLayout({ children, frontmatter, navigation, relatedPosts }: PostLayoutProps) {
   const title = frontmatter?.title || "Post";
   const description = frontmatter?.description || frontmatter?.summary || "";
   const url = frontmatter?.slug
     ? `https://port-website-indol.vercel.app/blog/${frontmatter.slug}`
     : undefined;
   const { hasCopied, onCopy } = useClipboard(url || "");
-  const nav = frontmatter?.slug ? getPrevNext(frontmatter.slug) : { prev: null, next: null };
+  const nav = navigation || { prev: null, next: null };
   return (
     <MainLayout>
       <ReadingProgress />
@@ -126,21 +136,20 @@ export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
               <span />
             )}
           </Flex>
-          <Box mt={8}>
-            <Heading as="h2" size="lg" mb={3}>
-              Related posts
-            </Heading>
-            <HStack spacing={4} wrap="wrap">
-              {getOrderedPosts()
-                .filter((p) => p.slug !== (frontmatter?.slug || ""))
-                .slice(0, 4)
-                .map((p) => (
+          {relatedPosts && relatedPosts.length > 0 && (
+            <Box mt={8}>
+              <Heading as="h2" size="lg" mb={3}>
+                Related posts
+              </Heading>
+              <HStack spacing={4} wrap="wrap">
+                {relatedPosts.map((p) => (
                   <NextLink key={p.slug} href={`/blog/${p.slug}`}>
                     {p.title}
                   </NextLink>
                 ))}
-            </HStack>
-          </Box>
+              </HStack>
+            </Box>
+          )}
         </chakra.main>
       </Container>
     </MainLayout>
