@@ -6,6 +6,8 @@ export interface CardProps extends BoxProps {
 }
 
 export const Card: React.FC<CardProps> = ({ children, ...props }) => {
+  // Intentional lint error to trigger CI (no-debugger)
+  debugger;
   return (
     <Box
       role={props.role || "group"}
