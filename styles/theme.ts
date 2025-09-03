@@ -77,6 +77,7 @@ const semanticTokens = {
     muted: { default: "neutral.600", _dark: "neutral.400" },
     border: { default: "neutral.200", _dark: "neutral.700" },
     link: { default: "primary.600", _dark: "primary.300" },
+    readingBg: { default: "neutral.50", _dark: "neutral.800" },
   },
 };
 
@@ -107,7 +108,11 @@ const shadows = {
 
 const components = {
   Button: {
-    baseStyle: { borderRadius: "md", fontWeight: 600 },
+    baseStyle: {
+      borderRadius: "md",
+      fontWeight: 600,
+      transition: "transform 150ms, box-shadow 150ms",
+    },
     variants: {
       solid: {
         bg: "primary.600",
@@ -126,19 +131,32 @@ const components = {
         _hover: { bg: "primary.50" },
         _active: { bg: "primary.100" },
       },
+      neon: {
+        bgGradient: "linear(to-r, primary.500, primary.700)",
+        color: "white",
+        _dark: { bgGradient: "linear(to-r, primary.400, primary.600)" },
+        boxShadow: "0 8px 24px rgba(0,102,204,0.25)",
+        _hover: {
+          transform: "translateY(-1px) scale(1.02)",
+          boxShadow: "0 10px 28px rgba(0,102,204,0.35)",
+        },
+        _active: { transform: "translateY(0) scale(0.99)" },
+      },
     },
   },
   Link: {
     baseStyle: {
       color: "link",
       textDecoration: "underline",
-      transition: "color 120ms",
-      _hover: { textDecoration: "none", opacity: 0.9 },
+      textUnderlineOffset: "2px",
+      textDecorationThickness: "from-font",
+      transition: "color 120ms, text-underline-offset 120ms",
+      _hover: { textDecoration: "underline", textUnderlineOffset: "4px", opacity: 0.9 },
       _focusVisible: {
-        outline: "2px solid",
-        outlineColor: "link",
+        outline: "2px solid currentColor",
         outlineOffset: "2px",
       },
+      _dark: { textShadow: "0 0 0.35em rgba(0, 102, 204, 0.35)" },
     },
   },
   IconButton: {
@@ -206,6 +224,12 @@ const styles = {
     },
     ".prose": {
       maxWidth: "72ch",
+    },
+    "h1, h2": {
+      transition: "font-variation-settings 150ms ease",
+    },
+    "h1:hover, h2:hover": {
+      fontVariationSettings: "'wght' 750",
     },
   },
 };

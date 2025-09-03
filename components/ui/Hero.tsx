@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Flex, Heading, Text, chakra, HStack, Tag, Button } from "@chakra-ui/react";
+import CanvasBackground from "./CanvasBackground";
 import NextImage from "next/image";
 
 const Image = chakra(NextImage, {
@@ -58,6 +59,7 @@ export const Hero: React.FC<HeroProps> = ({
         pointerEvents: "none",
       }}
     >
+      <CanvasBackground color="rgba(0, 102, 204, 0.4)" />
       <Flex direction={{ base: "column", md: "row" }} align="center" gap={{ base: 6, md: 10 }}>
         <Box flex="1" textAlign={{ base: "center", md: "left" }}>
           <Heading as="h1" size="3xl" mb={2}>
