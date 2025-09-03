@@ -4,6 +4,7 @@ import "../styles/prism.css";
 import Head from "next/head";
 import { MDXProvider } from "@mdx-js/react";
 import CodeBlock from "../components/ui/CodeBlock";
+import MdxImage from "../components/ui/MdxImage";
 import theme from "../styles/theme";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -33,7 +34,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           a: (p: any) => <chakra.a color="link" textDecoration="underline" {...p} />,
           code: (p: any) => <chakra.code {...p} />,
           pre: (p: any) => <CodeBlock {...p} />,
-          img: (p: any) => <chakra.img maxW="100%" borderRadius={6} my={2} {...p} />,
+          img: (p: any) => <MdxImage {...p} />,
         }}
       >
         <Component {...pageProps} />
