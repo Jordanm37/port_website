@@ -1,6 +1,21 @@
 import Head from "next/head";
 import { ReactNode } from "react";
-import { chakra, Heading, Text, Container, HStack, Box, Tag } from "@chakra-ui/react";
+import {
+  chakra,
+  Heading,
+  Text,
+  Container,
+  HStack,
+  Box,
+  Tag,
+  IconButton,
+  Tooltip,
+  Flex,
+} from "@chakra-ui/react";
+import { useClipboard } from "@chakra-ui/react";
+import { FaTwitter, FaLinkedin } from "react-icons/fa";
+import NextLink from "next/link";
+import { getPrevNext } from "../lib/blog";
 import { MainLayout } from "./layout";
 import TOC from "./TOC";
 
@@ -22,6 +37,8 @@ export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
   const url = frontmatter?.slug
     ? `https://port-website-indol.vercel.app/blog/${frontmatter.slug}`
     : undefined;
+  const { hasCopied, onCopy } = useClipboard(url || "");
+  const nav = frontmatter?.slug ? getPrevNext(frontmatter.slug) : { prev: null, next: null };
   return (
     <MainLayout>
       <Container maxW="container.lg" px={{ base: 4, md: 6 }}>
@@ -56,6 +73,53 @@ export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
           <Box sx={frontmatter?.title ? { "h1:first-of-type": { display: "none" } } : undefined}>
             {children}
           </Box>
+          <HStack spacing={2} mt={8}>
+            <Tooltip label={hasCopied ? "Copied" : "Copy link"} openDelay={200}>
+              <IconButton
+                aria-label="Copy link"
+                onClick={onCopy}
+                size="sm"
+                variant="ghost"
+                icon={<chakra.span>🔗</chakra.span>}
+              />
+            </Tooltip>
+            {url ? (
+              <>
+                <IconButton
+                  as="a"
+                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on Twitter"
+                  size="sm"
+                  variant="ghost"
+                  icon={<FaTwitter />}
+                />
+                <IconButton
+                  as="a"
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on LinkedIn"
+                  size="sm"
+                  variant="ghost"
+                  icon={<FaLinkedin />}
+                />
+              </>
+            ) : null}
+          </HStack>
+          <Flex mt={8} justify="space-between">
+            {nav.prev ? (
+              <NextLink href={`/blog/${nav.prev.slug}`}>← {nav.prev.title}</NextLink>
+            ) : (
+              <span />
+            )}
+            {nav.next ? (
+              <NextLink href={`/blog/${nav.next.slug}`}>{nav.next.title} →</NextLink>
+            ) : (
+              <span />
+            )}
+          </Flex>
         </chakra.main>
       </Container>
     </MainLayout>

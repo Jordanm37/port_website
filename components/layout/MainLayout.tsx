@@ -99,6 +99,20 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 >
                   CV
                 </ChakraLink>
+                <ChakraLink
+                  as={NextLink}
+                  href="/privacy"
+                  _hover={{ textDecoration: "none", opacity: 0.8 }}
+                >
+                  Privacy
+                </ChakraLink>
+                <ChakraLink
+                  as={NextLink}
+                  href="mailto:jordan.moshcovitis@gmail.com"
+                  _hover={{ textDecoration: "none", opacity: 0.8 }}
+                >
+                  Contact
+                </ChakraLink>
               </HStack>
             </Box>
           </Flex>

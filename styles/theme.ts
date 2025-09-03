@@ -11,9 +11,10 @@ const config: ThemeConfig = {
 };
 
 const fonts = {
-  heading: "Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
-  body: "Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
-  mono: "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas",
+  heading:
+    "var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
+  body: "var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
+  mono: "var(--font-jbmono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas",
 };
 
 const fontSizes = {
@@ -138,6 +139,24 @@ const components = {
       _focusVisible: {
         outline: "2px solid",
         outlineColor: "link",
+        outlineOffset: "2px",
+      },
+    },
+  },
+  IconButton: {
+    baseStyle: {
+      _focusVisible: {
+        outline: "2px solid",
+        outlineColor: "link",
+        outlineOffset: "2px",
+      },
+    },
+  },
+  Card: {
+    baseStyle: {
+      _focusWithin: {
+        outline: "2px solid",
+        outlineColor: "primary.300",
         outlineOffset: "2px",
       },
     },
