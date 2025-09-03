@@ -4,7 +4,7 @@ import "../styles/prism.css";
 import Head from "next/head";
 import { MDXProvider } from "@mdx-js/react";
 import CodeBlock from "../components/ui/CodeBlock";
-import MdxImage from "../components/ui/MdxImage";
+import { MdxImage } from "../components/ui";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import theme from "../styles/theme";
 

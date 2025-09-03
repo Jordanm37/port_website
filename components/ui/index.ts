@@ -10,3 +10,4 @@ export { BlogCard } from "./BlogCard";
 export type { BlogCardProps } from "./BlogCard";
 export { Hero } from "./Hero";
 export type { HeroProps } from "./Hero";
+export { default as MdxImage } from "./MdxImage";
