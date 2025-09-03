@@ -3,7 +3,13 @@ import { ChakraProvider, ColorModeScript, chakra } from "@chakra-ui/react";
 import "../styles/prism.css";
 import Head from "next/head";
 import { MDXProvider } from "@mdx-js/react";
+import CodeBlock from "../components/ui/CodeBlock";
+import { MdxImage } from "../components/ui";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import theme from "../styles/theme";
+
+const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
+const jbmono = JetBrains_Mono({ subsets: ["latin"], display: "swap", variable: "--font-jbmono" });
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -31,11 +37,13 @@ function MyApp({ Component, pageProps }: AppProps) {
           li: (p: any) => <chakra.li my={1} {...p} />,
           a: (p: any) => <chakra.a color="link" textDecoration="underline" {...p} />,
           code: (p: any) => <chakra.code {...p} />,
-          pre: (p: any) => <chakra.pre my={4} className="line-numbers" {...p} />,
-          img: (p: any) => <chakra.img maxW="100%" borderRadius={6} my={2} {...p} />,
+          pre: (p: any) => <CodeBlock {...p} />,
+          img: (p: any) => <MdxImage {...p} />,
         }}
       >
-        <Component {...pageProps} />
+        <chakra.div className={`${inter.variable} ${jbmono.variable}`}>
+          <Component {...pageProps} />
+        </chakra.div>
       </MDXProvider>
     </ChakraProvider>
   );

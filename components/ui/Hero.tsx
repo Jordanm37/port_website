@@ -27,8 +27,7 @@ export const Hero: React.FC<HeroProps> = ({ title, subtitle, imageSrc, imageAlt 
       _hover={{ boxShadow: "md" }}
       bgGradient="linear(to-b, primary.50 0%, primary.50 12%, white 70%)"
       _dark={{ bgGradient: "linear(to-b, neutral.800 0%, neutral.850 20%, neutral.900 70%)" }}
-      bgAttachment="fixed"
-      _motionReduce={{ bgAttachment: "scroll" }}
+      // Avoid motion-specific props to satisfy strict Chakra types in CI
       px={{ base: 6, md: 10 }}
       py={{ base: 10, md: 16 }}
       _before={{
