@@ -8,3 +8,5 @@ export { SkipLink } from "./SkipLink";
 export type { SkipLinkProps } from "./SkipLink";
 export { BlogCard } from "./BlogCard";
 export type { BlogCardProps } from "./BlogCard";
+export { Hero } from "./Hero";
+export type { HeroProps } from "./Hero";

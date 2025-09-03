@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Box, Link as ChakraLink, List, ListItem } from "@chakra-ui/react";
 
 type TocItem = { id: string; text: string; level: number };
 
@@ -18,14 +19,16 @@ export default function TOC() {
 
   if (!items.length) return null;
   return (
-    <nav aria-label="Table of contents">
-      <ul>
+    <Box as="nav" aria-label="Table of contents">
+      <List spacing={1}>
         {items.map((i) => (
-          <li key={i.id} style={{ marginLeft: (i.level - 1) * 12 }}>
-            <a href={`#${i.id}`}>{i.text}</a>
-          </li>
+          <ListItem key={i.id} ml={`${(i.level - 1) * 12}px`}>
+            <ChakraLink href={`#${i.id}`} color="muted" _hover={{ color: "link" }}>
+              {i.text}
+            </ChakraLink>
+          </ListItem>
         ))}
-      </ul>
-    </nav>
+      </List>
+    </Box>
   );
 }

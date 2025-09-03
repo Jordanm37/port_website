@@ -10,11 +10,16 @@ interface SocialButtonProps {
 const SocialButton: React.FC<SocialButtonProps> = ({ url, ariaLabel, icon }) => {
   return (
     <IconButton
-      colorScheme="teal"
-      variant="outline"
+      as="a"
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
       aria-label={ariaLabel}
       icon={icon}
-      onClick={() => window.open(url, "_blank")}
+      variant="outline"
+      colorScheme="primary"
+      borderRadius="full"
+      size="md"
     />
   );
 };

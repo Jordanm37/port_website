@@ -133,7 +133,8 @@ const components = {
     baseStyle: {
       color: "link",
       textDecoration: "underline",
-      _hover: { textDecoration: "none" },
+      transition: "color 120ms",
+      _hover: { textDecoration: "none", opacity: 0.9 },
       _focusVisible: {
         outline: "2px solid",
         outlineColor: "link",

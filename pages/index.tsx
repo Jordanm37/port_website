@@ -1,9 +1,11 @@
-import { Box, HStack, VStack, chakra, Divider, Center } from "@chakra-ui/react";
+import { Box, HStack, VStack, chakra, Divider, Heading } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { default as NextImage } from "next/image";
 import { ImLinkedin2, ImMail4, ImGithub } from "react-icons/im";
 import SocialButton from "../components/SocialButton";
+import { MainLayout } from "../components/layout";
+import { PageContainer, BrandLink, Hero } from "../components/ui";
 
 const Image = chakra(NextImage, {
   shouldForwardProp: (prop) => ["width", "height", "layout", "src", "alt"].includes(prop as string),
@@ -11,65 +13,52 @@ const Image = chakra(NextImage, {
 
 const Home: NextPage = () => {
   return (
-    <Center height="100vh">
+    <MainLayout>
       <Head>
         <title>Jordan Moshcovitis</title>
         <meta name="description" content="Personal space on the web." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <VStack>
-        <Image
-          src="/images/jordan-profile-pic.jpg"
-          alt="Picture of Jordan"
-          width={156}
-          height={170}
+      <PageContainer>
+        <Hero
+          title="I’m Jordan Moshcovitis"
+          subtitle="Physicist, Mathematician, Researcher, Teacher"
+          imageSrc="/images/jordan-profile-pic.jpg"
+          imageAlt="Picture of Jordan"
         />
-        <Box textAlign="center">
-          <chakra.h1 fontSize="140%">
-            I&apos;m <b>Jordan Moshcovitis</b>
-          </chakra.h1>
-          <HStack justifyContent="center">
-            <VStack>
-              <chakra.p color="gray.500">Physicist, Mathematician, Researcher, Teacher</chakra.p>
-              <chakra.p color="gray.500">
-                Optical Nanoscale-Metasurfaces, Financial Mathematics, Solidity, Chatbots
-              </chakra.p>
-            </VStack>
+        <VStack spacing={6} align="center">
+          <Box textAlign="center">
+            <BrandLink
+              href="/JORDAN_MOSHCOVITIS_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View my CV
+            </BrandLink>
+            <chakra.span> · </chakra.span>
+            <BrandLink href="/blog">Blog</BrandLink>
+          </Box>
+          <Divider pt={3} w="full" />
+          <HStack pt={4}>
+            <SocialButton
+              url="mailto:jordan.moshcovitis@gmail.com"
+              ariaLabel="Email"
+              icon={<ImMail4 />}
+            />
+            <SocialButton
+              url="https://www.linkedin.com/in/jordan-m-ab5a4010b/"
+              ariaLabel="LinkedIn"
+              icon={<ImLinkedin2 />}
+            />
+            <SocialButton
+              url="https://github.com/Jordanm37/"
+              ariaLabel="Github"
+              icon={<ImGithub />}
+            />
           </HStack>
-          <chakra.a
-            href="/JORDAN_MOSHCOVITIS_Resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            textDecoration="underline"
-            color="blue.500"
-          >
-            View my CV
-          </chakra.a>
-          <chakra.span> · </chakra.span>
-          <chakra.a href="/blog" textDecoration="underline" color="blue.500">
-            Blog
-          </chakra.a>
-        </Box>
-        <Divider paddingTop={3} width="150%" />
-        <HStack paddingTop={4}>
-          <SocialButton
-            url="mailto:jordan.moshcovitis@gmail.com"
-            ariaLabel="Email"
-            icon={<ImMail4 />}
-          />
-          <SocialButton
-            url="https://www.linkedin.com/in/jordan-m-ab5a4010b/"
-            ariaLabel="LinkedIn"
-            icon={<ImLinkedin2 />}
-          />
-          <SocialButton
-            url="https://github.com/Jordanm37/"
-            ariaLabel="Github"
-            icon={<ImGithub />}
-          />
-        </HStack>
-      </VStack>
-    </Center>
+        </VStack>
+      </PageContainer>
+    </MainLayout>
   );
 };
 

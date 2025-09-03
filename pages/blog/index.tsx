@@ -1,6 +1,9 @@
 import fs from "fs";
 import path from "path";
 import Link from "next/link";
+import { Heading, SimpleGrid, Text, Box, HStack, Tag } from "@chakra-ui/react";
+import { MainLayout } from "../../components/layout";
+import { PageContainer, BlogCard } from "../../components/ui";
 import matter from "gray-matter";
 import type { GetStaticProps, NextPage } from "next";
 
@@ -20,31 +23,40 @@ const BlogIndexPage: NextPage<BlogIndexProps> = ({ entries }) => {
   entries.forEach((e) => e.tags.forEach((t) => tagSet.add(t)));
   const tags = Array.from(tagSet);
   return (
-    <main>
-      <h1>Blog</h1>
-      <ul>
-        {entries.map((p) => (
-          <li key={p.slug}>
-            <Link href={`/blog/${p.slug}`}>
-              <a>{p.title}</a>
-            </Link>
-            {p.date ? ` — ${p.date}` : null}
-          </li>
-        ))}
-      </ul>
-      {tags.length ? (
-        <p>
-          Tags{" "}
-          {tags.map((t) => (
-            <span key={t} style={{ marginRight: 8 }}>
-              <Link href={`/blog/tags/${t}`}>
-                <a>#{t}</a>
-              </Link>
-            </span>
+    <MainLayout>
+      <PageContainer>
+        <Heading as="h1" size="2xl">
+          Blog
+        </Heading>
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+          {entries.map((p) => (
+            <BlogCard
+              key={p.slug}
+              href={`/blog/${p.slug}`}
+              title={p.title}
+              excerpt={undefined}
+              tag={p.tags[0]}
+              readingTime={p.date || undefined}
+            />
           ))}
-        </p>
-      ) : null}
-    </main>
+        </SimpleGrid>
+
+        {tags.length ? (
+          <Box>
+            <Text color="muted" mb={2}>
+              Tags
+            </Text>
+            <HStack wrap="wrap" spacing={2}>
+              {tags.map((t) => (
+                <Tag key={t} size="sm" as={Link} href={`/blog/tags/${t}`}>
+                  #{t}
+                </Tag>
+              ))}
+            </HStack>
+          </Box>
+        ) : null}
+      </PageContainer>
+    </MainLayout>
   );
 };
 
