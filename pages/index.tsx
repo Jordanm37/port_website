@@ -1,15 +1,10 @@
 import { Box, HStack, VStack, chakra, Divider, Heading } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { default as NextImage } from "next/image";
 import { ImLinkedin2, ImMail4, ImGithub } from "react-icons/im";
 import SocialButton from "../components/SocialButton";
 import { MainLayout } from "../components/layout";
 import { PageContainer, BrandLink, Hero } from "../components/ui";
-
-const Image = chakra(NextImage, {
-  shouldForwardProp: (prop) => ["width", "height", "layout", "src", "alt"].includes(prop as string),
-});
 
 const Home: NextPage = () => {
   return (

@@ -13,7 +13,7 @@ export const NavLink: React.FC<NavLinkProps> = ({
   ...props
 }) => {
   const router = useRouter();
-  const path = typeof href === "string" ? href : href.pathname || "";
+  const path = typeof href === "string" ? href : (href as any)?.pathname || "";
   const isActive = exact ? router.pathname === path : router.pathname.startsWith(path || "");
 
   return (
@@ -21,6 +21,7 @@ export const NavLink: React.FC<NavLinkProps> = ({
       as={NextLink}
       href={href}
       position="relative"
+      color={isActive ? "link" : undefined}
       _hover={{ textDecoration: "none", opacity: 0.9 }}
       _after={{
         content: '""',

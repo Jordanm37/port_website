@@ -5,6 +5,12 @@ tags: ["notes", "update"]
 summary: "A second post to validate tags and RSS"
 ---
 
+import PostLayout from "../../components/PostLayout";
+
+export default ({ children, ...props }) => (
+  <PostLayout frontmatter={props.frontmatter}>{children}</PostLayout>
+);
+
 # Second post
 
 This validates frontmatter, tags, and RSS generation.

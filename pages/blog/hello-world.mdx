@@ -5,6 +5,12 @@ tags: ["notes", "intro"]
 summary: "Launch note"
 ---
 
+import PostLayout from "../../components/PostLayout";
+
+export default ({ children, ...props }) => (
+  <PostLayout frontmatter={props.frontmatter}>{children}</PostLayout>
+);
+
 # Hello world
 
 Some text. Code:
