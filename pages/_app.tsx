@@ -5,7 +5,11 @@ import Head from "next/head";
 import { MDXProvider } from "@mdx-js/react";
 import CodeBlock from "../components/ui/CodeBlock";
 import MdxImage from "../components/ui/MdxImage";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import theme from "../styles/theme";
+
+const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
+const jbmono = JetBrains_Mono({ subsets: ["latin"], display: "swap", variable: "--font-jbmono" });
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -37,7 +41,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           img: (p: any) => <MdxImage {...p} />,
         }}
       >
-        <Component {...pageProps} />
+        <chakra.div className={`${inter.variable} ${jbmono.variable}`}>
+          <Component {...pageProps} />
+        </chakra.div>
       </MDXProvider>
     </ChakraProvider>
   );
