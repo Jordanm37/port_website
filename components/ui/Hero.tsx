@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Heading, Text, chakra } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, chakra, HStack, Tag, Button } from "@chakra-ui/react";
 import NextImage from "next/image";
 
 const Image = chakra(NextImage, {
@@ -12,9 +12,24 @@ export interface HeroProps {
   subtitle?: string;
   imageSrc?: string;
   imageAlt?: string;
+  chips?: string[];
+  primaryCtaHref?: string;
+  primaryCtaLabel?: string;
+  secondaryCtaHref?: string;
+  secondaryCtaLabel?: string;
 }
 
-export const Hero: React.FC<HeroProps> = ({ title, subtitle, imageSrc, imageAlt }) => {
+export const Hero: React.FC<HeroProps> = ({
+  title,
+  subtitle,
+  imageSrc,
+  imageAlt,
+  chips,
+  primaryCtaHref,
+  primaryCtaLabel,
+  secondaryCtaHref,
+  secondaryCtaLabel,
+}) => {
   return (
     <Box
       position="relative"
@@ -54,39 +69,32 @@ export const Hero: React.FC<HeroProps> = ({ title, subtitle, imageSrc, imageAlt 
             </Text>
           ) : null}
           <Flex mt={6} justify={{ base: "center", md: "flex-start" }} gap={3} wrap="wrap">
-            <chakra.button
-              as="a"
-              href="mailto:jordan.moshcovitis@gmail.com"
-              role="button"
-              className="chakra-button"
-              data-variant="solid"
-              style={{
-                background: "var(--chakra-colors-primary-600)",
-                color: "white",
-                borderRadius: "var(--chakra-radii-md)",
-                padding: "8px 16px",
-              }}
-            >
-              Contact
-            </chakra.button>
-            <chakra.button
-              as="a"
-              href="/JORDAN_MOSHCOVITIS_Resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              role="button"
-              className="chakra-button"
-              data-variant="outline"
-              style={{
-                border: "1px solid var(--chakra-colors-primary-600)",
-                color: "var(--chakra-colors-primary-700)",
-                borderRadius: "var(--chakra-radii-md)",
-                padding: "8px 16px",
-              }}
-            >
-              View CV
-            </chakra.button>
+            {primaryCtaHref && primaryCtaLabel ? (
+              <Button as="a" href={primaryCtaHref} variant="solid">
+                {primaryCtaLabel}
+              </Button>
+            ) : null}
+            {secondaryCtaHref && secondaryCtaLabel ? (
+              <Button
+                as="a"
+                href={secondaryCtaHref}
+                variant="outline"
+                target={secondaryCtaHref.startsWith("http") ? "_blank" : undefined}
+                rel={secondaryCtaHref.startsWith("http") ? "noopener noreferrer" : undefined}
+              >
+                {secondaryCtaLabel}
+              </Button>
+            ) : null}
           </Flex>
+          {chips && chips.length ? (
+            <HStack spacing={2} mt={4} wrap="wrap">
+              {chips.slice(0, 3).map((c) => (
+                <Tag key={c} size="sm">
+                  {c}
+                </Tag>
+              ))}
+            </HStack>
+          ) : null}
         </Box>
         {imageSrc ? (
           <Box
@@ -106,6 +114,7 @@ export const Hero: React.FC<HeroProps> = ({ title, subtitle, imageSrc, imageAlt 
               width={156}
               height={170}
               sizes="(min-width: 768px) 170px, 140px"
+              priority
             />
           </Box>
         ) : null}

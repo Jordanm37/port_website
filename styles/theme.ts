@@ -21,11 +21,11 @@ const fontSizes = {
   xs: "0.75rem",
   sm: "0.875rem",
   md: "1rem",
-  lg: "1.125rem",
-  xl: "1.25rem",
-  "2xl": "1.5rem",
-  "3xl": "1.875rem",
-  "4xl": "2.25rem",
+  lg: "clamp(1.125rem, 0.6vw + 1rem, 1.25rem)",
+  xl: "clamp(1.35rem, 1vw + 1rem, 1.6rem)",
+  "2xl": "clamp(1.7rem, 1.6vw + 1rem, 2.2rem)",
+  "3xl": "clamp(2.2rem, 2.4vw + 1rem, 3rem)",
+  "4xl": "clamp(2.6rem, 3vw + 1rem, 3.6rem)",
 };
 
 const lineHeights = {
@@ -86,13 +86,11 @@ const space = {
   2: "8px",
   3: "12px",
   4: "16px",
-  5: "20px",
-  6: "24px",
-  8: "32px",
-  10: "40px",
-  12: "48px",
-  16: "64px",
-  20: "80px",
+  5: "24px",
+  6: "32px",
+  7: "48px",
+  8: "64px",
+  9: "80px",
 };
 
 const radii = {
@@ -201,9 +199,13 @@ const styles = {
     "html, body": {
       bg: "bg",
       color: "text",
+      lineHeight: "base",
     },
     "::selection": {
       background: "primary.200",
+    },
+    ".prose": {
+      maxWidth: "72ch",
     },
   },
 };

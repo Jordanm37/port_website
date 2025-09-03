@@ -24,6 +24,10 @@ jobs:
       github.event.workflow_run.pull_requests[0] &&
       !startsWith(github.event.workflow_run.head_branch, 'codex-auto-fix-ci-')
     runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - name: Determine PR context
         id: pr
@@ -114,11 +118,7 @@ jobs:
           npm run build || true
 
       - name: Check Vercel preview deployment (optional)
-        if: ${{ secrets.VERCEL_TOKEN != '' && github.event.workflow_run.pull_requests[0] }}
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        if: ${{ env.VERCEL_TOKEN != '' && github.event.workflow_run.event == 'pull_request' }}
         run: |
           echo "Checking Vercel preview status (if a deployment exists)..."
           npm i -g vercel@latest

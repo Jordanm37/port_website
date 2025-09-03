@@ -22,6 +22,7 @@ export const NavLink: React.FC<NavLinkProps> = ({
       href={href}
       position="relative"
       color={isActive ? "link" : undefined}
+      aria-current={isActive ? "page" : undefined}
       _hover={{ textDecoration: "none", opacity: 0.9 }}
       _after={{
         content: '""',

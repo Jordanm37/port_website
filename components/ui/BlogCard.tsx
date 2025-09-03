@@ -51,7 +51,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({
           </Tag>
         ))}
         {date ? (
-          <Text fontSize="sm" color="muted">
+          <Text as="time" dateTime={date ?? undefined} fontSize="sm" color="muted">
             {formatDate(date)}
           </Text>
         ) : null}

@@ -16,10 +16,15 @@ const Home: NextPage = () => {
       </Head>
       <PageContainer>
         <Hero
-          title="I’m Jordan Moshcovitis"
-          subtitle="Physicist, Mathematician, Researcher, Teacher"
+          title="I build retrieval‑centric, agentic LLM systems with measurable gains."
+          subtitle="AI researcher‑engineer: I create at the edge of agents, structured planning, and retrieval—questioning trends for robustness and legitimacy."
           imageSrc="/images/jordan-profile-pic.jpg"
           imageAlt="Picture of Jordan"
+          chips={["+35% accuracy vs baseline", "4× ROI PoC", "Privacy‑aligned deployments"]}
+          primaryCtaHref="/JORDAN_MOSHCOVITIS_Resume.pdf"
+          primaryCtaLabel="View résumé"
+          secondaryCtaHref="mailto:jordan.moshcovitis@gmail.com"
+          secondaryCtaLabel="Book a chat"
         />
         <VStack spacing={6} align="center">
           <Box textAlign="center">
