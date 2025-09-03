@@ -24,6 +24,10 @@ jobs:
       github.event.workflow_run.pull_requests[0] &&
       !startsWith(github.event.workflow_run.head_branch, 'codex-auto-fix-ci-')
     runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - name: Determine PR context
         id: pr
@@ -34,10 +38,31 @@ jobs:
             if (!prs[0]) { core.setFailed('No PR context'); return; }
             core.setOutput('number', prs[0].number);
 
+      - name: Resolve checkout ref and push strategy
+        id: resolve_ref
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prs = context.payload.workflow_run.pull_requests || [];
+            if (!prs[0]) { core.setFailed('No PR context'); return; }
+            const prNumber = prs[0].number;
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+            const isFork = pr.head.repo.full_name !== pr.base.repo.full_name;
+            const checkoutRef = isFork ? `refs/pull/${prNumber}/merge` : context.payload.workflow_run.head_branch;
+            core.setOutput('checkout_ref', checkoutRef);
+            core.setOutput('is_fork', String(isFork));
+            core.setOutput('head_branch', pr.head.ref);
+            core.setOutput('base_branch', pr.base.ref);
+            core.setOutput('can_push_directly', String(!isFork));
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_branch }}
+          ref: ${{ steps.resolve_ref.outputs.checkout_ref }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -113,20 +138,53 @@ jobs:
           npm run typecheck || true
           npm run build || true
 
-      - name: Commit and push changes (if any)
+      - name: Check Vercel preview deployment (optional)
+        if: ${{ env.VERCEL_TOKEN != '' && github.event.workflow_run.event == 'pull_request' }}
+        run: |
+          echo "Checking Vercel preview status (if a deployment exists)..."
+          npm i -g vercel@latest
+          # Attempt to fetch latest deployment for the PR branch
+          BRANCH="${{ github.event.workflow_run.head_branch }}"
+          vercel ls --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID" --confirm | head -n 50 | cat || true
+
+      - name: Commit and push changes (if any) to PR head branch
+        id: push_result
+        env:
+          CAN_PUSH_DIRECTLY: ${{ steps.resolve_ref.outputs.can_push_directly }}
+          HEAD_BRANCH: ${{ steps.resolve_ref.outputs.head_branch }}
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git add -A
             git commit -m "chore(ci): auto-fix lint/type/build issues via Codex"
-            git push origin "${{ steps.branch.outputs.branch_name }}"
+            if [ "${CAN_PUSH_DIRECTLY}" = "true" ]; then
+              if git push origin "${HEAD_BRANCH}"; then
+                echo "pushed_directly=true" >> $GITHUB_OUTPUT
+              else
+                echo "pushed_directly=false" >> $GITHUB_OUTPUT
+                FIX_BRANCH="codex-auto-fix-ci-${HEAD_BRANCH}-${GITHUB_RUN_ID}"
+                git checkout -b "$FIX_BRANCH"
+                git push origin "$FIX_BRANCH"
+                echo "fix_branch=$FIX_BRANCH" >> $GITHUB_OUTPUT
+              fi
+            else
+              echo "pushed_directly=false" >> $GITHUB_OUTPUT
+              FIX_BRANCH="codex-auto-fix-ci-${HEAD_BRANCH}-${GITHUB_RUN_ID}"
+              git checkout -b "$FIX_BRANCH"
+                git push origin "$FIX_BRANCH"
+              echo "fix_branch=$FIX_BRANCH" >> $GITHUB_OUTPUT
+            fi
           else
             echo "No changes from Codex."
+            echo "pushed_directly=none" >> $GITHUB_OUTPUT
           fi
 
       - name: Comment back on PR with auto-fix branch link
         uses: actions/github-script@v7
         env:
-          FIX_BRANCH: ${{ steps.branch.outputs.branch_name }}
+          PUSHED_DIRECTLY: ${{ steps.push_result.outputs.pushed_directly }}
+          HEAD_BRANCH: ${{ steps.resolve_ref.outputs.head_branch }}
+          BASE_BRANCH: ${{ steps.resolve_ref.outputs.base_branch }}
+          FIX_BRANCH: ${{ steps.push_result.outputs.fix_branch }}
         with:
           script: |
             const prs = context.payload.workflow_run.pull_requests || [];
@@ -134,16 +192,34 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const prNumber = prs[0].number;
-            const baseBranch = context.payload.workflow_run.head_branch;
-            const fixBranch = process.env.FIX_BRANCH;
-            const compareUrl = `https://github.com/${owner}/${repo}/compare/${baseBranch}...${fixBranch}?quick_pull=1`;
-            const body = [
-              '## 🤖 CI Auto-Fix (Codex) Available',
-              '',
-              `A fix branch \`${fixBranch}\` was prepared with Codex for CI failures.`,
-              '',
-              `[**→ Create pull request**](${compareUrl})`,
-              '',
-              `_Run ID: ${context.runId}_`
-            ].join('\n');
+            const pushedDirectly = process.env.PUSHED_DIRECTLY;
+            let body;
+            if (pushedDirectly === 'true') {
+              body = [
+                '## 🤖 CI Auto-Fix (Codex) Applied',
+                '',
+                `Changes were pushed directly to the PR head branch \`${process.env.HEAD_BRANCH}\`.`,
+                '',
+                `_Run ID: ${context.runId}_`
+              ].join('\n');
+            } else if (pushedDirectly === 'false') {
+              const compareUrl = `https://github.com/${owner}/${repo}/compare/${process.env.HEAD_BRANCH}...${process.env.FIX_BRANCH}?quick_pull=1`;
+              body = [
+                '## 🤖 CI Auto-Fix (Codex) Available',
+                '',
+                `Branch \`${process.env.FIX_BRANCH}\` with fixes has been pushed to this repo (fork PR or protected branch).`,
+                '',
+                `[**→ Create pull request**](${compareUrl})`,
+                '',
+                `_Run ID: ${context.runId}_`
+              ].join('\n');
+            } else {
+              body = [
+                '## 🤖 CI Auto-Fix (Codex) Attempted',
+                '',
+                'No file changes were necessary based on the reported CI errors.',
+                '',
+                `_Run ID: ${context.runId}_`
+              ].join('\n');
+            }
             await github.rest.issues.createComment({ owner, repo, issue_number: prNumber, body });

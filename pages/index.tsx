@@ -4,7 +4,7 @@ import Head from "next/head";
 import { ImLinkedin2, ImMail4, ImGithub } from "react-icons/im";
 import SocialButton from "../components/SocialButton";
 import { MainLayout } from "../components/layout";
-import { PageContainer, BrandLink, Hero } from "../components/ui";
+import { PageContainer, BrandLink, Hero, Reveal, CTAButton } from "../components/ui";
 
 const Home: NextPage = () => {
   return (
@@ -15,12 +15,19 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageContainer>
-        <Hero
-          title="I’m Jordan Moshcovitis"
-          subtitle="Physicist, Mathematician, Researcher, Teacher"
-          imageSrc="/images/jordan-profile-pic.jpg"
-          imageAlt="Picture of Jordan"
-        />
+        <Reveal>
+          <Hero
+            title="I build retrieval‑centric, agentic LLM systems with measurable gains."
+            subtitle="AI researcher‑engineer: I create at the edge of agents, structured planning, and retrieval—questioning trends for robustness and legitimacy."
+            imageSrc="/images/jordan-profile-pic.jpg"
+            imageAlt="Picture of Jordan"
+            chips={["+35% accuracy vs baseline", "4× ROI PoC", "Privacy‑aligned deployments"]}
+            primaryCtaHref="/JORDAN_MOSHCOVITIS_Resume.pdf"
+            primaryCtaLabel="View résumé"
+            secondaryCtaHref="mailto:jordan.moshcovitis@gmail.com"
+            secondaryCtaLabel="Book a chat"
+          />
+        </Reveal>
         <VStack spacing={6} align="center">
           <Box textAlign="center">
             <BrandLink

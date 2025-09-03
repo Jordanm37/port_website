@@ -11,20 +11,21 @@ const config: ThemeConfig = {
 };
 
 const fonts = {
-  heading: "Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
-  body: "Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
-  mono: "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas",
+  heading:
+    "var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
+  body: "var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
+  mono: "var(--font-jbmono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas",
 };
 
 const fontSizes = {
   xs: "0.75rem",
   sm: "0.875rem",
   md: "1rem",
-  lg: "1.125rem",
-  xl: "1.25rem",
-  "2xl": "1.5rem",
-  "3xl": "1.875rem",
-  "4xl": "2.25rem",
+  lg: "clamp(1.125rem, 0.6vw + 1rem, 1.25rem)",
+  xl: "clamp(1.35rem, 1vw + 1rem, 1.6rem)",
+  "2xl": "clamp(1.7rem, 1.6vw + 1rem, 2.2rem)",
+  "3xl": "clamp(2.2rem, 2.4vw + 1rem, 3rem)",
+  "4xl": "clamp(2.6rem, 3vw + 1rem, 3.6rem)",
 };
 
 const lineHeights = {
@@ -76,6 +77,8 @@ const semanticTokens = {
     muted: { default: "neutral.600", _dark: "neutral.400" },
     border: { default: "neutral.200", _dark: "neutral.700" },
     link: { default: "primary.600", _dark: "primary.300" },
+    readingBg: { default: "neutral.50", _dark: "neutral.800" },
+    chromeBg: { default: "rgba(255,255,255,0.7)", _dark: "rgba(23,23,23,0.6)" },
   },
 };
 
@@ -85,13 +88,11 @@ const space = {
   2: "8px",
   3: "12px",
   4: "16px",
-  5: "20px",
-  6: "24px",
-  8: "32px",
-  10: "40px",
-  12: "48px",
-  16: "64px",
-  20: "80px",
+  5: "24px",
+  6: "32px",
+  7: "48px",
+  8: "64px",
+  9: "80px",
 };
 
 const radii = {
@@ -108,7 +109,11 @@ const shadows = {
 
 const components = {
   Button: {
-    baseStyle: { borderRadius: "md", fontWeight: 600 },
+    baseStyle: {
+      borderRadius: "md",
+      fontWeight: 600,
+      transition: "transform 150ms, box-shadow 150ms",
+    },
     variants: {
       solid: {
         bg: "primary.600",
@@ -127,17 +132,48 @@ const components = {
         _hover: { bg: "primary.50" },
         _active: { bg: "primary.100" },
       },
+      neon: {
+        bgGradient: "linear(to-r, primary.500, primary.700)",
+        color: "white",
+        _dark: { bgGradient: "linear(to-r, primary.400, primary.600)" },
+        boxShadow: "0 8px 24px rgba(0,102,204,0.25)",
+        _hover: {
+          transform: "translateY(-1px) scale(1.02)",
+          boxShadow: "0 10px 28px rgba(0,102,204,0.35)",
+        },
+        _active: { transform: "translateY(0) scale(0.99)" },
+      },
     },
   },
   Link: {
     baseStyle: {
       color: "link",
       textDecoration: "underline",
-      transition: "color 120ms",
-      _hover: { textDecoration: "none", opacity: 0.9 },
+      textUnderlineOffset: "2px",
+      textDecorationThickness: "from-font",
+      transition: "color 120ms, text-underline-offset 120ms",
+      _hover: { textDecoration: "underline", textUnderlineOffset: "4px", opacity: 0.9 },
+      _focusVisible: {
+        outline: "2px solid currentColor",
+        outlineOffset: "2px",
+      },
+      _dark: { textShadow: "0 0 0.35em rgba(0, 102, 204, 0.35)" },
+    },
+  },
+  IconButton: {
+    baseStyle: {
       _focusVisible: {
         outline: "2px solid",
         outlineColor: "link",
+        outlineOffset: "2px",
+      },
+    },
+  },
+  Card: {
+    baseStyle: {
+      _focusWithin: {
+        outline: "2px solid",
+        outlineColor: "primary.300",
         outlineOffset: "2px",
       },
     },
@@ -182,9 +218,25 @@ const styles = {
     "html, body": {
       bg: "bg",
       color: "text",
+      lineHeight: "base",
     },
     "::selection": {
       background: "primary.200",
+    },
+    ":root": {
+      "--motion-duration-quick": "120ms",
+      "--motion-duration-base": "200ms",
+      "--motion-duration-slow": "400ms",
+      "--motion-ease-standard": "cubic-bezier(.2,.8,.2,1)",
+    } as any,
+    ".prose": {
+      maxWidth: "72ch",
+    },
+    "h1, h2": {
+      transition: "font-variation-settings 150ms ease",
+    },
+    "h1:hover, h2:hover": {
+      fontVariationSettings: "'wght' 750",
     },
   },
 };

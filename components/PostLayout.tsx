@@ -1,8 +1,25 @@
 import Head from "next/head";
 import { ReactNode } from "react";
-import { chakra, Heading, Text, Container, HStack, Box, Tag } from "@chakra-ui/react";
+import {
+  chakra,
+  Heading,
+  Text,
+  Container,
+  HStack,
+  Box,
+  Tag,
+  IconButton,
+  Tooltip,
+  Flex,
+} from "@chakra-ui/react";
+import { useClipboard } from "@chakra-ui/react";
+import { FaTwitter, FaLinkedin } from "react-icons/fa";
+import NextLink from "next/link";
 import { MainLayout } from "./layout";
 import TOC from "./TOC";
+import { getPrevNext, getOrderedPosts, BlogMeta } from "../lib/blog";
+import { ReadingProgress } from "./ui/ReadingProgress";
+import { Reveal } from "./ui";
 
 type PostLayoutProps = {
   children: ReactNode;
@@ -22,9 +39,21 @@ export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
   const url = frontmatter?.slug
     ? `https://port-website-indol.vercel.app/blog/${frontmatter.slug}`
     : undefined;
+  const { hasCopied, onCopy } = useClipboard(url || "");
+  const nav = frontmatter?.slug ? getPrevNext(frontmatter.slug) : { prev: null, next: null };
+
+  const relatedPosts =
+    frontmatter?.slug && frontmatter.tags?.length
+      ? getOrderedPosts()
+          .filter((p) => p.slug !== frontmatter.slug)
+          .filter((p) => p.tags?.some((t) => frontmatter.tags?.includes(t)))
+          .slice(0, 4)
+      : [];
+
   return (
     <MainLayout>
-      <Container maxW="container.lg" px={{ base: 4, md: 6 }}>
+      <ReadingProgress />
+      <Container maxW="container.lg" px={{ base: 4, md: 6 }} bg="readingBg">
         <chakra.main p={0} mx="auto">
           <Head>
             <title>{title}</title>
@@ -37,12 +66,18 @@ export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
             {description ? <meta name="twitter:description" content={description} /> : null}
           </Head>
           {frontmatter?.title ? (
-            <Heading as="h1" size="2xl" mb={2}>
-              {frontmatter.title}
-            </Heading>
+            <Reveal>
+              <Heading as="h1" size="2xl" mb={2}>
+                {frontmatter.title}
+              </Heading>
+            </Reveal>
           ) : null}
           <HStack spacing={3} mb={6} align="center">
-            {frontmatter?.date ? <Text color="muted">{frontmatter.date}</Text> : null}
+            {frontmatter?.date ? (
+              <Text as="time" color="muted" fontSize="sm">
+                Last updated: {frontmatter.date}
+              </Text>
+            ) : null}
             {frontmatter?.tags?.map((t) => (
               <Tag key={t} size="sm">
                 {t}
@@ -56,6 +91,71 @@ export default function PostLayout({ children, frontmatter }: PostLayoutProps) {
           <Box sx={frontmatter?.title ? { "h1:first-of-type": { display: "none" } } : undefined}>
             {children}
           </Box>
+          <HStack spacing={2} mt={8}>
+            <Tooltip label={hasCopied ? "Copied" : "Copy link"} openDelay={200}>
+              <IconButton
+                aria-label="Copy link"
+                onClick={onCopy}
+                size="sm"
+                variant="ghost"
+                icon={<chakra.span>🔗</chakra.span>}
+              />
+            </Tooltip>
+            {url ? (
+              <>
+                <IconButton
+                  as="a"
+                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                    url
+                  )}&text=${encodeURIComponent(title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on Twitter"
+                  size="sm"
+                  variant="ghost"
+                  icon={<FaTwitter />}
+                />
+                <IconButton
+                  as="a"
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                    url
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on LinkedIn"
+                  size="sm"
+                  variant="ghost"
+                  icon={<FaLinkedin />}
+                />
+              </>
+            ) : null}
+          </HStack>
+          <Flex mt={8} justify="space-between">
+            {nav.prev ? (
+              <NextLink href={`/blog/${nav.prev.slug}`}>← {nav.prev.title}</NextLink>
+            ) : (
+              <span />
+            )}
+            {nav.next ? (
+              <NextLink href={`/blog/${nav.next.slug}`}>{nav.next.title} →</NextLink>
+            ) : (
+              <span />
+            )}
+          </Flex>
+          {relatedPosts.length > 0 && (
+            <Box mt={8}>
+              <Heading as="h2" size="lg" mb={3}>
+                Related posts
+              </Heading>
+              <HStack spacing={4} wrap="wrap">
+                {relatedPosts.map((p) => (
+                  <NextLink key={p.slug} href={`/blog/${p.slug}`}>
+                    {p.title}
+                  </NextLink>
+                ))}
+              </HStack>
+            </Box>
+          )}
         </chakra.main>
       </Container>
     </MainLayout>
