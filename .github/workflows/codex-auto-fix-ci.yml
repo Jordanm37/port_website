@@ -71,12 +71,8 @@ jobs:
           git config --global user.email "codex[bot]@users.noreply.github.com"
           git config --global user.name "codex[bot]"
 
-      - name: Create fix branch
-        id: branch
-        run: |
-          BRANCH_NAME="codex-auto-fix-ci-${{ github.event.workflow_run.head_branch }}-${{ github.run_id }}"
-          git checkout -b "$BRANCH_NAME"
-          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+      - name: Install dependencies
+        run: npm ci
 
       - name: Get CI failure details
         id: failure_details
@@ -104,10 +100,10 @@ jobs:
                 repo: context.repo.repo,
                 job_id: job.id
               });
-              errorLogs.push({
-                jobName: job.name,
-                logs: logs.data
-              });
+              // Limit logs to avoid oversized outputs/env vars
+              const raw = typeof logs.data === 'string' ? logs.data : String(logs.data);
+              const tail = raw.length > 50000 ? raw.slice(-50000) : raw;
+              errorLogs.push({ jobName: job.name, logs: tail });
             }
 
             return {
@@ -130,7 +126,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           echo "Attempting auto-fix using Codex..."
-          codex exec "Read .ci-failure.json to understand the lint/type/build failures. Apply minimal, safe edits to fix:\n- ESLint violations\n- TypeScript type errors\n- Next.js build errors\nKeep changes tightly scoped. Do not refactor unrelated code. Maintain existing formatting and comments."
+          codex exec "Read .ci-failure.json to understand the lint/type/build failures. Apply minimal, safe edits directly to files to fix: ESLint violations, TypeScript type errors, and Next.js build errors. Keep changes tightly scoped; do not refactor unrelated code. Maintain existing formatting and comments."
 
       - name: Validate after Codex edits (non-blocking)
         run: |
@@ -157,20 +153,22 @@ jobs:
             git add -A
             git commit -m "chore(ci): auto-fix lint/type/build issues via Codex"
             if [ "${CAN_PUSH_DIRECTLY}" = "true" ]; then
+              # Ensure we are on the PR head branch before pushing
+              git checkout "${HEAD_BRANCH}" 2>/dev/null || true
               if git push origin "${HEAD_BRANCH}"; then
                 echo "pushed_directly=true" >> $GITHUB_OUTPUT
               else
                 echo "pushed_directly=false" >> $GITHUB_OUTPUT
                 FIX_BRANCH="codex-auto-fix-ci-${HEAD_BRANCH}-${GITHUB_RUN_ID}"
-                git checkout -b "$FIX_BRANCH"
+                git checkout -B "$FIX_BRANCH"
                 git push origin "$FIX_BRANCH"
                 echo "fix_branch=$FIX_BRANCH" >> $GITHUB_OUTPUT
               fi
             else
               echo "pushed_directly=false" >> $GITHUB_OUTPUT
               FIX_BRANCH="codex-auto-fix-ci-${HEAD_BRANCH}-${GITHUB_RUN_ID}"
-              git checkout -b "$FIX_BRANCH"
-                git push origin "$FIX_BRANCH"
+              git checkout -B "$FIX_BRANCH"
+              git push origin "$FIX_BRANCH"
               echo "fix_branch=$FIX_BRANCH" >> $GITHUB_OUTPUT
             fi
           else
