@@ -106,20 +106,20 @@ jobs:
               errorLogs.push({ jobName: job.name, logs: tail });
             }
 
-            return {
+            const payload = {
               runUrl: run.data.html_url,
               failedJobs: failedJobs.map(j => j.name),
               errorLogs: errorLogs
             };
+            core.setOutput('result_b64', Buffer.from(JSON.stringify(payload), 'utf8').toString('base64'));
+            return payload;
 
       - name: Install Codex CLI
         run: npm install -g @openai/codex
 
       - name: Write CI failure JSON
-        env:
-          CI_FAILURE_JSON: ${{ toJSON(fromJSON(steps.failure_details.outputs.result)) }}
         run: |
-          node -e "require('fs').writeFileSync('.ci-failure.json', process.env.CI_FAILURE_JSON)"
+          echo "${{ steps.failure_details.outputs.result_b64 }}" | base64 -d > .ci-failure.json
 
       - name: Run Codex to repair CI issues
         env:
