@@ -2,7 +2,7 @@
  * @type {import('next-sitemap').IConfig}
  */
 module.exports = {
-  siteUrl: "https://port-website-indol.vercel.app",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://jordanmoshcovitis.com",
   generateRobotsTxt: true,
   changefreq: "weekly",
   priority: 0.7,

@@ -1,0 +1,17 @@
+---
+title: "Prompt audit harness"
+status: "Budding"
+updated: "2025-08-24"
+tags: ["evaluation", "prompts"]
+summary: "Quick harness to diff prompt variants with paired judgments."
+---
+
+Plan: paired eval on (A,B) prompts with the same seed set; score with rubric and shortjust.
+
+```ts
+type Judgment = { pass: boolean; reason: string };
+export async function judge(output: string): Promise<Judgment> {
+  // placeholder rubric; swap with LLM-as-judge
+  return { pass: /grounded|citation/.test(output), reason: "checks groundedness" };
+}
+```

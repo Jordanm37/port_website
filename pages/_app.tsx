@@ -1,10 +1,12 @@
 import type { AppProps } from "next/app";
 import { ChakraProvider, ColorModeScript, chakra } from "@chakra-ui/react";
 import "../styles/prism.css";
+import "katex/dist/katex.min.css";
 import Head from "next/head";
 import { MDXProvider } from "@mdx-js/react";
-import CodeBlock from "../components/ui/CodeBlock";
 import { MdxImage } from "../components/ui";
+import { Sidenote } from "../components/ui/Sidenote";
+import CodeBlock from "../components/ui/CodeBlock";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import theme from "../styles/theme";
 
@@ -39,6 +41,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           code: (p: any) => <chakra.code {...p} />,
           pre: (p: any) => <CodeBlock {...p} />,
           img: (p: any) => <MdxImage {...p} />,
+          Sidenote: (p: any) => <Sidenote {...p} />,
         }}
       >
         <chakra.div className={`${inter.variable} ${jbmono.variable}`}>

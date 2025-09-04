@@ -31,7 +31,7 @@ const Home: NextPage = () => {
         </Reveal>
         <VStack spacing={6} align="center">
           <Box textAlign="center">
-            <BrandLink href="/blog">Blog</BrandLink>
+            <BrandLink href="/writing">Writing</BrandLink>
           </Box>
           <Divider pt={3} w="full" />
           <HStack pt={4}>
