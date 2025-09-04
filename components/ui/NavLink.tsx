@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useCallback } from "react";
 import { Link as ChakraLink, LinkProps } from "@chakra-ui/react";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import { useRouter } from "next/router";
@@ -10,25 +10,44 @@ const NavLinkComponent = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
     const router = useRouter();
     const path = typeof href === "string" ? href : (href as any)?.pathname || "";
     const isActive = exact ? router.pathname === path : router.pathname.startsWith(path || "");
+    const rafRef = useRef<number | null>(null);
 
-    function onMouseMove(e: React.MouseEvent<HTMLAnchorElement>) {
+    const onMouseMove = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
       if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)
         return;
-      const el = e.currentTarget;
-      const rect = el.getBoundingClientRect();
-      const dx = (e.clientX - (rect.left + rect.width / 2)) / rect.width; // -0.5..0.5
-      el.style.transform = `translateY(-1px) translateX(${dx * 6}px)`;
-    }
 
-    function onMouseLeave(e: React.MouseEvent<HTMLAnchorElement>) {
+      // Cancel any pending animation frame
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+
+      // Use requestAnimationFrame for smooth 60fps updates
+      rafRef.current = requestAnimationFrame(() => {
+        const el = e.currentTarget;
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const dx = Math.max(
+          -0.5,
+          Math.min(0.5, (e.clientX - (rect.left + rect.width / 2)) / rect.width)
+        );
+        el.style.transform = `translateY(-1px) translateX(${dx * 6}px)`;
+      });
+    }, []);
+
+    const onMouseLeave = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+      // Cancel any pending animation
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
       e.currentTarget.style.transform = "";
-    }
+    }, []);
 
     return (
       <ChakraLink
         as={NextLink}
         href={href}
-        ref={ref as any}
+        ref={ref}
         position="relative"
         color={isActive ? "link" : undefined}
         aria-current={isActive ? "page" : undefined}

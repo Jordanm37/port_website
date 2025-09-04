@@ -97,7 +97,7 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
       const maxConnections = Math.min(particles.length, 50); // Limit total connections for performance
       const lineDist2 = lineDist * lineDist;
       let connectionsDrawn = 0;
-      
+
       for (let i = 0; i < particles.length && connectionsDrawn < maxConnections; i++) {
         const p = particles[i];
         // Only check a subset of particles for each particle to reduce O(n²) complexity
@@ -105,12 +105,12 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
         for (let k = 1; k <= checkCount; k++) {
           const j = i + k;
           if (j >= particles.length) break;
-          
+
           const q = particles[j];
           const dx = p.x - q.x;
           const dy = p.y - q.y;
           const d2 = dx * dx + dy * dy;
-          
+
           if (d2 < lineDist2) {
             const a = 1 - Math.sqrt(d2) / lineDist;
             ctxEl.globalAlpha = Math.max(0, a * 0.6);
@@ -134,12 +134,19 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
       mouse.y = e.clientY - rect.top;
     }
 
+    function onPointerLeave() {
+      // Reset mouse position when pointer leaves the canvas area
+      mouse.x = -9999;
+      mouse.y = -9999;
+    }
+
     const onResize = () => resize();
     resize();
 
     if (!prefersReduced) {
       rafRef.current = requestAnimationFrame(draw);
       window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerleave", onPointerLeave);
     } else {
       // render a single static frame
       draw();
@@ -150,6 +157,7 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerleave", onPointerLeave);
     };
   }, [color, density]);
 

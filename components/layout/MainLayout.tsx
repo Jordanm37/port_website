@@ -58,10 +58,17 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     const onResize = () => updateFromActive();
     requestAnimationFrame(updateFromActive);
     window.addEventListener("resize", onResize);
-    router.events?.on("routeChangeComplete", updateFromActive);
+
+    // Add null check for router.events
+    if (router.events) {
+      router.events.on("routeChangeComplete", updateFromActive);
+    }
+
     return () => {
       window.removeEventListener("resize", onResize);
-      router.events?.off("routeChangeComplete", updateFromActive);
+      if (router.events) {
+        router.events.off("routeChangeComplete", updateFromActive);
+      }
     };
   }, [router.events, updateFromActive]);
 

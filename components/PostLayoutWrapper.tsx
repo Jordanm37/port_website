@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import PostLayout from "./PostLayout";
+import { useBlogData } from "../lib/useBlogData";
 
 type PostLayoutWrapperProps = {
   children: ReactNode;
@@ -14,10 +15,11 @@ type PostLayoutWrapperProps = {
 };
 
 export default function PostLayoutWrapper({ children, frontmatter }: PostLayoutWrapperProps) {
-  // For now, we'll pass empty navigation and related posts
-  // In a future iteration, these could be passed via getStaticProps in a custom page
+  // Use the hook to get navigation and related posts data
+  const { navigation, relatedPosts } = useBlogData(frontmatter?.slug);
+
   return (
-    <PostLayout frontmatter={frontmatter} navigation={{ prev: null, next: null }} relatedPosts={[]}>
+    <PostLayout frontmatter={frontmatter} navigation={navigation} relatedPosts={relatedPosts}>
       {children}
     </PostLayout>
   );
