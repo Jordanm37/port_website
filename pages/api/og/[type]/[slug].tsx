@@ -1,9 +1,8 @@
-import type { NextRequest } from "next/server";
 import { ImageResponse } from "@vercel/og";
 
-export const config = { runtime: "edge" } as const;
+export const config = { runtime: "edge" };
 
-export default async function handler(req: NextRequest) {
+export default function handler(req: Request) {
   const { searchParams } = new URL(req.url);
   const type = searchParams.get("type") || "essay";
   const slug = searchParams.get("slug") || "Untitled";
