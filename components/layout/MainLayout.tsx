@@ -13,6 +13,7 @@ import {
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { track } from "../../lib/analytics";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { SkipLink } from "../ui";
 import { NavLink } from "../ui/NavLink";
@@ -103,30 +104,28 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                     About
                   </NavLink>
                   <NavLink
-                    href="/talks"
+                    href="/writing"
                     ref={talksRef as any}
                     onMouseEnter={() => measure(talksRef.current)}
                     onMouseLeave={updateFromActive}
                   >
-                    Talks
+                    Writing
                   </NavLink>
                   <NavLink
-                    href="/blog"
+                    href="/notes"
                     ref={blogRef as any}
                     onMouseEnter={() => measure(blogRef.current)}
                     onMouseLeave={updateFromActive}
                   >
-                    Blog
+                    Notes
                   </NavLink>
                   <NavLink
-                    href="/JORDAN_MOSHCOVITIS_Resume.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="/projects"
                     ref={cvRef as any}
                     onMouseEnter={() => measure(cvRef.current)}
                     onMouseLeave={updateFromActive}
                   >
-                    Résumé
+                    Projects
                   </NavLink>
                 </HStack>
                 <Box
@@ -196,10 +195,18 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 </ChakraLink>
                 <ChakraLink
                   as={NextLink}
-                  href="/blog"
+                  href="/writing"
                   _hover={{ textDecoration: "none", opacity: 0.8 }}
                 >
-                  Blog
+                  Writing
+                </ChakraLink>
+                <ChakraLink
+                  as={NextLink}
+                  href="/rss.xml"
+                  _hover={{ textDecoration: "none", opacity: 0.8 }}
+                  onClick={() => track("rss_click", { from: "footer" })}
+                >
+                  RSS
                 </ChakraLink>
                 {null}
                 <ChakraLink

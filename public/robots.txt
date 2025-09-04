@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://port-website-indol.vercel.app
+Host: https://jordanmoshcovitis.com
 
 # Sitemaps
-Sitemap: https://port-website-indol.vercel.app/sitemap.xml
+Sitemap: https://jordanmoshcovitis.com/sitemap.xml

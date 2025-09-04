@@ -2,45 +2,51 @@
 const fs = require("fs");
 const path = require("path");
 const RSS = require("rss");
+const matter = require("gray-matter");
 
-const SITE_URL = "https://port-website-indol.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://jordanmoshcovitis.com";
 
 function getPosts() {
-  const appBlogDir = path.join(process.cwd(), "app", "blog");
-  if (fs.existsSync(appBlogDir)) {
-    const dirs = fs
-      .readdirSync(appBlogDir, { withFileTypes: true })
-      .filter((d) => d.isDirectory())
-      .map((d) => d.name)
-      .filter((name) => fs.existsSync(path.join(appBlogDir, name, "page.mdx")));
-    return dirs.map((slug) => {
-      const raw = fs.readFileSync(path.join(appBlogDir, slug, "page.mdx"), "utf8");
-      const matter = require("gray-matter");
+  // Prefer Pages Router /writing directory
+  const writingDir = path.join(process.cwd(), "pages", "writing");
+  const posts = [];
+  if (fs.existsSync(writingDir)) {
+    const files = fs.readdirSync(writingDir).filter((f) => f.endsWith(".mdx"));
+    files.forEach((filename) => {
+      const slug = filename.replace(/\.mdx$/, "");
+      const fullPath = path.join(writingDir, filename);
+      const raw = fs.readFileSync(fullPath, "utf8");
       const { data } = matter(raw);
       const title = data.title || slug.replace(/-/g, " ");
       const date = data.date ? new Date(data.date) : new Date();
-      const url = `${SITE_URL}/blog/${slug}`;
-      return { title, url, date };
+      const url = `${SITE_URL}/writing/${slug}`;
+      posts.push({ title, url, date });
     });
   }
+  // Fallback: legacy /pages/blog/*.mdx
   const pagesBlogDir = path.join(process.cwd(), "pages", "blog");
-  if (!fs.existsSync(pagesBlogDir)) return [];
-  const files = fs.readdirSync(pagesBlogDir).filter((f) => f.endsWith(".mdx"));
-  return files.map((filename) => {
-    const slug = filename.replace(/\.mdx$/, "");
-    const title = slug.replace(/-/g, " ");
-    const url = `${SITE_URL}/blog/${slug}`;
-    const date = new Date();
-    return { title, url, date };
-  });
+  if (fs.existsSync(pagesBlogDir)) {
+    const files = fs.readdirSync(pagesBlogDir).filter((f) => f.endsWith(".mdx"));
+    files.forEach((filename) => {
+      const slug = filename.replace(/\.mdx$/, "");
+      const fullPath = path.join(pagesBlogDir, filename);
+      const raw = fs.readFileSync(fullPath, "utf8");
+      const { data } = matter(raw);
+      const title = data.title || slug.replace(/-/g, " ");
+      const date = data.date ? new Date(data.date) : new Date();
+      const url = `${SITE_URL}/writing/${slug}`;
+      posts.push({ title, url, date });
+    });
+  }
+  return posts.sort((a, b) => b.date - a.date);
 }
 
 function main() {
   const feed = new RSS({
-    title: "Jordan Moshcovitis – Blog",
+    title: "Jordan Moshcovitis – Writing",
     site_url: SITE_URL,
     feed_url: `${SITE_URL}/rss.xml`,
-    description: "MDX posts from the portfolio website",
+    description: "Essays and notes from the writing lab",
     language: "en",
   });
 

@@ -5,7 +5,7 @@ const path = require("path");
 const matter = require("gray-matter");
 
 function getBlogDir() {
-  return path.join(process.cwd(), "pages", "blog");
+  return path.join(process.cwd(), "pages", "writing");
 }
 
 function getOrderedPosts() {

@@ -1,0 +1,19 @@
+---
+title: "Answerability-first retrieval"
+status: "Evergreen"
+updated: "2025-08-28"
+tags: ["retrieval", "evaluation"]
+summary: "Optimizing for answerable queries before recall can lift end metrics."
+---
+
+import { Sidenote } from "../../components/ui/Sidenote";
+
+Claim: answerability filters (scope + anti-queries) reduce hallucination pressure.
+
+<Sidenote title="Evidence">
+  Internal runs: +35% vs baseline on exact-match QA; fewer retries.
+</Sidenote>
+
+```md
+Heuristic: detect unanswerable scopes early and decline; swap to human or reframe.
+```

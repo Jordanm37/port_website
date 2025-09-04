@@ -4,4 +4,7 @@ export const siteUrl: string =
 export const bookingUrl: string =
   process.env.NEXT_PUBLIC_BOOKING_URL?.trim() || "mailto:jordan.moshcovitis@gmail.com";
 
+export const consultingUrl: string =
+  process.env.NEXT_PUBLIC_CONSULTING_URL?.trim() || "https://your-consulting-company.com";
+
 export default siteUrl;

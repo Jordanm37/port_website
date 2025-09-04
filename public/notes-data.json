@@ -1,0 +1,63 @@
+{
+  "evergreen": {
+    "meta": {
+      "slug": "evergreen",
+      "title": "Answerability-first retrieval",
+      "updated": "2025-08-28",
+      "tags": ["retrieval", "evaluation"],
+      "status": "Evergreen"
+    },
+    "related": [
+      {
+        "slug": "budding",
+        "title": "Prompt audit harness",
+        "updated": "2025-08-24",
+        "tags": ["evaluation", "prompts"],
+        "status": "Budding"
+      },
+      {
+        "slug": "seedling",
+        "title": "Vector cache eviction sketch",
+        "updated": "2025-08-22",
+        "tags": ["retrieval", "caching"],
+        "status": "Seedling"
+      }
+    ]
+  },
+  "budding": {
+    "meta": {
+      "slug": "budding",
+      "title": "Prompt audit harness",
+      "updated": "2025-08-24",
+      "tags": ["evaluation", "prompts"],
+      "status": "Budding"
+    },
+    "related": [
+      {
+        "slug": "evergreen",
+        "title": "Answerability-first retrieval",
+        "updated": "2025-08-28",
+        "tags": ["retrieval", "evaluation"],
+        "status": "Evergreen"
+      }
+    ]
+  },
+  "seedling": {
+    "meta": {
+      "slug": "seedling",
+      "title": "Vector cache eviction sketch",
+      "updated": "2025-08-22",
+      "tags": ["retrieval", "caching"],
+      "status": "Seedling"
+    },
+    "related": [
+      {
+        "slug": "evergreen",
+        "title": "Answerability-first retrieval",
+        "updated": "2025-08-28",
+        "tags": ["retrieval", "evaluation"],
+        "status": "Evergreen"
+      }
+    ]
+  }
+}

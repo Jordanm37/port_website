@@ -1,0 +1,22 @@
+---
+title: "Vector cache eviction sketch"
+status: "Seedling"
+updated: "2025-08-22"
+tags: ["retrieval", "caching"]
+summary: "Exploring eviction policies for retrieval caches under temporal drift."
+---
+
+import { Sidenote } from "../../components/ui/Sidenote";
+
+<Sidenote title="Context">Early thought. Expect changes as I test with live traces.</Sidenote>
+
+Idea: combine recency with error-aware eviction. Track a light failure score per key (misses / outdated).
+
+```ts
+type Entry = { key: string; lastHit: number; misses: number };
+function score(e: Entry, now = Date.now()) {
+  const recency = 1 / Math.max(1, (now - e.lastHit) / 6e4); // minutes
+  const error = 1 + e.misses;
+  return recency / error;
+}
+```

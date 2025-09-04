@@ -1,79 +1,40 @@
-/* Minimal Prism-like theme for rehype-prism-plus */
-pre[class*="language-"] {
-  padding: 1rem;
+/* Shiki (rehype-pretty-code) baseline styles */
+pre code {
+  counter-reset: line;
+}
+code .line {
+  display: block;
+  padding-inline: 16px;
+}
+code .line::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 3ch;
+  margin-right: 16px;
+  opacity: 0.5;
+  color: var(--oklch-muted, #737373);
+  text-align: right;
+}
+pre {
+  border: 1px solid var(--oklch-border, #d4d4d4);
+  border-radius: 10px;
+  padding: 12px 0;
   overflow: auto;
-  border-radius: 6px;
 }
 
-/* Light mode */
-html[data-theme="light"] pre[class*="language-"] {
-  background: #f5f5f5;
-  color: #1f2937;
+/* Highlighted lines (Shiki pretty-code uses data attributes) */
+code .line[data-highlighted] {
+  background: color-mix(in oklch, var(--oklch-accent, #2563eb) 9%, transparent);
+  border-left: 2px solid var(--oklch-accent, #2563eb);
 }
 
-/* Dark mode */
-html[data-theme="dark"] pre[class*="language-"] {
-  background: #1e1e1e;
-  color: #d4d4d4;
+/* Diff styling (optional) */
+code .line[data-diff="add"] {
+  background: color-mix(in oklch, #22c55e 10%, transparent);
 }
-.line-numbers .line-numbers-rows {
-  border-right: 1px solid #444;
-}
-.line-numbers-rows > span:before {
-  color: #666;
+code .line[data-diff="remove"] {
+  background: color-mix(in oklch, #ef4444 10%, transparent);
 }
 
-code[class*="language-"] {
-  background: transparent;
-}
-
-.token.comment,
-.token.prolog,
-.token.doctype,
-.token.cdata {
-  color: #6a9955;
-}
-
-.token.punctuation {
-  color: #d4d4d4;
-}
-.token.property,
-.token.tag,
-.token.constant,
-.token.symbol {
-  color: #569cd6;
-}
-.token.boolean,
-.token.number {
-  color: #b5cea8;
-}
-.token.selector,
-.token.attr-name,
-.token.string,
-.token.char,
-.token.builtin,
-.token.inserted {
-  color: #ce9178;
-}
-.token.operator,
-.token.entity,
-.token.url {
-  color: #d4d4d4;
-}
-.token.atrule,
-.token.attr-value,
-.token.keyword {
-  color: #c586c0;
-}
-.token.function,
-.token.class-name {
-  color: #dcdcaa;
-}
-.token.regex,
-.token.important,
-.token.variable {
-  color: #d16969;
-}
-.token.deleted {
-  color: #d16969;
-}
+/* Header chrome (language shown via CodeBlock header) */

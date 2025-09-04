@@ -22,9 +22,10 @@ const NavLinkComponent = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
 
     // Cleanup on unmount
     useEffect(() => {
+      const currentRaf = rafRef;
       return () => {
-        if (rafRef.current) {
-          cancelAnimationFrame(rafRef.current);
+        if (currentRaf.current) {
+          cancelAnimationFrame(currentRaf.current);
         }
       };
     }, []);
