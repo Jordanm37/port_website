@@ -26,8 +26,10 @@ export function useBlogData(slug?: string): BlogData {
           setData(allData[slug]);
         }
       })
-      .catch(() => {
-        // Silently fail if data not available
+      .catch((error) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('Failed to load blog data:', error);
+        }
       });
   }, [slug]);
 

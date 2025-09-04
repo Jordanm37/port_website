@@ -47,7 +47,7 @@ const NavLinkComponent = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
       <ChakraLink
         as={NextLink}
         href={href}
-        ref={ref}
+        ref={ref as React.Ref<HTMLAnchorElement>}
         position="relative"
         color={isActive ? "link" : undefined}
         aria-current={isActive ? "page" : undefined}

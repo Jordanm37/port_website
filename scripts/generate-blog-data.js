@@ -26,8 +26,7 @@ function getOrderedPosts() {
   });
 }
 
-function getPrevNext(slug) {
-  const posts = getOrderedPosts();
+function getPrevNext(slug, posts) {
   const index = posts.findIndex((p) => p.slug === slug);
   if (index === -1) return { prev: null, next: null };
   const prev = index > 0 ? posts[index - 1] : null;
@@ -35,20 +34,21 @@ function getPrevNext(slug) {
   return { prev, next };
 }
 
-function getRelatedPosts(slug, tags) {
+function getRelatedPosts(slug, tags, posts) {
   if (!tags || tags.length === 0) return [];
-  return getOrderedPosts()
+  return posts
     .filter((p) => p.slug !== slug && p.tags?.some((t) => tags.includes(t)))
     .slice(0, 3);
 }
 
 function generateBlogData() {
+  // Cache posts to avoid repeated file reads
   const posts = getOrderedPosts();
   const blogData = {};
 
   posts.forEach((post) => {
-    const navigation = getPrevNext(post.slug);
-    const relatedPosts = getRelatedPosts(post.slug, post.tags);
+    const navigation = getPrevNext(post.slug, posts);
+    const relatedPosts = getRelatedPosts(post.slug, post.tags, posts);
     blogData[post.slug] = {
       navigation,
       relatedPosts,
