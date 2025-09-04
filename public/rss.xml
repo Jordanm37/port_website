@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title><![CDATA[Jordan Moshcovitis – Blog]]></title>
-        <description><![CDATA[MDX posts from the portfolio website]]></description>
-        <link>https://port-website-indol.vercel.app</link>
+        <title><![CDATA[Jordan Moshcovitis – Writing]]></title>
+        <description><![CDATA[Essays and notes from the writing lab]]></description>
+        <link>https://jordanmoshcovitis.com</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Thu, 04 Sep 2025 07:42:30 GMT</lastBuildDate>
-        <atom:link href="https://port-website-indol.vercel.app/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Thu, 04 Sep 2025 10:31:34 GMT</lastBuildDate>
+        <atom:link href="https://jordanmoshcovitis.com/rss.xml" rel="self" type="application/rss+xml"/>
         <language><![CDATA[en]]></language>
         <item>
-            <title><![CDATA[hello world]]></title>
-            <link>https://port-website-indol.vercel.app/blog/hello-world</link>
-            <guid isPermaLink="true">https://port-website-indol.vercel.app/blog/hello-world</guid>
-            <pubDate>Thu, 04 Sep 2025 07:42:30 GMT</pubDate>
+            <title><![CDATA[Second post]]></title>
+            <link>https://jordanmoshcovitis.com/writing/second-post</link>
+            <guid isPermaLink="true">https://jordanmoshcovitis.com/writing/second-post</guid>
+            <pubDate>Tue, 02 Sep 2025 00:00:00 GMT</pubDate>
         </item>
         <item>
-            <title><![CDATA[second post]]></title>
-            <link>https://port-website-indol.vercel.app/blog/second-post</link>
-            <guid isPermaLink="true">https://port-website-indol.vercel.app/blog/second-post</guid>
-            <pubDate>Thu, 04 Sep 2025 07:42:30 GMT</pubDate>
+            <title><![CDATA[Hello world]]></title>
+            <link>https://jordanmoshcovitis.com/writing/hello-world</link>
+            <guid isPermaLink="true">https://jordanmoshcovitis.com/writing/hello-world</guid>
+            <pubDate>Mon, 01 Sep 2025 00:00:00 GMT</pubDate>
         </item>
     </channel>
 </rss>
