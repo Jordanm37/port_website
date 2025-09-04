@@ -6,6 +6,8 @@ tags: ["retrieval", "caching"]
 summary: "Exploring eviction policies for retrieval caches under temporal drift."
 ---
 
+import { Sidenote } from "../../components/ui/Sidenote";
+
 <Sidenote title="Context">Early thought. Expect changes as I test with live traces.</Sidenote>
 
 Idea: combine recency with error-aware eviction. Track a light failure score per key (misses / outdated).
