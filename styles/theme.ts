@@ -22,16 +22,17 @@ const fontSizes = {
   sm: "0.875rem",
   md: "1rem",
   lg: "clamp(1.125rem, 0.6vw + 1rem, 1.25rem)",
-  xl: "clamp(1.35rem, 1vw + 1rem, 1.6rem)",
-  "2xl": "clamp(1.7rem, 1.6vw + 1rem, 2.2rem)",
-  "3xl": "clamp(2.2rem, 2.4vw + 1rem, 3rem)",
+  // Fluid headings per visual spec
+  xl: "clamp(1.5rem, 1.2vw + 1rem, 1.7rem)", // h3
+  "2xl": "clamp(2.0rem, 2.5vw + 1rem, 2.4rem)", // h2
+  "3xl": "clamp(2.6rem, 4vw + 1rem, 3.4rem)", // h1
   "4xl": "clamp(2.6rem, 3vw + 1rem, 3.6rem)",
 };
 
 const lineHeights = {
   short: 1.2,
-  base: 1.5,
-  tall: 1.65,
+  base: 1.65,
+  tall: 1.7,
 };
 
 const letterSpacings = {
@@ -72,12 +73,12 @@ const colors = {
 
 const semanticTokens = {
   colors: {
-    bg: { default: "white", _dark: "neutral.900" },
-    text: { default: "neutral.800", _dark: "neutral.100" },
-    muted: { default: "neutral.600", _dark: "neutral.400" },
-    border: { default: "neutral.200", _dark: "neutral.700" },
-    link: { default: "primary.600", _dark: "primary.300" },
-    readingBg: { default: "neutral.50", _dark: "neutral.800" },
+    bg: { default: "var(--oklch-bg, white)", _dark: "var(--oklch-bg, #0f0f10)" },
+    text: { default: "var(--oklch-text, #171717)", _dark: "var(--oklch-text, #f3f4f6)" },
+    muted: { default: "var(--oklch-muted, #737373)", _dark: "var(--oklch-muted, #9ca3af)" },
+    border: { default: "var(--oklch-border, #d4d4d4)", _dark: "var(--oklch-border, #374151)" },
+    link: { default: "var(--oklch-accent, #2563eb)", _dark: "var(--oklch-accent, #60a5fa)" },
+    readingBg: { default: "var(--oklch-surface, #fafafa)", _dark: "var(--oklch-surface, #111114)" },
     chromeBg: { default: "rgba(255,255,255,0.7)", _dark: "rgba(23,23,23,0.6)" },
   },
 };
@@ -112,23 +113,28 @@ const components = {
     baseStyle: {
       borderRadius: "md",
       fontWeight: 600,
-      transition: "transform 150ms, box-shadow 150ms",
+      transition: "transform var(--t-fast, 140ms), box-shadow var(--t-fast, 140ms)",
+      _focusVisible: {
+        outline: "2px solid",
+        outlineColor: "link",
+        outlineOffset: "3px",
+      },
     },
     variants: {
       solid: {
-        bg: "primary.600",
+        bg: "var(--oklch-accent, var(--chakra-colors-primary-600))",
         color: "white",
-        _hover: { bg: "primary.700" },
-        _active: { bg: "primary.800" },
+        _hover: { bg: "var(--oklch-accent-hover, var(--chakra-colors-primary-700))" },
+        _active: { bg: "var(--oklch-accent, var(--chakra-colors-primary-800))" },
       },
       outline: {
-        borderColor: "primary.600",
-        color: "primary.700",
+        borderColor: "var(--oklch-accent, var(--chakra-colors-primary-600))",
+        color: "var(--oklch-accent, var(--chakra-colors-primary-700))",
         _hover: { bg: "primary.50" },
         _active: { bg: "primary.100" },
       },
       ghost: {
-        color: "primary.700",
+        color: "var(--oklch-accent, var(--chakra-colors-primary-700))",
         _hover: { bg: "primary.50" },
         _active: { bg: "primary.100" },
       },
@@ -149,13 +155,13 @@ const components = {
     baseStyle: {
       color: "link",
       textDecoration: "underline",
-      textUnderlineOffset: "2px",
-      textDecorationThickness: "from-font",
-      transition: "color 120ms, text-underline-offset 120ms",
-      _hover: { textDecoration: "underline", textUnderlineOffset: "4px", opacity: 0.9 },
+      textUnderlineOffset: "0.12em",
+      textDecorationThickness: "0.08em",
+      transition: "color var(--t-fast, 140ms), text-underline-offset var(--t-fast, 140ms)",
+      _hover: { textDecoration: "underline", textUnderlineOffset: "0.2em", opacity: 0.9 },
       _focusVisible: {
         outline: "2px solid currentColor",
-        outlineOffset: "2px",
+        outlineOffset: "3px",
       },
       _dark: { textShadow: "0 0 0.35em rgba(0, 102, 204, 0.35)" },
     },
@@ -165,7 +171,7 @@ const components = {
       _focusVisible: {
         outline: "2px solid",
         outlineColor: "link",
-        outlineOffset: "2px",
+        outlineOffset: "3px",
       },
     },
   },
@@ -219,21 +225,40 @@ const styles = {
       bg: "bg",
       color: "text",
       lineHeight: "base",
+      fontSize: "1.15rem",
     },
     "::selection": {
       background: "primary.200",
     },
     ":root": {
-      "--motion-duration-quick": "120ms",
-      "--motion-duration-base": "200ms",
-      "--motion-duration-slow": "400ms",
-      "--motion-ease-standard": "cubic-bezier(.2,.8,.2,1)",
+      // Motion tokens
+      "--t-fast": ".14s",
+      "--t-med": ".22s",
+      "--easing": "cubic-bezier(.2,.8,.2,1)",
+
+      // OKLCH color variables (light defaults)
+      "--oklch-bg": "oklch(0.98 0.005 260)",
+      "--oklch-surface": "oklch(0.96 0.006 260)",
+      "--oklch-text": "oklch(0.16 0.03 260)",
+      "--oklch-muted": "oklch(0.55 0.02 260)",
+      "--oklch-accent": "oklch(0.68 0.16 280)",
+      "--oklch-accent-hover": "oklch(0.64 0.18 280)",
+      "--oklch-border": "oklch(0.86 0.01 260)",
+    } as any,
+    'html[data-theme="dark"]': {
+      "--oklch-bg": "oklch(0.16 0.02 260)",
+      "--oklch-surface": "oklch(0.20 0.02 260)",
+      "--oklch-text": "oklch(0.95 0.02 260)",
+      "--oklch-muted": "oklch(0.72 0.02 260)",
+      "--oklch-accent": "oklch(0.68 0.16 280)",
+      "--oklch-accent-hover": "oklch(0.64 0.18 280)",
+      "--oklch-border": "oklch(0.30 0.01 260)",
     } as any,
     ".prose": {
       maxWidth: "72ch",
     },
     "h1, h2": {
-      transition: "font-variation-settings 150ms ease",
+      transition: "font-variation-settings var(--t-fast, 140ms) var(--easing, ease)",
     },
     "h1:hover, h2:hover": {
       fontVariationSettings: "'wght' 750",
