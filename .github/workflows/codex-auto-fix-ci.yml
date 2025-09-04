@@ -22,7 +22,8 @@ jobs:
     if: |
       github.event.workflow_run.conclusion == 'failure' &&
       github.event.workflow_run.pull_requests[0] &&
-      !startsWith(github.event.workflow_run.head_branch, 'codex-auto-fix-ci-')
+      !startsWith(github.event.workflow_run.head_branch, 'codex-auto-fix-ci-') &&
+      !startsWith(github.event.workflow_run.head_commit.message, 'chore(ci): auto-fix lint/type/build issues via Codex')
     runs-on: ubuntu-latest
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -106,20 +107,20 @@ jobs:
               errorLogs.push({ jobName: job.name, logs: tail });
             }
 
-            return {
+            const payload = {
               runUrl: run.data.html_url,
               failedJobs: failedJobs.map(j => j.name),
               errorLogs: errorLogs
             };
+            core.setOutput('result_b64', Buffer.from(JSON.stringify(payload), 'utf8').toString('base64'));
+            return payload;
 
       - name: Install Codex CLI
         run: npm install -g @openai/codex
 
       - name: Write CI failure JSON
-        env:
-          CI_FAILURE_JSON: ${{ toJSON(fromJSON(steps.failure_details.outputs.result)) }}
         run: |
-          node -e "require('fs').writeFileSync('.ci-failure.json', process.env.CI_FAILURE_JSON)"
+          echo "${{ steps.failure_details.outputs.result_b64 }}" | base64 -d > .ci-failure.json
 
       - name: Run Codex to repair CI issues
         env:
@@ -152,6 +153,10 @@ jobs:
           if [ -n "$(git status --porcelain)" ]; then
             git add -A
             git commit -m "chore(ci): auto-fix lint/type/build issues via Codex"
+            COMMIT_SHA=$(git rev-parse HEAD)
+            echo "commit_sha=$COMMIT_SHA" >> $GITHUB_OUTPUT
+            CHANGED_FILES_B64=$(git diff-tree --no-commit-id --name-only -r "$COMMIT_SHA" | base64 | tr -d '\n')
+            echo "changed_files_b64=$CHANGED_FILES_B64" >> $GITHUB_OUTPUT
             if [ "${CAN_PUSH_DIRECTLY}" = "true" ]; then
               # Ensure we are on the PR head branch before pushing
               git checkout "${HEAD_BRANCH}" 2>/dev/null || true
@@ -183,6 +188,8 @@ jobs:
           HEAD_BRANCH: ${{ steps.resolve_ref.outputs.head_branch }}
           BASE_BRANCH: ${{ steps.resolve_ref.outputs.base_branch }}
           FIX_BRANCH: ${{ steps.push_result.outputs.fix_branch }}
+          CHANGED_FILES_B64: ${{ steps.push_result.outputs.changed_files_b64 }}
+          COMMIT_SHA: ${{ steps.push_result.outputs.commit_sha }}
         with:
           script: |
             const prs = context.payload.workflow_run.pull_requests || [];
@@ -191,12 +198,27 @@ jobs:
             const repo = context.repo.repo;
             const prNumber = prs[0].number;
             const pushedDirectly = process.env.PUSHED_DIRECTLY;
+            const changedFilesB64 = process.env.CHANGED_FILES_B64 || '';
+            let changedSection = '';
+            if (changedFilesB64) {
+              try {
+                const files = Buffer.from(changedFilesB64, 'base64').toString('utf8').split('\n').filter(Boolean).slice(0, 20);
+                if (files.length) {
+                  const branch = pushedDirectly === 'true' ? process.env.HEAD_BRANCH : process.env.FIX_BRANCH;
+                  const items = files.map(f => `- [${f}](https://github.com/${owner}/${repo}/blob/${branch}/${f})`).join('\n');
+                  changedSection = ['','**Changed files**','', items].join('\n');
+                }
+              } catch (e) {
+                core.warning('Failed to decode changed files list');
+              }
+            }
             let body;
             if (pushedDirectly === 'true') {
               body = [
                 '## 🤖 CI Auto-Fix (Codex) Applied',
                 '',
                 `Changes were pushed directly to the PR head branch \`${process.env.HEAD_BRANCH}\`.`,
+                changedSection,
                 '',
                 `_Run ID: ${context.runId}_`
               ].join('\n');
@@ -206,6 +228,7 @@ jobs:
                 '## 🤖 CI Auto-Fix (Codex) Available',
                 '',
                 `Branch \`${process.env.FIX_BRANCH}\` with fixes has been pushed to this repo (fork PR or protected branch).`,
+                changedSection,
                 '',
                 `[**→ Create pull request**](${compareUrl})`,
                 '',
