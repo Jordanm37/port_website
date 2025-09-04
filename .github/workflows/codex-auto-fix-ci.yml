@@ -127,7 +127,35 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           echo "Attempting auto-fix using Codex..."
-          codex exec "Read .ci-failure.json to understand the lint/type/build failures. Apply minimal, safe edits directly to files to fix: ESLint violations, TypeScript type errors, and Next.js build errors. Keep changes tightly scoped; do not refactor unrelated code. Maintain existing formatting and comments."
+          mkdir -p .codex
+          PROMPT=$(cat << 'TXT'
+          You are operating inside a GitHub Actions runner at the repository root.
+          Task: Read .ci-failure.json to understand ESLint/TypeScript/Next.js build failures. Then FIX THEM by applying minimal, safe edits directly to the repository files.
+
+          Requirements:
+          - Keep edits tightly scoped to address only the reported issues.
+          - Preserve formatting and comments.
+          - Do NOT write suggested diffs only; actually modify the files in place.
+          - If a direct edit is not possible, additionally write a unified git diff patch relative to repo root to .codex/auto-fix.patch so the workflow can apply it.
+          - Do NOT modify lockfiles unless required by a code change.
+
+          After making edits, re-check logic locally (mentally) to ensure fixes are consistent.
+          TXT)
+          codex exec "$PROMPT"
+
+      - name: Apply Codex patch if present
+        run: |
+          if [ -f .codex/auto-fix.patch ]; then
+            echo "Applying Codex-generated patch..."
+            git apply -p0 .codex/auto-fix.patch || git apply .codex/auto-fix.patch || true
+          fi
+
+      - name: Cleanup analysis artifacts and non-code churn
+        run: |
+          # prevent committing analysis artifacts
+          rm -f .ci-failure.json || true
+          # avoid committing lockfile churn from CI environment
+          git restore --source=HEAD --staged --worktree yarn.lock 2>/dev/null || true
 
       - name: Validate after Codex edits (non-blocking)
         run: |
