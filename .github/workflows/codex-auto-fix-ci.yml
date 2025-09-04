@@ -156,6 +156,7 @@ jobs:
           rm -f .ci-failure.json || true
           # avoid committing lockfile churn from CI environment
           git restore --source=HEAD --staged --worktree yarn.lock 2>/dev/null || true
+          git restore --source=HEAD --staged --worktree package-lock.json 2>/dev/null || true
 
       - name: Validate after Codex edits (non-blocking)
         run: |
