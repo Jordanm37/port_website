@@ -28,3 +28,51 @@ This project uses GitHub Actions for CI and automated remediation of common issu
 - `npm run typecheck`: TypeScript check (no emit)
 - `npm run lint`: ESLint
 - `npm run new:post`: scaffold a new MDX post
+
+## Getting Started
+
+Prerequisites:
+
+- Node 22.x (see `.nvmrc`)
+
+Steps:
+
+1. Use the pinned Node version
+
+```bash
+nvm use || nvm install
+```
+
+2. Install dependencies
+
+```bash
+npm ci
+```
+
+3. Start the dev server
+
+```bash
+npm run dev
+```
+
+Notes:
+
+- Commits auto-format staged files via husky + lint-staged.
+- Type-check and lint locally with `npm run typecheck` and `npm run lint`.
+
+## Deployment (Vercel)
+
+- Framework preset: Next.js
+- Node: picked up from `.nvmrc` (22.x) / `engines.node`
+- Build command: `npm run build` (postbuild runs `next-sitemap` and RSS generation)
+- Output: Next.js default
+
+Optional CI visibility for previews:
+
+- Set the following GitHub Actions secrets if you want Codex to surface Vercel preview info on PRs:
+  - `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`
+
+Codex auto-fix (CI remediation):
+
+- Requires `OPENAI_API_KEY` in GitHub Actions secrets.
+- See `docs/auto-fix.md` for details.
