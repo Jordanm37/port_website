@@ -4,20 +4,20 @@
         <description><![CDATA[MDX posts from the portfolio website]]></description>
         <link>https://port-website-indol.vercel.app</link>
         <generator>RSS for Node</generator>
-        <lastBuildDate>Thu, 04 Sep 2025 02:03:07 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 04 Sep 2025 04:34:40 GMT</lastBuildDate>
         <atom:link href="https://port-website-indol.vercel.app/rss.xml" rel="self" type="application/rss+xml"/>
         <language><![CDATA[en]]></language>
         <item>
             <title><![CDATA[hello world]]></title>
             <link>https://port-website-indol.vercel.app/blog/hello-world</link>
             <guid isPermaLink="true">https://port-website-indol.vercel.app/blog/hello-world</guid>
-            <pubDate>Thu, 04 Sep 2025 02:03:07 GMT</pubDate>
+            <pubDate>Thu, 04 Sep 2025 04:34:40 GMT</pubDate>
         </item>
         <item>
             <title><![CDATA[second post]]></title>
             <link>https://port-website-indol.vercel.app/blog/second-post</link>
             <guid isPermaLink="true">https://port-website-indol.vercel.app/blog/second-post</guid>
-            <pubDate>Thu, 04 Sep 2025 02:03:07 GMT</pubDate>
+            <pubDate>Thu, 04 Sep 2025 04:34:40 GMT</pubDate>
         </item>
     </channel>
 </rss>

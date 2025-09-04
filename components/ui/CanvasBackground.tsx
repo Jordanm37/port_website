@@ -11,20 +11,23 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
   const [isVisible, setIsVisible] = useState(true);
 
   // Memoize expensive calculations and constants
-  const constants = useMemo(() => ({
-    lineDist: 100,
-    lineDist2: 100 * 100, // Pre-calculate squared distance
-    mouseInfluence: 80,
-    mouseInfluence2: 80 * 80, // Pre-calculate squared influence
-    friction: 0.995,
-    mouseForce: 0.0007,
-    maxConnections: 50,
-    particleCheckCount: 8,
-    velocityRange: 0.3,
-    particleRadius: 1.1,
-    connectionAlpha: 0.6,
-    minDistance: 20,
-  }), []);
+  const constants = useMemo(
+    () => ({
+      lineDist: 100,
+      lineDist2: 100 * 100, // Pre-calculate squared distance
+      mouseInfluence: 80,
+      mouseInfluence2: 80 * 80, // Pre-calculate squared influence
+      friction: 0.995,
+      mouseForce: 0.0007,
+      maxConnections: 50,
+      particleCheckCount: 8,
+      velocityRange: 0.3,
+      particleRadius: 1.1,
+      connectionAlpha: 0.6,
+      minDistance: 20,
+    }),
+    []
+  );
 
   useEffect(() => {
     const prefersReduced =
@@ -89,7 +92,9 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
         const dy = mouse.y - p.y;
         const md2 = dx * dx + dy * dy;
         if (md2 < constants.mouseInfluence2) {
-          const f = constants.mouseForce * (constants.mouseInfluence / Math.max(constants.minDistance, Math.sqrt(md2)));
+          const f =
+            constants.mouseForce *
+            (constants.mouseInfluence / Math.max(constants.minDistance, Math.sqrt(md2)));
           p.vx += dx * f;
           p.vy += dy * f;
         }
@@ -164,7 +169,7 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
     }
 
     const onResize = () => resize();
-    
+
     // IntersectionObserver to pause animation when off-screen
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -172,7 +177,7 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
       },
       { threshold: 0 }
     );
-    
+
     observer.observe(canvasEl);
     resize();
 
@@ -192,7 +197,7 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
       observer.disconnect();
       // Event listeners are automatically removed via AbortController
     };
-  }, [color, density, isVisible]);
+  }, [color, density, isVisible, constants]);
 
   return (
     <canvas
