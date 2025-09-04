@@ -38,10 +38,31 @@ jobs:
             if (!prs[0]) { core.setFailed('No PR context'); return; }
             core.setOutput('number', prs[0].number);
 
+      - name: Resolve checkout ref and push strategy
+        id: resolve_ref
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prs = context.payload.workflow_run.pull_requests || [];
+            if (!prs[0]) { core.setFailed('No PR context'); return; }
+            const prNumber = prs[0].number;
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+            const isFork = pr.head.repo.full_name !== pr.base.repo.full_name;
+            const checkoutRef = isFork ? `refs/pull/${prNumber}/merge` : context.payload.workflow_run.head_branch;
+            core.setOutput('checkout_ref', checkoutRef);
+            core.setOutput('is_fork', String(isFork));
+            core.setOutput('head_branch', pr.head.ref);
+            core.setOutput('base_branch', pr.base.ref);
+            core.setOutput('can_push_directly', String(!isFork));
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_branch }}
+          ref: ${{ steps.resolve_ref.outputs.checkout_ref }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -79,10 +100,10 @@ jobs:
                 repo: context.repo.repo,
                 job_id: job.id
               });
-              errorLogs.push({
-                jobName: job.name,
-                logs: logs.data
-              });
+              // Limit logs to avoid oversized outputs/env vars
+              const raw = typeof logs.data === 'string' ? logs.data : String(logs.data);
+              const tail = raw.length > 50000 ? raw.slice(-50000) : raw;
+              errorLogs.push({ jobName: job.name, logs: tail });
             }
 
             return {
@@ -105,7 +126,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           echo "Attempting auto-fix using Codex..."
-          codex exec "Read .ci-failure.json to understand the lint/type/build failures. Apply minimal, safe edits directly to the repository to fix ESLint violations, TypeScript type errors, and Next.js build errors. Keep changes tightly scoped and do not refactor unrelated code. Maintain existing formatting and comments."
+          codex exec "Read .ci-failure.json to understand the lint/type/build failures. Apply minimal, safe edits directly to files to fix: ESLint violations, TypeScript type errors, and Next.js build errors. Keep changes tightly scoped; do not refactor unrelated code. Maintain existing formatting and comments."
 
       - name: Validate after Codex edits (non-blocking)
         run: |
@@ -123,29 +144,80 @@ jobs:
           vercel ls --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID" --confirm | head -n 50 | cat || true
 
       - name: Commit and push changes (if any) to PR head branch
+        id: push_result
+        env:
+          CAN_PUSH_DIRECTLY: ${{ steps.resolve_ref.outputs.can_push_directly }}
+          HEAD_BRANCH: ${{ steps.resolve_ref.outputs.head_branch }}
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git add -A
             git commit -m "chore(ci): auto-fix lint/type/build issues via Codex"
-            git push origin "${{ github.event.workflow_run.head_branch }}"
+            if [ "${CAN_PUSH_DIRECTLY}" = "true" ]; then
+              # Ensure we are on the PR head branch before pushing
+              git checkout "${HEAD_BRANCH}" 2>/dev/null || true
+              if git push origin "${HEAD_BRANCH}"; then
+                echo "pushed_directly=true" >> $GITHUB_OUTPUT
+              else
+                echo "pushed_directly=false" >> $GITHUB_OUTPUT
+                FIX_BRANCH="codex-auto-fix-ci-${HEAD_BRANCH}-${GITHUB_RUN_ID}"
+                git checkout -B "$FIX_BRANCH"
+                git push origin "$FIX_BRANCH"
+                echo "fix_branch=$FIX_BRANCH" >> $GITHUB_OUTPUT
+              fi
+            else
+              echo "pushed_directly=false" >> $GITHUB_OUTPUT
+              FIX_BRANCH="codex-auto-fix-ci-${HEAD_BRANCH}-${GITHUB_RUN_ID}"
+              git checkout -B "$FIX_BRANCH"
+              git push origin "$FIX_BRANCH"
+              echo "fix_branch=$FIX_BRANCH" >> $GITHUB_OUTPUT
+            fi
           else
             echo "No changes from Codex."
+            echo "pushed_directly=none" >> $GITHUB_OUTPUT
           fi
 
-      - name: Comment back on PR with auto-fix note
+      - name: Comment back on PR with auto-fix branch link
         uses: actions/github-script@v7
+        env:
+          PUSHED_DIRECTLY: ${{ steps.push_result.outputs.pushed_directly }}
+          HEAD_BRANCH: ${{ steps.resolve_ref.outputs.head_branch }}
+          BASE_BRANCH: ${{ steps.resolve_ref.outputs.base_branch }}
+          FIX_BRANCH: ${{ steps.push_result.outputs.fix_branch }}
         with:
           script: |
             const prs = context.payload.workflow_run.pull_requests || [];
             if (!prs[0]) { core.info('No PR context found; skipping comment'); return; }
-            const { owner, repo } = context.repo;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
             const prNumber = prs[0].number;
-            const head = context.payload.workflow_run.head_branch;
-            const body = [
-              '## 🤖 CI Auto-Fix (Codex) Applied',
-              '',
-              `Changes were pushed directly to the PR head branch \`${head}\`.`,
-              '',
-              `_Run ID: ${context.runId}_`
-            ].join('\n');
+            const pushedDirectly = process.env.PUSHED_DIRECTLY;
+            let body;
+            if (pushedDirectly === 'true') {
+              body = [
+                '## 🤖 CI Auto-Fix (Codex) Applied',
+                '',
+                `Changes were pushed directly to the PR head branch \`${process.env.HEAD_BRANCH}\`.`,
+                '',
+                `_Run ID: ${context.runId}_`
+              ].join('\n');
+            } else if (pushedDirectly === 'false') {
+              const compareUrl = `https://github.com/${owner}/${repo}/compare/${process.env.HEAD_BRANCH}...${process.env.FIX_BRANCH}?quick_pull=1`;
+              body = [
+                '## 🤖 CI Auto-Fix (Codex) Available',
+                '',
+                `Branch \`${process.env.FIX_BRANCH}\` with fixes has been pushed to this repo (fork PR or protected branch).`,
+                '',
+                `[**→ Create pull request**](${compareUrl})`,
+                '',
+                `_Run ID: ${context.runId}_`
+              ].join('\n');
+            } else {
+              body = [
+                '## 🤖 CI Auto-Fix (Codex) Attempted',
+                '',
+                'No file changes were necessary based on the reported CI errors.',
+                '',
+                `_Run ID: ${context.runId}_`
+              ].join('\n');
+            }
             await github.rest.issues.createComment({ owner, repo, issue_number: prNumber, body });

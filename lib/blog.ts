@@ -6,6 +6,7 @@ export type BlogMeta = {
   slug: string;
   title: string;
   date: string | null;
+  tags?: string[];
 };
 
 export function getBlogDir(): string {
@@ -13,34 +14,23 @@ export function getBlogDir(): string {
 }
 
 export function getOrderedPosts(): BlogMeta[] {
-  try {
-    const dir = getBlogDir();
-    const files = fs.readdirSync(dir).filter((f) => f.endsWith(".mdx"));
-    const entries: BlogMeta[] = files.map((name) => {
-      try {
-        const fullPath = path.join(dir, name);
-        const raw = fs.readFileSync(fullPath, "utf8");
-        const { data } = matter(raw);
-        const slug = name.replace(/\.mdx$/, "");
-        const title = (data.title as string) || slug.replace(/-/g, " ");
-        const date = (data.date as string | undefined) || null;
-        return { slug, title, date };
-      } catch (error) {
-        console.error(`Error reading blog post ${name}:`, error);
-        // Return a minimal entry for the file that failed to parse
-        const slug = name.replace(/\.mdx$/, "");
-        return { slug, title: slug.replace(/-/g, " "), date: null };
-      }
-    });
-    return entries.sort((a, b) => {
-      const ad = a.date ? Date.parse(a.date) : 0;
-      const bd = b.date ? Date.parse(b.date) : 0;
-      return bd - ad; // newest first
-    });
-  } catch (error) {
-    console.error("Error reading blog directory:", error);
-    return [];
-  }
+  const dir = getBlogDir();
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".mdx"));
+  const entries: BlogMeta[] = files.map((name) => {
+    const fullPath = path.join(dir, name);
+    const raw = fs.readFileSync(fullPath, "utf8");
+    const { data } = matter(raw);
+    const slug = name.replace(/\.mdx$/, "");
+    const title = (data.title as string) || slug.replace(/-/g, " ");
+    const date = (data.date as string | undefined) || null;
+    const tags = (data.tags as string[] | undefined) || [];
+    return { slug, title, date, tags };
+  });
+  return entries.sort((a, b) => {
+    const ad = a.date ? Date.parse(a.date) : 0;
+    const bd = b.date ? Date.parse(b.date) : 0;
+    return bd - ad; // newest first
+  });
 }
 
 export function getPrevNext(slug: string): {

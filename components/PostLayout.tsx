@@ -18,6 +18,7 @@ import NextLink from "next/link";
 import { MainLayout } from "./layout";
 import TOC from "./TOC";
 import { ReadingProgress } from "./ui/ReadingProgress";
+import { Reveal } from "./ui";
 
 type BlogMeta = {
   slug: string;
@@ -42,7 +43,12 @@ type PostLayoutProps = {
   relatedPosts?: BlogMeta[];
 };
 
-export default function PostLayout({ children, frontmatter, navigation, relatedPosts }: PostLayoutProps) {
+export default function PostLayout({
+  children,
+  frontmatter,
+  navigation,
+  relatedPosts,
+}: PostLayoutProps) {
   const title = frontmatter?.title || "Post";
   const description = frontmatter?.description || frontmatter?.summary || "";
   const url = frontmatter?.slug
@@ -50,6 +56,8 @@ export default function PostLayout({ children, frontmatter, navigation, relatedP
     : undefined;
   const { hasCopied, onCopy } = useClipboard(url || "");
   const nav = navigation || { prev: null, next: null };
+  const related = relatedPosts || [];
+
   return (
     <MainLayout>
       <ReadingProgress />
@@ -66,9 +74,11 @@ export default function PostLayout({ children, frontmatter, navigation, relatedP
             {description ? <meta name="twitter:description" content={description} /> : null}
           </Head>
           {frontmatter?.title ? (
-            <Heading as="h1" size="2xl" mb={2}>
-              {frontmatter.title}
-            </Heading>
+            <Reveal>
+              <Heading as="h1" size="2xl" mb={2}>
+                {frontmatter.title}
+              </Heading>
+            </Reveal>
           ) : null}
           <HStack spacing={3} mb={6} align="center">
             {frontmatter?.date ? (
@@ -103,7 +113,9 @@ export default function PostLayout({ children, frontmatter, navigation, relatedP
               <>
                 <IconButton
                   as="a"
-                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`}
+                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                    url
+                  )}&text=${encodeURIComponent(title)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Share on Twitter"
@@ -113,7 +125,9 @@ export default function PostLayout({ children, frontmatter, navigation, relatedP
                 />
                 <IconButton
                   as="a"
-                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`}
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                    url
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Share on LinkedIn"
@@ -136,13 +150,13 @@ export default function PostLayout({ children, frontmatter, navigation, relatedP
               <span />
             )}
           </Flex>
-          {relatedPosts && relatedPosts.length > 0 && (
+          {related.length > 0 && (
             <Box mt={8}>
               <Heading as="h2" size="lg" mb={3}>
                 Related posts
               </Heading>
               <HStack spacing={4} wrap="wrap">
-                {relatedPosts.map((p) => (
+                {related.map((p) => (
                   <NextLink key={p.slug} href={`/blog/${p.slug}`}>
                     {p.title}
                   </NextLink>

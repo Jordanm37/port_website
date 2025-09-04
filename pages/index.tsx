@@ -4,7 +4,7 @@ import Head from "next/head";
 import { ImLinkedin2, ImMail4, ImGithub } from "react-icons/im";
 import SocialButton from "../components/SocialButton";
 import { MainLayout } from "../components/layout";
-import { PageContainer, BrandLink, Hero, Reveal } from "../components/ui";
+import { PageContainer, BrandLink, Hero, Reveal, CTAButton } from "../components/ui";
 
 const Home: NextPage = () => {
   return (

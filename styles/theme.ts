@@ -78,6 +78,7 @@ const semanticTokens = {
     border: { default: "neutral.200", _dark: "neutral.700" },
     link: { default: "primary.600", _dark: "primary.300" },
     readingBg: { default: "neutral.50", _dark: "neutral.800" },
+    chromeBg: { default: "rgba(255,255,255,0.7)", _dark: "rgba(23,23,23,0.6)" },
   },
 };
 
@@ -222,6 +223,12 @@ const styles = {
     "::selection": {
       background: "primary.200",
     },
+    ":root": {
+      "--motion-duration-quick": "120ms",
+      "--motion-duration-base": "200ms",
+      "--motion-duration-slow": "400ms",
+      "--motion-ease-standard": "cubic-bezier(.2,.8,.2,1)",
+    } as any,
     ".prose": {
       maxWidth: "72ch",
     },
