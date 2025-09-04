@@ -7,7 +7,7 @@ const remarkMdxFrontmatter =
   require("remark-mdx-frontmatter").default || require("remark-mdx-frontmatter");
 const remarkMath = require("remark-math").default || require("remark-math");
 const rehypeKatex = require("rehype-katex").default || require("rehype-katex");
-const rehypePrettyCode = require("rehype-pretty-code");
+const rehypePrettyCode = require("rehype-pretty-code").default || require("rehype-pretty-code");
 
 const withMDX = require("@next/mdx")({
   extension: /\.mdx?$/,
