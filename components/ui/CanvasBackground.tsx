@@ -28,6 +28,7 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
     let mouse = { x: -9999, y: -9999 };
 
     function resize() {
+      if (!canvas || !ctx) return;
       width = canvas.clientWidth;
       height = canvas.clientHeight;
       canvas.width = Math.floor(width * dpr);
@@ -47,6 +48,7 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
     }
 
     function draw() {
+      if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = "rgba(0,0,0,0)";
 
@@ -105,6 +107,7 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
     }
 
     function onPointerMove(e: PointerEvent) {
+      if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
       mouse.x = e.clientX - rect.left;
       mouse.y = e.clientY - rect.top;

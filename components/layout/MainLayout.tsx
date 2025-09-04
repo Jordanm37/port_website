@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Box,
   Container,
@@ -44,7 +44,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     setUnderline({ left: rect.left - wrapRect.left, width: rect.width });
   }
 
-  function updateFromActive() {
+  const updateFromActive = useCallback(() => {
     const refs = [
       { path: "/about", ref: aboutRef },
       { path: "/talks", ref: talksRef },
@@ -52,7 +52,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     ];
     const active = refs.find((r) => router.pathname.startsWith(r.path));
     measure(active?.ref.current || null);
-  }
+  }, [router.pathname]);
 
   useEffect(() => {
     const onResize = () => updateFromActive();
@@ -63,7 +63,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       window.removeEventListener("resize", onResize);
       router.events?.off("routeChangeComplete", updateFromActive);
     };
-  }, [router.pathname]);
+  }, [router.events, updateFromActive]);
 
   return (
     <Box>

@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 export type NavLinkProps = LinkProps & NextLinkProps & { exact?: boolean };
 
-export const NavLink = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
+const NavLinkComponent = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
   ({ href, as, exact = false, children, ...props }, ref) => {
     const router = useRouter();
     const path = typeof href === "string" ? href : (href as any)?.pathname || "";
@@ -52,5 +52,8 @@ export const NavLink = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
     );
   }
 );
+
+NavLinkComponent.displayName = "NavLink";
+export const NavLink = NavLinkComponent;
 
 export default NavLink;
