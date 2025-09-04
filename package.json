@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npx tsx scripts/generate-blog-data.ts && next dev",
+    "dev": "node scripts/generate-blog-data.js && next dev",
     "build": "next build",
-    "postbuild": "next-sitemap && node scripts/generate-rss.js && npx tsx scripts/generate-blog-data.ts",
+    "postbuild": "next-sitemap && node scripts/generate-rss.js && node scripts/generate-blog-data.js",
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky",
@@ -42,7 +42,6 @@
     "lint-staged": "15.2.10",
     "next-sitemap": "4.2.3",
     "prettier": "3.3.3",
-    "tsx": "^4.19.1",
     "typescript": "5.5.4"
   },
   "lint-staged": {

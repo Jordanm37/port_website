@@ -1,24 +1,12 @@
-import fs from "fs";
-import path from "path";
-import { getOrderedPosts, getPrevNext, getRelatedPosts, BlogMeta } from "../lib/blog";
+const fs = require("fs");
+const path = require("path");
+const { getOrderedPosts, getPrevNext, getRelatedPosts } = require("../lib/blog");
 
-type BlogDataEntry = {
-  navigation: {
-    prev: BlogMeta | null;
-    next: BlogMeta | null;
-  };
-  relatedPosts: BlogMeta[];
-};
-
-type AllBlogData = {
-  [slug: string]: BlogDataEntry;
-};
-
-function generateBlogData(): void {
+function generateBlogData() {
   try {
     // Cache posts to avoid repeated file reads
     const posts = getOrderedPosts();
-    const blogData: AllBlogData = {};
+    const blogData = {};
 
     posts.forEach((post) => {
       try {
