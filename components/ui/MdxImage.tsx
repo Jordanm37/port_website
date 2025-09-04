@@ -9,6 +9,7 @@ const ChakraNextImage = chakra(NextImage, {
 export type MdxImageProps = {
   src: string;
   alt?: string;
+  aspectRatio?: number; // width / height
 } & Partial<Pick<ImageProps, "width" | "height" | "sizes">>;
 
 export const MdxImage: React.FC<MdxImageProps> = ({
@@ -17,14 +18,17 @@ export const MdxImage: React.FC<MdxImageProps> = ({
   width,
   height,
   sizes,
+  aspectRatio,
   ...rest
 }) => {
+  const resolvedWidth = width ?? (aspectRatio ? 1200 : 1200);
+  const resolvedHeight = height ?? (aspectRatio ? Math.round(1200 / aspectRatio) : 630);
   return (
     <ChakraNextImage
       src={src}
       alt={alt}
-      width={width ?? 1200}
-      height={height ?? 630}
+      width={resolvedWidth}
+      height={resolvedHeight}
       sizes={sizes ?? "(min-width: 768px) 720px, 100vw"}
       style={{ width: "100%", height: "auto" }}
       borderRadius="md"

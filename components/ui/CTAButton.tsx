@@ -20,10 +20,10 @@ export const CTAButton: React.FC<CTAButtonProps> = ({ asLinkHref, children, ...p
 
   const gradient = {
     background:
-      "radial-gradient(40% 60% at var(--x,50%) var(--y,50%), rgba(0,102,204,0.35), rgba(0,102,204,0) 55%), linear-gradient(90deg, var(--chakra-colors-primary-500), var(--chakra-colors-primary-700))",
+      "radial-gradient(40% 60% at var(--x,50%) var(--y,50%), rgba(0,102,204,0.25), rgba(0,102,204,0) 55%), linear-gradient(90deg, var(--chakra-colors-primary-500), var(--chakra-colors-primary-700))",
     _dark: {
       background:
-        "radial-gradient(40% 60% at var(--x,50%) var(--y,50%), rgba(51,153,255,0.35), rgba(51,153,255,0) 55%), linear-gradient(90deg, var(--chakra-colors-primary-400), var(--chakra-colors-primary-600))",
+        "radial-gradient(40% 60% at var(--x,50%) var(--y,50%), rgba(0,0,0,0.25), rgba(0,0,0,0) 55%), linear-gradient(90deg, var(--chakra-colors-primary-500), var(--chakra-colors-primary-700))",
     },
   } as const;
 

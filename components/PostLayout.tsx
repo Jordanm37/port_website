@@ -18,7 +18,8 @@ import NextLink from "next/link";
 import { MainLayout } from "./layout";
 import TOC from "./TOC";
 import { ReadingProgress } from "./ui/ReadingProgress";
-import { Reveal } from "./ui";
+import { Reveal, Prose } from "./ui";
+import siteUrl from "../lib/site";
 
 type BlogMeta = {
   slug: string;
@@ -35,6 +36,11 @@ type PostLayoutProps = {
     date?: string;
     tags?: string[];
     slug?: string;
+    image?: string; // relative or absolute
+    ogImage?: string; // relative or absolute
+    ogImageAlt?: string;
+    ogImageWidth?: number;
+    ogImageHeight?: number;
   };
   navigation?: {
     prev: BlogMeta | null;
@@ -51,9 +57,14 @@ export default function PostLayout({
 }: PostLayoutProps) {
   const title = frontmatter?.title || "Post";
   const description = frontmatter?.description || frontmatter?.summary || "";
-  const url = frontmatter?.slug
-    ? `https://port-website-indol.vercel.app/blog/${frontmatter.slug}`
+  const url = frontmatter?.slug ? `${siteUrl}/blog/${frontmatter.slug}` : undefined;
+  const ogImagePath = frontmatter?.ogImage || frontmatter?.image;
+  const ogImage = ogImagePath
+    ? ogImagePath.startsWith("http")
+      ? ogImagePath
+      : `${siteUrl}${ogImagePath.startsWith("/") ? "" : "/"}${ogImagePath}`
     : undefined;
+  const ogImageAlt = frontmatter?.ogImageAlt || title;
   const { hasCopied, onCopy } = useClipboard(url || "");
   const nav = navigation || { prev: null, next: null };
   const related = relatedPosts || [];
@@ -72,6 +83,16 @@ export default function PostLayout({
             <meta name="twitter:card" content="summary_large_image" />
             {title ? <meta name="twitter:title" content={title} /> : null}
             {description ? <meta name="twitter:description" content={description} /> : null}
+            {ogImage ? <meta property="og:image" content={ogImage} /> : null}
+            {ogImage ? <meta property="og:image:secure_url" content={ogImage} /> : null}
+            {ogImageAlt ? <meta property="og:image:alt" content={ogImageAlt} /> : null}
+            {typeof frontmatter?.ogImageWidth === "number" ? (
+              <meta property="og:image:width" content={String(frontmatter?.ogImageWidth)} />
+            ) : null}
+            {typeof frontmatter?.ogImageHeight === "number" ? (
+              <meta property="og:image:height" content={String(frontmatter?.ogImageHeight)} />
+            ) : null}
+            {ogImage ? <meta name="twitter:image" content={ogImage} /> : null}
           </Head>
           {frontmatter?.title ? (
             <Reveal>
@@ -96,9 +117,11 @@ export default function PostLayout({
             <TOC />
           </Box>
           <chakra.div my={4} />
-          <Box sx={frontmatter?.title ? { "h1:first-of-type": { display: "none" } } : undefined}>
-            {children}
-          </Box>
+          <Prose mt={0}>
+            <Box sx={frontmatter?.title ? { "h1:first-of-type": { display: "none" } } : undefined}>
+              {children}
+            </Box>
+          </Prose>
           <HStack spacing={2} mt={8}>
             <Tooltip label={hasCopied ? "Copied" : "Copy link"} openDelay={200}>
               <IconButton
@@ -155,7 +178,7 @@ export default function PostLayout({
               <Heading as="h2" size="lg" mb={3}>
                 Related posts
               </Heading>
-              <HStack spacing={4} wrap="wrap">
+              <HStack spacing={4} flexWrap="wrap">
                 {related.map((p) => (
                   <NextLink key={p.slug} href={`/blog/${p.slug}`}>
                     {p.title}

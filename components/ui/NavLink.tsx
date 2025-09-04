@@ -12,38 +12,12 @@ const NavLinkComponent = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
     const isActive = exact ? router.pathname === path : router.pathname.startsWith(path || "");
     const rafRef = useRef<number | null>(null);
 
-    const onMouseMove = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-        return;
-
-      // Cancel any pending animation frame
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-      }
-
-      // Capture currentTarget outside RAF to avoid stale reference
-      const el = e.currentTarget;
-      const clientX = e.clientX;
-
-      // Use requestAnimationFrame for smooth 60fps updates
-      rafRef.current = requestAnimationFrame(() => {
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        const dx = Math.max(
-          -0.5,
-          Math.min(0.5, (clientX - (rect.left + rect.width / 2)) / rect.width)
-        );
-        el.style.transform = `translate3d(${dx * 6}px, -1px, 0)`;
-      });
+    const onMouseMove = useCallback((_e: React.MouseEvent<HTMLAnchorElement>) => {
+      // removed wobble transform for clarity and reduced motion
     }, []);
 
-    const onMouseLeave = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
-      // Cancel any pending animation
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
-      e.currentTarget.style.transform = "";
+    const onMouseLeave = useCallback((_e: React.MouseEvent<HTMLAnchorElement>) => {
+      // no-op after removing wobble
     }, []);
 
     // Cleanup on unmount
@@ -65,17 +39,7 @@ const NavLinkComponent = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
         aria-current={isActive ? "page" : undefined}
         onMouseMove={onMouseMove}
         onMouseLeave={onMouseLeave}
-        transition="transform 150ms cubic-bezier(.2,.8,.2,1)"
-        _after={{
-          content: '""',
-          position: "absolute",
-          left: 0,
-          bottom: -1,
-          height: "2px",
-          width: isActive ? "100%" : "0%",
-          bg: "link",
-          transition: "width 200ms",
-        }}
+        transition="color 150ms cubic-bezier(.2,.8,.2,1)"
         {...props}
       >
         {children}

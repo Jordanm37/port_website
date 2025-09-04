@@ -87,7 +87,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         transition="all 200ms cubic-bezier(.2,.8,.2,1)"
       >
         <Container maxW="container.xl" px={{ base: 4, md: 6 }}>
-          <Flex h={scrolled ? 14 : 16} align="center" justify="space-between">
+          <Flex h={16} align="center" justify="space-between">
             <NavLink href="/" exact fontWeight={700} _hover={{ textDecoration: "none" }}>
               Jordan Moshcovitis
             </NavLink>
@@ -126,7 +126,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                     onMouseEnter={() => measure(cvRef.current)}
                     onMouseLeave={updateFromActive}
                   >
-                    CV
+                    Résumé
                   </NavLink>
                 </HStack>
                 <Box
@@ -185,7 +185,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           >
             <Text color="muted">© {new Date().getFullYear()} Jordan Moshcovitis</Text>
             <Box w="full">
-              <Divider my={4} />
+              <Divider my={4} display={{ base: "none", md: "block" }} />
               <HStack spacing={4} color="muted">
                 <ChakraLink
                   as={NextLink}
@@ -201,15 +201,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 >
                   Blog
                 </ChakraLink>
-                <ChakraLink
-                  as={NextLink}
-                  href="/JORDAN_MOSHCOVITIS_Resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  _hover={{ textDecoration: "none", opacity: 0.8 }}
-                >
-                  CV
-                </ChakraLink>
+                {null}
                 <ChakraLink
                   as={NextLink}
                   href="/privacy"

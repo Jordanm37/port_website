@@ -20,12 +20,12 @@ export const ReadingProgress: React.FC<{ targetId?: string }> = ({ targetId = "m
   return (
     <Box
       position="fixed"
-      top={0}
+      top={16}
       left={0}
       height="2px"
       width={`${progress}%`}
       bg="link"
-      zIndex={200}
+      zIndex={50}
       transition="width 80ms linear"
     />
   );
