@@ -21,14 +21,17 @@ const NavLinkComponent = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
         cancelAnimationFrame(rafRef.current);
       }
 
+      // Capture currentTarget outside RAF to avoid stale reference
+      const el = e.currentTarget;
+      const clientX = e.clientX;
+
       // Use requestAnimationFrame for smooth 60fps updates
       rafRef.current = requestAnimationFrame(() => {
-        const el = e.currentTarget;
         if (!el) return;
         const rect = el.getBoundingClientRect();
         const dx = Math.max(
           -0.5,
-          Math.min(0.5, (e.clientX - (rect.left + rect.width / 2)) / rect.width)
+          Math.min(0.5, (clientX - (rect.left + rect.width / 2)) / rect.width)
         );
         el.style.transform = `translate3d(${dx * 6}px, -1px, 0)`;
       });

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from "react";
+import React, { useEffect, useRef, useMemo, useState } from "react";
 
 export interface CanvasBackgroundProps {
   color: string;
@@ -8,6 +8,7 @@ export interface CanvasBackgroundProps {
 export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, density = 0.06 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
+  const [isVisible, setIsVisible] = useState(true);
 
   // Memoize expensive calculations and constants
   const constants = useMemo(() => ({
@@ -34,6 +35,9 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    // AbortController for proper cleanup
+    const abortController = new AbortController();
 
     // Narrowed, stable references for inner closures
     const canvasEl: HTMLCanvasElement = canvas;
@@ -68,6 +72,11 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
     }
 
     function draw() {
+      // Check if still visible and not aborted
+      if (!isVisible || abortController.signal.aborted) {
+        return;
+      }
+
       ctxEl.clearRect(0, 0, width, height);
       // faint background noise
       ctxEl.fillStyle = "rgba(0,0,0,0)";
@@ -137,7 +146,9 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
       }
       ctxEl.globalAlpha = 1;
 
-      rafRef.current = requestAnimationFrame(draw);
+      if (!abortController.signal.aborted) {
+        rafRef.current = requestAnimationFrame(draw);
+      }
     }
 
     function onPointerMove(e: PointerEvent) {
@@ -153,25 +164,35 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
     }
 
     const onResize = () => resize();
+    
+    // IntersectionObserver to pause animation when off-screen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
+    
+    observer.observe(canvasEl);
     resize();
 
     if (!prefersReduced) {
       rafRef.current = requestAnimationFrame(draw);
-      window.addEventListener("pointermove", onPointerMove);
-      window.addEventListener("pointerleave", onPointerLeave);
+      window.addEventListener("pointermove", onPointerMove, { signal: abortController.signal });
+      window.addEventListener("pointerleave", onPointerLeave, { signal: abortController.signal });
     } else {
       // render a single static frame
       draw();
     }
-    window.addEventListener("resize", onResize);
+    window.addEventListener("resize", onResize, { signal: abortController.signal });
 
     return () => {
+      abortController.abort();
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerleave", onPointerLeave);
+      observer.disconnect();
+      // Event listeners are automatically removed via AbortController
     };
-  }, [color, density]);
+  }, [color, density, isVisible]);
 
   return (
     <canvas

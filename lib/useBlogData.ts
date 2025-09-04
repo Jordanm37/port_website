@@ -18,14 +18,42 @@ export function useBlogData(slug?: string): BlogData {
   useEffect(() => {
     if (!slug?.trim()) return;
 
-    // Try to fetch the pre-generated blog data
-    fetch("/blog-data.json")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    // Create abort controller for cleanup
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+    // Try to fetch the pre-generated blog data with retry logic
+    const fetchWithRetry = async (retries = 2): Promise<any> => {
+      for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+          const res = await fetch("/blog-data.json", {
+            signal: controller.signal,
+            cache: 'default', // Allow browser caching
+          });
+          
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+          }
+          
+          clearTimeout(timeoutId);
+          return await res.json();
+        } catch (error: any) {
+          if (error.name === 'AbortError') {
+            throw new Error('Request timeout after 10 seconds');
+          }
+          
+          // If it's the last attempt, throw the error
+          if (attempt === retries) {
+            throw error;
+          }
+          
+          // Wait before retry (exponential backoff)
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
         }
-        return res.json();
-      })
+      }
+    };
+
+    fetchWithRetry()
       .then((allData) => {
         // Enhanced null checks for blog data processing
         if (!allData || typeof allData !== 'object') {
@@ -56,8 +84,9 @@ export function useBlogData(slug?: string): BlogData {
         }
       })
       .catch((error) => {
+        clearTimeout(timeoutId);
         if (process.env.NODE_ENV === 'development') {
-          console.warn('Failed to load blog data, attempting fallback:', error);
+          console.warn('Failed to load blog data after retries:', error.message);
         }
         
         // Fallback: try to compute data client-side (only in development)
@@ -73,6 +102,12 @@ export function useBlogData(slug?: string): BlogData {
           }
         }
       });
+
+    // Cleanup function to abort fetch and clear timeout
+    return () => {
+      controller.abort();
+      clearTimeout(timeoutId);
+    };
   }, [slug]);
 
   return data;
