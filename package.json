@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node scripts/generate-blog-data.js && next dev",
+    "dev": "npx tsx scripts/generate-blog-data.ts && next dev",
     "build": "next build",
-    "postbuild": "next-sitemap && node scripts/generate-rss.js && node scripts/generate-blog-data.js",
+    "postbuild": "next-sitemap && node scripts/generate-rss.js && npx tsx scripts/generate-blog-data.ts",
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky",

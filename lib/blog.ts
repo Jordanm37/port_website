@@ -33,14 +33,22 @@ export function getOrderedPosts(): BlogMeta[] {
   });
 }
 
-export function getPrevNext(slug: string): {
+export function getPrevNext(slug: string, posts?: BlogMeta[]): {
   prev: BlogMeta | null;
   next: BlogMeta | null;
 } {
-  const posts = getOrderedPosts();
-  const index = posts.findIndex((p) => p.slug === slug);
+  const allPosts = posts || getOrderedPosts();
+  const index = allPosts.findIndex((p) => p.slug === slug);
   if (index === -1) return { prev: null, next: null };
-  const prev = index > 0 ? posts[index - 1] : null; // newer
-  const next = index < posts.length - 1 ? posts[index + 1] : null; // older
+  const prev = index > 0 ? allPosts[index - 1] : null; // newer
+  const next = index < allPosts.length - 1 ? allPosts[index + 1] : null; // older
   return { prev, next };
+}
+
+export function getRelatedPosts(slug: string, tags: string[], posts?: BlogMeta[]): BlogMeta[] {
+  if (!tags || tags.length === 0) return [];
+  const allPosts = posts || getOrderedPosts();
+  return allPosts
+    .filter((p) => p.slug !== slug && p.tags?.some((t) => tags.includes(t)))
+    .slice(0, 3);
 }

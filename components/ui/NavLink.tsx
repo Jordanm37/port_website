@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useEffect } from "react";
 import { Link as ChakraLink, LinkProps } from "@chakra-ui/react";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import { useRouter } from "next/router";
@@ -41,6 +41,15 @@ const NavLinkComponent = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
         rafRef.current = null;
       }
       e.currentTarget.style.transform = "";
+    }, []);
+
+    // Cleanup on unmount
+    useEffect(() => {
+      return () => {
+        if (rafRef.current) {
+          cancelAnimationFrame(rafRef.current);
+        }
+      };
     }, []);
 
     return (
