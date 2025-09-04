@@ -49,7 +49,7 @@ const BlogIndexPage: NextPage<BlogIndexProps> = ({ entries }) => {
             <Text color="muted" mb={2}>
               Tags
             </Text>
-            <HStack wrap="wrap" spacing={2}>
+            <HStack flexWrap="wrap" spacing={2}>
               {tags.map((t) => (
                 <Tag key={t} size="sm" as={Link} href={`/blog/tags/${t}`}>
                   #{t}

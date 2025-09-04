@@ -62,7 +62,9 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
       ctxEl.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       // seed particles based on area
-      const target = Math.floor(((width * height) / 10000) * density);
+      const isSmall = Math.min(width, height) < 480;
+      const effectiveDensity = isSmall ? density * 0.7 : density;
+      const target = Math.floor(((width * height) / 10000) * effectiveDensity);
       particles = [];
       for (let i = 0; i < target; i++) {
         particles.push({

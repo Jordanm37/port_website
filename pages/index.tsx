@@ -30,14 +30,6 @@ const Home: NextPage = () => {
         </Reveal>
         <VStack spacing={6} align="center">
           <Box textAlign="center">
-            <BrandLink
-              href="/JORDAN_MOSHCOVITIS_Resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View my CV
-            </BrandLink>
-            <chakra.span> · </chakra.span>
             <BrandLink href="/blog">Blog</BrandLink>
           </Box>
           <Divider pt={3} w="full" />
