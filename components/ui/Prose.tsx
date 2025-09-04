@@ -8,6 +8,7 @@ export const Prose: React.FC<ProseProps> = ({ children, ...props }) => {
     <Box
       sx={{
         "h1, h2, h3, h4": { scrollMarginTop: "80px" },
+        p: { lineHeight: 1.7 },
         "p + p": { mt: 3 },
         ul: { pl: 6 },
         ol: { pl: 6 },

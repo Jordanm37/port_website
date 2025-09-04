@@ -42,7 +42,7 @@ export const Hero: React.FC<HeroProps> = ({
       boxShadow="sm"
       _hover={{ boxShadow: "md" }}
       bgGradient="linear(to-b, primary.50 0%, primary.50 12%, white 70%)"
-      _dark={{ bgGradient: "linear(to-b, neutral.800 0%, neutral.850 20%, neutral.900 70%)" }}
+      _dark={{ bgGradient: "linear(to-b, neutral.800 0%, neutral.800 20%, neutral.900 70%)" }}
       // Avoid motion-specific props to satisfy strict Chakra types in CI
       px={{ base: 6, md: 10 }}
       py={{ base: 10, md: 16 }}
@@ -89,7 +89,7 @@ export const Hero: React.FC<HeroProps> = ({
             ) : null}
           </Flex>
           {chips && chips.length ? (
-            <HStack spacing={2} mt={4} wrap="wrap">
+            <HStack spacing={2} mt={4} flexWrap="wrap">
               {chips.slice(0, 3).map((c) => (
                 <Tag key={c} size="sm">
                   {c}
