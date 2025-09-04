@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "new:post": "node scripts/new-post.js"
   },
   "dependencies": {
     "@chakra-ui/icons": "2.2.4",

@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import PostLayout from "./PostLayout";
-import { getPrevNext, getOrderedPosts, BlogMeta } from "../lib/blog";
 
 type PostLayoutWrapperProps = {
   children: ReactNode;
@@ -15,25 +14,10 @@ type PostLayoutWrapperProps = {
 };
 
 export default function PostLayoutWrapper({ children, frontmatter }: PostLayoutWrapperProps) {
-  // This component will only run on the server during static generation
-  // since it imports filesystem-dependent functions
-  let navigation = { prev: null, next: null };
-  let relatedPosts: BlogMeta[] = [];
-
-  if (typeof window === "undefined" && frontmatter?.slug) {
-    // Only run on server
-    navigation = getPrevNext(frontmatter.slug);
-    relatedPosts = getOrderedPosts()
-      .filter((p) => p.slug !== frontmatter.slug)
-      .slice(0, 4);
-  }
-
+  // For now, we'll pass empty navigation and related posts
+  // In a future iteration, these could be passed via getStaticProps in a custom page
   return (
-    <PostLayout 
-      frontmatter={frontmatter} 
-      navigation={navigation} 
-      relatedPosts={relatedPosts}
-    >
+    <PostLayout frontmatter={frontmatter} navigation={{ prev: null, next: null }} relatedPosts={[]}>
       {children}
     </PostLayout>
   );
