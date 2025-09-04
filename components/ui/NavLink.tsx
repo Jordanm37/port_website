@@ -30,7 +30,7 @@ const NavLinkComponent = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
           -0.5,
           Math.min(0.5, (e.clientX - (rect.left + rect.width / 2)) / rect.width)
         );
-        el.style.transform = `translateY(-1px) translateX(${dx * 6}px)`;
+        el.style.transform = `translate3d(${dx * 6}px, -1px, 0)`;
       });
     }, []);
 

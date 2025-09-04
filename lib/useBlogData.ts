@@ -27,8 +27,30 @@ export function useBlogData(slug?: string): BlogData {
         return res.json();
       })
       .then((allData) => {
-        if (allData && typeof allData === 'object' && allData[slug]) {
-          setData(allData[slug]);
+        // Enhanced null checks for blog data processing
+        if (!allData || typeof allData !== 'object') {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('Invalid blog data structure received');
+          }
+          return;
+        }
+
+        const slugData = allData[slug];
+        if (slugData && typeof slugData === 'object') {
+          // Validate the structure of slug data
+          const navigation = slugData.navigation || { prev: null, next: null };
+          const relatedPosts = Array.isArray(slugData.relatedPosts) ? slugData.relatedPosts : [];
+          
+          // Ensure navigation has the correct structure
+          const safeNavigation = {
+            prev: navigation.prev && typeof navigation.prev === 'object' ? navigation.prev : null,
+            next: navigation.next && typeof navigation.next === 'object' ? navigation.next : null,
+          };
+
+          setData({
+            navigation: safeNavigation,
+            relatedPosts,
+          });
         } else if (process.env.NODE_ENV === 'development') {
           console.warn(`No blog data found for slug: ${slug}`);
         }

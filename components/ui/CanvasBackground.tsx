@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 
 export interface CanvasBackgroundProps {
   color: string;
@@ -8,6 +8,22 @@ export interface CanvasBackgroundProps {
 export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, density = 0.06 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
+
+  // Memoize expensive calculations and constants
+  const constants = useMemo(() => ({
+    lineDist: 100,
+    lineDist2: 100 * 100, // Pre-calculate squared distance
+    mouseInfluence: 80,
+    mouseInfluence2: 80 * 80, // Pre-calculate squared influence
+    friction: 0.995,
+    mouseForce: 0.0007,
+    maxConnections: 50,
+    particleCheckCount: 8,
+    velocityRange: 0.3,
+    particleRadius: 1.1,
+    connectionAlpha: 0.6,
+    minDistance: 20,
+  }), []);
 
   useEffect(() => {
     const prefersReduced =
@@ -45,8 +61,8 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
         particles.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
+          vx: (Math.random() - 0.5) * constants.velocityRange,
+          vy: (Math.random() - 0.5) * constants.velocityRange,
         });
       }
     }
@@ -57,17 +73,14 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
       ctxEl.fillStyle = "rgba(0,0,0,0)";
 
       // update & draw particles
-      const lineDist = 100; // px
-      const mouseInfluence = 80;
-
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         // mouse attraction
         const dx = mouse.x - p.x;
         const dy = mouse.y - p.y;
         const md2 = dx * dx + dy * dy;
-        if (md2 < mouseInfluence * mouseInfluence) {
-          const f = 0.0007 * (mouseInfluence / Math.max(20, Math.sqrt(md2)));
+        if (md2 < constants.mouseInfluence2) {
+          const f = constants.mouseForce * (constants.mouseInfluence / Math.max(constants.minDistance, Math.sqrt(md2)));
           p.vx += dx * f;
           p.vy += dy * f;
         }
@@ -75,8 +88,8 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
         p.x += p.vx;
         p.y += p.vy;
         // gentle friction
-        p.vx *= 0.995;
-        p.vy *= 0.995;
+        p.vx *= constants.friction;
+        p.vy *= constants.friction;
 
         // wrap
         if (p.x < 0) p.x += width;
@@ -86,7 +99,7 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
 
         // draw point
         ctxEl.beginPath();
-        ctxEl.arc(p.x, p.y, 1.1, 0, Math.PI * 2);
+        ctxEl.arc(p.x, p.y, constants.particleRadius, 0, Math.PI * 2);
         ctxEl.fillStyle = color;
         ctxEl.fill();
       }
@@ -94,14 +107,13 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
       // draw connections - with performance optimization
       ctxEl.strokeStyle = color;
       ctxEl.globalAlpha = 0.5;
-      const maxConnections = Math.min(particles.length, 50); // Limit total connections for performance
-      const lineDist2 = lineDist * lineDist;
+      const maxConnections = Math.min(particles.length, constants.maxConnections);
       let connectionsDrawn = 0;
 
       for (let i = 0; i < particles.length && connectionsDrawn < maxConnections; i++) {
         const p = particles[i];
         // Only check a subset of particles for each particle to reduce O(n²) complexity
-        const checkCount = Math.min(8, particles.length - i - 1);
+        const checkCount = Math.min(constants.particleCheckCount, particles.length - i - 1);
         for (let k = 1; k <= checkCount; k++) {
           const j = i + k;
           if (j >= particles.length) break;
@@ -111,9 +123,9 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
           const dy = p.y - q.y;
           const d2 = dx * dx + dy * dy;
 
-          if (d2 < lineDist2) {
-            const a = 1 - Math.sqrt(d2) / lineDist;
-            ctxEl.globalAlpha = Math.max(0, a * 0.6);
+          if (d2 < constants.lineDist2) {
+            const a = 1 - Math.sqrt(d2) / constants.lineDist;
+            ctxEl.globalAlpha = Math.max(0, a * constants.connectionAlpha);
             ctxEl.beginPath();
             ctxEl.moveTo(p.x, p.y);
             ctxEl.lineTo(q.x, q.y);
