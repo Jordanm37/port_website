@@ -19,6 +19,10 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Narrowed, stable references for inner closures
+    const canvasEl: HTMLCanvasElement = canvas;
+    const ctxEl: CanvasRenderingContext2D = ctx;
+
     let width = 0;
     let height = 0;
     let dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
@@ -28,13 +32,13 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
     let mouse = { x: -9999, y: -9999 };
 
     function resize() {
-      if (!canvas || !ctx) return;
-      width = canvas.clientWidth;
-      height = canvas.clientHeight;
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      width = canvasEl.clientWidth;
+      height = canvasEl.clientHeight;
+      canvasEl.width = Math.floor(width * dpr);
+      canvasEl.height = Math.floor(height * dpr);
+      ctxEl.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+      // seed particles based on area
       const target = Math.floor(((width * height) / 10000) * density);
       particles = [];
       for (let i = 0; i < target; i++) {
@@ -48,15 +52,17 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
     }
 
     function draw() {
-      if (!ctx) return;
-      ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = "rgba(0,0,0,0)";
+      ctxEl.clearRect(0, 0, width, height);
+      // faint background noise
+      ctxEl.fillStyle = "rgba(0,0,0,0)";
 
-      const lineDist = 100;
+      // update & draw particles
+      const lineDist = 100; // px
       const mouseInfluence = 80;
 
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
+        // mouse attraction
         const dx = mouse.x - p.x;
         const dy = mouse.y - p.y;
         const md2 = dx * dx + dy * dy;
@@ -68,47 +74,62 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
 
         p.x += p.vx;
         p.y += p.vy;
+        // gentle friction
         p.vx *= 0.995;
         p.vy *= 0.995;
 
+        // wrap
         if (p.x < 0) p.x += width;
         else if (p.x > width) p.x -= width;
         if (p.y < 0) p.y += height;
         else if (p.y > height) p.y -= height;
 
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 1.1, 0, Math.PI * 2);
-        ctx.fillStyle = color;
-        ctx.fill();
+        // draw point
+        ctxEl.beginPath();
+        ctxEl.arc(p.x, p.y, 1.1, 0, Math.PI * 2);
+        ctxEl.fillStyle = color;
+        ctxEl.fill();
       }
 
-      ctx.strokeStyle = color;
-      ctx.globalAlpha = 0.5;
-      for (let i = 0; i < particles.length; i++) {
+      // draw connections - with performance optimization
+      ctxEl.strokeStyle = color;
+      ctxEl.globalAlpha = 0.5;
+      const maxConnections = Math.min(particles.length, 50); // Limit total connections for performance
+      const lineDist2 = lineDist * lineDist;
+      let connectionsDrawn = 0;
+      
+      for (let i = 0; i < particles.length && connectionsDrawn < maxConnections; i++) {
         const p = particles[i];
-        for (let j = i + 1; j < particles.length; j++) {
+        // Only check a subset of particles for each particle to reduce O(n²) complexity
+        const checkCount = Math.min(8, particles.length - i - 1);
+        for (let k = 1; k <= checkCount; k++) {
+          const j = i + k;
+          if (j >= particles.length) break;
+          
           const q = particles[j];
           const dx = p.x - q.x;
           const dy = p.y - q.y;
           const d2 = dx * dx + dy * dy;
-          if (d2 < lineDist * lineDist) {
+          
+          if (d2 < lineDist2) {
             const a = 1 - Math.sqrt(d2) / lineDist;
-            ctx.globalAlpha = Math.max(0, a * 0.6);
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(q.x, q.y);
-            ctx.stroke();
+            ctxEl.globalAlpha = Math.max(0, a * 0.6);
+            ctxEl.beginPath();
+            ctxEl.moveTo(p.x, p.y);
+            ctxEl.lineTo(q.x, q.y);
+            ctxEl.stroke();
+            connectionsDrawn++;
+            if (connectionsDrawn >= maxConnections) break;
           }
         }
       }
-      ctx.globalAlpha = 1;
+      ctxEl.globalAlpha = 1;
 
       rafRef.current = requestAnimationFrame(draw);
     }
 
     function onPointerMove(e: PointerEvent) {
-      if (!canvas) return;
-      const rect = canvas.getBoundingClientRect();
+      const rect = canvasEl.getBoundingClientRect();
       mouse.x = e.clientX - rect.left;
       mouse.y = e.clientY - rect.top;
     }
@@ -120,6 +141,7 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ color, densi
       rafRef.current = requestAnimationFrame(draw);
       window.addEventListener("pointermove", onPointerMove);
     } else {
+      // render a single static frame
       draw();
     }
     window.addEventListener("resize", onResize);

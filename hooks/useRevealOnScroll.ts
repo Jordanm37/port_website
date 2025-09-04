@@ -32,22 +32,26 @@ export function useRevealOnScroll<T extends HTMLElement = HTMLElement>({
       setVisible(true);
       return;
     }
+    let timeoutId: number | undefined;
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             if (delayMs) {
-              const t = window.setTimeout(() => setVisible(true), delayMs);
-              return () => window.clearTimeout(t);
+              timeoutId = window.setTimeout(() => setVisible(true), delayMs);
+            } else {
+              setVisible(true);
             }
-            setVisible(true);
           }
         });
       },
       { root: null, rootMargin, threshold }
     );
     io.observe(el);
-    return () => io.disconnect();
+    return () => {
+      io.disconnect();
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
   }, [rootMargin, threshold, delayMs, reduceMotion]);
 
   const style: React.CSSProperties = reduceMotion

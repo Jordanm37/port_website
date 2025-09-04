@@ -73,7 +73,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         position="sticky"
         top={0}
         zIndex={100}
-        bg="bg"
+        bg="chromeBg"
         borderBottomWidth="1px"
         borderColor="border"
         backdropFilter="saturate(180%) blur(10px)"
@@ -161,7 +161,14 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         {children}
       </Box>
 
-      <Box as="footer" borderTopWidth="1px" borderColor="border" py={8} bg="bg">
+      <Box
+        as="footer"
+        borderTopWidth="1px"
+        borderColor="border"
+        py={8}
+        bg="chromeBg"
+        backdropFilter="saturate(180%) blur(10px)"
+      >
         <Container maxW="container.xl" px={{ base: 4, md: 6 }}>
           <Flex
             direction={{ base: "column", md: "row" }}
