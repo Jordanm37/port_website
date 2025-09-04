@@ -127,7 +127,6 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           echo "Attempting auto-fix using Codex..."
-          mkdir -p .codex
           PROMPT=$(cat << 'TXT'
           You are operating inside a GitHub Actions runner at the repository root.
           Task: Read .ci-failure.json to understand ESLint/TypeScript/Next.js build failures. Then FIX THEM by applying minimal, safe edits directly to the repository files.
@@ -135,20 +134,12 @@ jobs:
           Requirements:
           - Keep edits tightly scoped to address only the reported issues.
           - Preserve formatting and comments.
-          - Do NOT write suggested diffs only; actually modify the files in place.
-          - If a direct edit is not possible, additionally write a unified git diff patch relative to repo root to .codex/auto-fix.patch so the workflow can apply it.
+          - Do NOT output diffs or patches; directly modify the files in place.
           - Do NOT modify lockfiles unless required by a code change.
 
           After making edits, re-check logic locally (mentally) to ensure fixes are consistent.
           TXT)
           codex exec "$PROMPT"
-
-      - name: Apply Codex patch if present
-        run: |
-          if [ -f .codex/auto-fix.patch ]; then
-            echo "Applying Codex-generated patch..."
-            git apply -p0 .codex/auto-fix.patch || git apply .codex/auto-fix.patch || true
-          fi
 
       - name: Cleanup analysis artifacts and non-code churn
         run: |
