@@ -21,3 +21,16 @@ export type { CTAButtonProps } from "./CTAButton";
 export { Reveal } from "./Reveal";
 export type { RevealProps } from "./Reveal";
 export { default as MdxImage } from "./MdxImage";
+export { WritingListRow } from "./WritingListRow";
+export type { WritingListRowProps } from "./WritingListRow";
+// Lazy-loaded components for better performance
+export { LazyMastheadSignature as MastheadSignature } from "./LazyMastheadSignature";
+export type { MastheadKind, MastheadSignatureProps } from "./MastheadSignature";
+export { AssumptionInspector, FanChart } from "./LazyMathComponents";
+export type { AssumptionInspectorProps, Assumptions } from "./AssumptionInspector";
+export type { FanChartProps, ConfidenceInterval } from "./FanChart";
+export { Sparkline } from "./Sparkline";
+export type { SparklineProps } from "./Sparkline";
+export { ProjectCard } from "./ProjectCard";
+export type { ProjectItem } from "./ProjectCard";
+export { ProjectListRow } from "./ProjectListRow";

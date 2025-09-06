@@ -1,10 +1,12 @@
 /** @type {import('next').NextConfig} */
-const rehypePrismPlus = require("rehype-prism-plus").default || require("rehype-prism-plus");
 const remarkGfm = require("remark-gfm").default || require("remark-gfm");
 const remarkSlug = require("remark-slug").default || require("remark-slug");
 const remarkFrontmatter = require("remark-frontmatter").default || require("remark-frontmatter");
 const remarkMdxFrontmatter =
   require("remark-mdx-frontmatter").default || require("remark-mdx-frontmatter");
+const remarkMath = require("remark-math").default || require("remark-math");
+const rehypeKatex = require("rehype-katex").default || require("rehype-katex");
+const rehypePrettyCode = require("rehype-pretty-code").default || require("rehype-pretty-code");
 
 const withMDX = require("@next/mdx")({
   extension: /\.mdx?$/,
@@ -14,8 +16,18 @@ const withMDX = require("@next/mdx")({
       [remarkMdxFrontmatter, { name: "frontmatter" }],
       remarkGfm,
       remarkSlug,
+      remarkMath,
     ],
-    rehypePlugins: [rehypePrismPlus],
+    rehypePlugins: [
+      [
+        rehypePrettyCode,
+        {
+          theme: { dark: "github-dark", light: "github-light" },
+          keepBackground: false,
+        },
+      ],
+      rehypeKatex,
+    ],
   },
 });
 

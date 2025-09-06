@@ -7,10 +7,11 @@ export interface CalloutProps {
   children?: React.ReactNode;
 }
 
-const typeToColors: Record<string, { bg: string; border: string }> = {
-  info: { bg: "primary.50", border: "primary.200" },
-  warn: { bg: "yellow.50", border: "yellow.200" },
-  success: { bg: "green.50", border: "green.200" },
+const typeToColors: Record<string, { bg: string; border: string; color?: string }> = {
+  // Use surface + border tokens for consistent contrast in light/dark
+  info: { bg: "readingBg", border: "border", color: "text" },
+  warn: { bg: "readingBg", border: "border", color: "text" },
+  success: { bg: "readingBg", border: "border", color: "text" },
 };
 
 export const Callout: React.FC<CalloutProps> = ({ type = "info", title, children }) => {
@@ -19,10 +20,12 @@ export const Callout: React.FC<CalloutProps> = ({ type = "info", title, children
     <Box bg={c.bg} borderWidth="1px" borderColor={c.border} borderRadius="md" p={4} my={4}>
       {title ? (
         <HStack mb={2}>
-          <Text fontWeight={600}>{title}</Text>
+          <Text fontWeight={600} color={c.color || "text"}>
+            {title}
+          </Text>
         </HStack>
       ) : null}
-      <Text>{children}</Text>
+      <Text color={c.color || "text"}>{children}</Text>
     </Box>
   );
 };

@@ -1,0 +1,78 @@
+---
+title: "Post title (sentence case)"
+dek: "One-line summary (≤120 chars)"
+tags: [topic, method]
+series: null
+date: "2025-01-01"
+readingTime: 8
+masthead: "perlin" # perlin | brownian | ou | gp
+assumptions:
+  noise: "Gaussian"
+  priors: "Weakly-informative"
+  solver: "Euler–Maruyama, Δt=1e-3"
+  uncertainty: ["aleatoric", "epistemic"]
+---
+
+import PostLayoutWrapper from "../../components/PostLayoutWrapper";
+import { Figure } from "../../components/ui";
+import { FanChart } from "../../components/ui";
+import { Callout } from "../../components/ui";
+
+export default ({ children, ...props }) => (
+  <PostLayoutWrapper frontmatter={props.frontmatter}>{children}</PostLayoutWrapper>
+);
+
+# Title (H1 hidden if frontmatter.title present)
+
+Intro paragraph. Keep paragraphs short (≤4 lines). Use inline math like $\mathbb{E}[X]$ and footnotes[^f1].
+
+## Section (H2)
+
+Core content paragraph. Use lists when helpful:
+
+- Clear point one.
+- Clear point two.
+
+### Subsection (H3)
+
+Shorter detail. Code blocks use language fences:
+
+```ts
+export function clamp(v: number, lo: number, hi: number) {
+  return Math.max(lo, Math.min(hi, v));
+}
+```
+
+Images with captions:
+
+Optional uncertainty visual:
+
+<FanChart
+  title="Demo fan chart"
+  data={Array.from({ length: 21 }).map((_, i) => ({
+    x: i,
+    median: Math.sin(i / 3),
+    p10: Math.sin(i / 3) - 0.8,
+    p25: Math.sin(i / 3) - 0.4,
+    p75: Math.sin(i / 3) + 0.4,
+    p90: Math.sin(i / 3) + 0.8,
+  }))}
+  width={640}
+  height={240}
+  xLabel="t"
+  yLabel="y"
+/>
+
+<Callout type="info" title="Note">
+  Keep math readable. Avoid periods immediately after display equations.
+</Callout>
+
+## Math and references
+
+Inline: $\mu=\mathbb{E}[X]$. Block:
+
+$$
+\operatorname{Var}(X)=\mathbb{E}\big[(X-\mu)^2\big]
+$$
+
+[^f1]: One-line footnote example.

@@ -11,14 +11,11 @@ export interface BlogCardProps {
   tags?: string[];
   date?: string | null;
   readingTime?: number | null;
+  series?: string | null;
+  thumbnail?: string | null;
 }
 
-function formatDate(iso?: string | null): string | undefined {
-  if (!iso) return undefined;
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return iso || undefined;
-  return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
-}
+import { formatDateNatural } from "../../lib/date";
 
 export const BlogCard: React.FC<BlogCardProps> = ({
   href,
@@ -27,6 +24,8 @@ export const BlogCard: React.FC<BlogCardProps> = ({
   tags,
   date,
   readingTime,
+  series,
+  thumbnail,
 }) => {
   return (
     <Reveal>
@@ -47,6 +46,11 @@ export const BlogCard: React.FC<BlogCardProps> = ({
           </Text>
         ) : null}
         <HStack spacing={2}>
+          {series ? (
+            <Tag size="sm" variant="subtle">
+              {series}
+            </Tag>
+          ) : null}
           {tags?.slice(0, 3).map((t) => (
             <Tag key={t} size="sm">
               {t}
@@ -54,7 +58,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({
           ))}
           {date ? (
             <Text as="time" dateTime={date ?? undefined} fontSize="sm" color="muted">
-              {formatDate(date)}
+              {formatDateNatural(date)}
             </Text>
           ) : null}
           {typeof readingTime === "number" ? (

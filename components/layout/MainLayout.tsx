@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React from "react";
 import {
   Box,
   Container,
@@ -7,13 +7,13 @@ import {
   IconButton,
   Text,
   useColorMode,
-  Divider,
   Link as ChakraLink,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { motion } from "framer-motion";
 import { SkipLink } from "../ui";
 import { NavLink } from "../ui/NavLink";
 import { useScrollNav } from "../../hooks/useScrollNav";
@@ -27,50 +27,15 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const scrolled = useScrollNav(12);
   const router = useRouter();
 
-  const navWrapRef = useRef<HTMLDivElement | null>(null);
-  const aboutRef = useRef<HTMLAnchorElement | null>(null);
-  const talksRef = useRef<HTMLAnchorElement | null>(null);
-  const blogRef = useRef<HTMLAnchorElement | null>(null);
-  const cvRef = useRef<HTMLAnchorElement | null>(null);
-  const [underline, setUnderline] = useState<{ left: number; width: number }>({
-    left: 0,
-    width: 0,
-  });
-
-  function measure(el: HTMLElement | null) {
-    if (!el || !navWrapRef.current) return;
-    const wrapRect = navWrapRef.current.getBoundingClientRect();
-    const rect = el.getBoundingClientRect();
-    setUnderline({ left: rect.left - wrapRect.left, width: rect.width });
-  }
-
-  const updateFromActive = useCallback(() => {
-    const refs = [
-      { path: "/about", ref: aboutRef },
-      { path: "/talks", ref: talksRef },
-      { path: "/blog", ref: blogRef },
-    ];
-    const active = refs.find((r) => router.pathname.startsWith(r.path));
-    measure(active?.ref.current || null);
-  }, [router.pathname]);
-
-  useEffect(() => {
-    const onResize = () => updateFromActive();
-    requestAnimationFrame(updateFromActive);
-    window.addEventListener("resize", onResize);
-
-    // Add null check for router.events
-    if (router.events) {
-      router.events.on("routeChangeComplete", updateFromActive);
-    }
-
-    return () => {
-      window.removeEventListener("resize", onResize);
-      if (router.events) {
-        router.events.off("routeChangeComplete", updateFromActive);
-      }
-    };
-  }, [router.events, updateFromActive]);
+  const isWritingActive = router.pathname === "/" || router.pathname.startsWith("/writing");
+  const isIdeasActive = router.pathname.startsWith("/ideas");
+  const isProjectsActive = router.pathname.startsWith("/projects");
+  const isHireActive = router.pathname.startsWith("/hire");
+  const [hovered, setHovered] = React.useState<string | null>(null);
+  const showWriting = hovered === "writing" || (!hovered && isWritingActive);
+  const showIdeas = hovered === "ideas" || (!hovered && isIdeasActive);
+  const showProjects = hovered === "projects" || (!hovered && isProjectsActive);
+  const showHire = hovered === "hire" || (!hovered && isHireActive);
 
   return (
     <Box>
@@ -86,65 +51,116 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         backdropFilter="saturate(180%) blur(10px)"
         transition="all 200ms cubic-bezier(.2,.8,.2,1)"
       >
-        <Container maxW="container.xl" px={{ base: 4, md: 6 }}>
+        <Container maxW="container.xl" px={{ base: 4, md: 5 }}>
           <Flex h={16} align="center" justify="space-between">
-            <NavLink href="/" exact fontWeight={700} _hover={{ textDecoration: "none" }}>
-              Jordan Moshcovitis
-            </NavLink>
-            <HStack spacing={4} align="center">
-              <Box position="relative" ref={navWrapRef}>
-                <HStack spacing={4} align="center">
-                  <NavLink
-                    href="/about"
-                    ref={aboutRef as any}
-                    onMouseEnter={() => measure(aboutRef.current)}
-                    onMouseLeave={updateFromActive}
-                  >
-                    About
-                  </NavLink>
-                  <NavLink
-                    href="/talks"
-                    ref={talksRef as any}
-                    onMouseEnter={() => measure(talksRef.current)}
-                    onMouseLeave={updateFromActive}
-                  >
-                    Talks
-                  </NavLink>
-                  <NavLink
-                    href="/blog"
-                    ref={blogRef as any}
-                    onMouseEnter={() => measure(blogRef.current)}
-                    onMouseLeave={updateFromActive}
-                  >
-                    Blog
-                  </NavLink>
-                  <NavLink
-                    href="/JORDAN_MOSHCOVITIS_Resume.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    ref={cvRef as any}
-                    onMouseEnter={() => measure(cvRef.current)}
-                    onMouseLeave={updateFromActive}
-                  >
-                    Résumé
-                  </NavLink>
-                </HStack>
+            <Text fontWeight={700}>Jordan Moshcovitis</Text>
+            <HStack spacing={3} align="center">
+              <HStack spacing={3} align="center">
                 <Box
-                  position="absolute"
-                  bottom={-1}
-                  left={`${underline.left}px`}
-                  width={`${underline.width}px`}
-                  height="2px"
-                  bg="link"
-                  transition="left 200ms cubic-bezier(.2,.8,.2,1), width 200ms cubic-bezier(.2,.8,.2,1)"
-                />
-              </Box>
+                  as="span"
+                  position="relative"
+                  display="inline-block"
+                  onMouseEnter={() => setHovered("writing")}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <NavLink href="/" activeWhen={(p) => p === "/" || p.startsWith("/writing")}>
+                    Writing
+                  </NavLink>
+                  {showWriting ? (
+                    <Box
+                      as={motion.div}
+                      layoutId="nav-underline"
+                      position="absolute"
+                      bottom={-1}
+                      left={0}
+                      right={0}
+                      height="2px"
+                      bg="link"
+                      borderRadius="1px"
+                      style={{ willChange: 'transform, opacity' }}
+                    />
+                  ) : null}
+                </Box>
+                <Text color="muted">·</Text>
+                <Box
+                  as="span"
+                  position="relative"
+                  display="inline-block"
+                  onMouseEnter={() => setHovered("ideas")}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <NavLink href="/ideas">Ideas</NavLink>
+                  {showIdeas ? (
+                    <Box
+                      as={motion.div}
+                      layoutId="nav-underline"
+                      position="absolute"
+                      bottom={-1}
+                      left={0}
+                      right={0}
+                      height="2px"
+                      bg="link"
+                      borderRadius="1px"
+                      style={{ willChange: 'transform, opacity' }}
+                    />
+                  ) : null}
+                </Box>
+                <Text color="muted">·</Text>
+                <Box
+                  as="span"
+                  position="relative"
+                  display="inline-block"
+                  onMouseEnter={() => setHovered("projects")}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <NavLink href="/projects">Projects</NavLink>
+                  {showProjects ? (
+                    <Box
+                      as={motion.div}
+                      layoutId="nav-underline"
+                      position="absolute"
+                      bottom={-1}
+                      left={0}
+                      right={0}
+                      height="2px"
+                      bg="link"
+                      borderRadius="1px"
+                      style={{ willChange: 'transform, opacity' }}
+                    />
+                  ) : null}
+                </Box>
+                <Text color="muted">·</Text>
+                <Box
+                  as="span"
+                  position="relative"
+                  display="inline-block"
+                  onMouseEnter={() => setHovered("hire")}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <NavLink href="/hire">Hire me</NavLink>
+                  {showHire ? (
+                    <Box
+                      as={motion.div}
+                      layoutId="nav-underline"
+                      position="absolute"
+                      bottom={-1}
+                      left={0}
+                      right={0}
+                      height="2px"
+                      bg="link"
+                      borderRadius="1px"
+                      style={{ willChange: 'transform, opacity' }}
+                    />
+                  ) : null}
+                </Box>
+              </HStack>
               <IconButton
                 as={ChakraLink}
                 href="https://github.com/Jordanm37"
                 aria-label="GitHub"
                 icon={<FaGithub />}
                 variant="ghost"
+                size="sm"
               />
               <IconButton
                 as={ChakraLink}
@@ -152,12 +168,14 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 aria-label="LinkedIn"
                 icon={<FaLinkedin />}
                 variant="ghost"
+                size="sm"
               />
               <IconButton
                 aria-label="Toggle color mode"
                 variant="ghost"
                 onClick={toggleColorMode}
                 icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+                size="sm"
               />
             </HStack>
           </Flex>
@@ -166,60 +184,6 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
       <Box as="main" id="main-content" minH="100svh">
         {children}
-      </Box>
-
-      <Box
-        as="footer"
-        borderTopWidth="1px"
-        borderColor="border"
-        py={8}
-        bg="chromeBg"
-        backdropFilter="saturate(180%) blur(10px)"
-      >
-        <Container maxW="container.xl" px={{ base: 4, md: 6 }}>
-          <Flex
-            direction={{ base: "column", md: "row" }}
-            justify="space-between"
-            align={{ base: "flex-start", md: "center" }}
-            gap={4}
-          >
-            <Text color="muted">© {new Date().getFullYear()} Jordan Moshcovitis</Text>
-            <Box w="full">
-              <Divider my={4} display={{ base: "none", md: "block" }} />
-              <HStack spacing={4} color="muted">
-                <ChakraLink
-                  as={NextLink}
-                  href="/"
-                  _hover={{ textDecoration: "none", opacity: 0.8 }}
-                >
-                  Home
-                </ChakraLink>
-                <ChakraLink
-                  as={NextLink}
-                  href="/blog"
-                  _hover={{ textDecoration: "none", opacity: 0.8 }}
-                >
-                  Blog
-                </ChakraLink>
-                {null}
-                <ChakraLink
-                  as={NextLink}
-                  href="/privacy"
-                  _hover={{ textDecoration: "none", opacity: 0.8 }}
-                >
-                  Privacy
-                </ChakraLink>
-                <ChakraLink
-                  as={NextLink}
-                  href="mailto:jordan.moshcovitis@gmail.com"
-                  _hover={{ textDecoration: "none", opacity: 0.8 }}
-                >
-                  Contact
-                </ChakraLink>
-              </HStack>
-            </Box>
-          </Flex>
-        </Container>
       </Box>
     </Box>
   );
