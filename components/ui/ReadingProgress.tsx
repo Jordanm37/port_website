@@ -31,6 +31,7 @@ const ReadingProgressComponent: React.FC<{ targetId?: string; storageKey?: strin
 }) => {
   const [progress, setProgress] = useState(0);
   const lastSavedRef = useRef<number>(0);
+  const throttledScrollRef = useRef<((...args: any[]) => any) | null>(null);
 
   const onScroll = useCallback(() => {
     const el = document.getElementById(targetId) || document.documentElement;
@@ -51,17 +52,20 @@ const ReadingProgressComponent: React.FC<{ targetId?: string; storageKey?: strin
     }
   }, [targetId, storageKey]);
 
-  // Throttle scroll events to improve performance
-  const throttledOnScroll = useCallback(
-    () => throttle(onScroll, 16), // ~60fps
-    [onScroll]
-  );
+  // Create stable throttled function reference
+  if (!throttledScrollRef.current) {
+    throttledScrollRef.current = throttle(onScroll, 16);
+  }
 
   useEffect(() => {
+    // Update the throttled function when dependencies change
+    throttledScrollRef.current = throttle(onScroll, 16);
+
     onScroll(); // Initial calculation
-    window.addEventListener("scroll", throttledOnScroll(), { passive: true });
-    return () => window.removeEventListener("scroll", throttledOnScroll());
-  }, [onScroll, throttledOnScroll]);
+    const throttledHandler = throttledScrollRef.current;
+    window.addEventListener("scroll", throttledHandler, { passive: true });
+    return () => window.removeEventListener("scroll", throttledHandler);
+  }, [onScroll]);
 
   return (
     <Box

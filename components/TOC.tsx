@@ -19,18 +19,30 @@ export default function TOC() {
     setItems(filtered);
 
     if (!filtered.length) return;
+
     const io = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
+        // Find the most visible heading (closest to top of viewport)
+        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
+        if (visibleEntries.length > 0) {
+          const mostVisible = visibleEntries.reduce((prev, current) =>
+            prev.intersectionRatio > current.intersectionRatio ? prev : current
+          );
+          setActiveId(mostVisible.target.id);
+        }
       },
-      { rootMargin: "0px 0px -70% 0px", threshold: 0.1 }
+      { rootMargin: "0px 0px -70% 0px", threshold: [0.1, 0.5, 1.0] }
     );
-    heads.forEach((h) => io.observe(h));
-    return () => io.disconnect();
+
+    // Observe only filtered headings
+    filtered.forEach((item) => {
+      const element = document.getElementById(item.id);
+      if (element) io.observe(element);
+    });
+
+    return () => {
+      io.disconnect();
+    };
   }, []);
 
   if (!items.length) return null;
