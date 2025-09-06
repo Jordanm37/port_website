@@ -38,7 +38,7 @@ export const WritingListRow: React.FC<WritingListRowProps> = ({
 }) => {
   const natural = formatDateNatural(date);
   return (
-    <Box as={LinkBox} py={4} borderBottomWidth="1px" borderColor="border">
+    <Box as={LinkBox} py={5} borderBottomWidth="1px" borderColor="border">
       <Grid templateColumns={{ base: "1fr", lg: "120px 1fr 240px" }} gap={4} alignItems="start">
         <GridItem display={{ base: "block", lg: "block" }}>
           <chakra.time

@@ -35,24 +35,21 @@ export const FanChart: React.FC<FanChartProps> = ({
     const svg = svgRef.current;
     svg.innerHTML = ""; // Clear previous content
 
-    const margin = { top: 20, right: 20, bottom: 40, left: 60 };
+    const margin = { top: 20, right: 20, bottom: 28, left: 40 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
     // Scales
-    const xScale = (value: number) => {
-      const minX = Math.min(...data.map((d) => d.x));
-      const maxX = Math.max(...data.map((d) => d.x));
-      return ((value - minX) / (maxX - minX)) * innerWidth + margin.left;
-    };
+    const minX = Math.min(...data.map((d) => d.x));
+    const maxX = Math.max(...data.map((d) => d.x));
+    const xScale = (value: number) =>
+      ((value - minX) / (maxX - minX || 1)) * innerWidth + margin.left;
 
-    const yScale = (value: number) => {
-      const allValues = data.flatMap((d) => [d.p10, d.median, d.p90]);
-      const minY = Math.min(...allValues);
-      const maxY = Math.max(...allValues);
-      const padding = (maxY - minY) * 0.1;
-      return height - margin.bottom - ((value - minY) / (maxY - minY + 2 * padding)) * innerHeight;
-    };
+    const allValues = data.flatMap((d) => [d.p10, d.median, d.p90]);
+    const minY = Math.min(...allValues);
+    const maxY = Math.max(...allValues);
+    const yScale = (value: number) =>
+      height - margin.bottom - ((value - minY) / (maxY - minY || 1)) * innerHeight;
 
     // Create path functions
     const createPath = (accessor: (d: ConfidenceInterval) => number) => {

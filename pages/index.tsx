@@ -1,15 +1,5 @@
 import React from "react";
-import {
-  Box,
-  HStack,
-  chakra,
-  Heading,
-  Text,
-  Select,
-  Checkbox,
-  CheckboxGroup,
-  Stack,
-} from "@chakra-ui/react";
+import { Box, HStack, chakra, Heading, Text, Select, Tag, Stack } from "@chakra-ui/react";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { MainLayout } from "../components/layout";
@@ -39,16 +29,12 @@ const Home: NextPage<HomeProps> = ({ entries, allTags, allSeries }) => {
   const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
   const [selectedSeries, setSelectedSeries] = React.useState<string>("");
 
-  const filtered = React.useMemo(() => {
+  const visible = React.useMemo(() => {
     return entries.filter((e) => {
       if (selectedSeries && e.series !== selectedSeries) return false;
-      if (selectedTags.length > 0) {
-        const hasAll = selectedTags.every((t) => e.tags.includes(t));
-        if (!hasAll) return false;
-      }
       return true;
     });
-  }, [entries, selectedTags, selectedSeries]);
+  }, [entries, selectedSeries]);
   return (
     <MainLayout>
       <Head>
@@ -75,18 +61,26 @@ const Home: NextPage<HomeProps> = ({ entries, allTags, allSeries }) => {
               <Text color="muted" fontSize="sm">
                 Tags
               </Text>
-              <CheckboxGroup
-                value={selectedTags}
-                onChange={(val) => setSelectedTags(val as string[])}
-              >
-                <Stack direction="row" spacing={2} flexWrap="wrap">
-                  {allTags.map((t) => (
-                    <Checkbox key={t} value={t} size="sm">
+              <Stack direction="row" spacing={2} flexWrap="wrap">
+                {allTags.map((t) => {
+                  const isActive = selectedTags.includes(t);
+                  return (
+                    <Tag
+                      key={t}
+                      size="sm"
+                      variant={isActive ? "solid" : "subtle"}
+                      cursor="pointer"
+                      onClick={() =>
+                        setSelectedTags((prev) =>
+                          prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]
+                        )
+                      }
+                    >
                       {t}
-                    </Checkbox>
-                  ))}
-                </Stack>
-              </CheckboxGroup>
+                    </Tag>
+                  );
+                })}
+              </Stack>
             </Stack>
             <Stack direction="row" align="center" spacing={2}>
               <Text color="muted" fontSize="sm">
@@ -98,6 +92,14 @@ const Home: NextPage<HomeProps> = ({ entries, allTags, allSeries }) => {
                 maxW="200px"
                 value={selectedSeries}
                 onChange={(e) => setSelectedSeries(e.target.value)}
+                variant="outline"
+                borderColor="border"
+                bg="bg"
+                borderRadius="md"
+                focusBorderColor="link"
+                _hover={{ borderColor: "link" }}
+                iconColor="muted"
+                iconSize="1rem"
               >
                 {allSeries.map((s) => (
                   <option key={s} value={s}>
@@ -109,19 +111,24 @@ const Home: NextPage<HomeProps> = ({ entries, allTags, allSeries }) => {
           </HStack>
 
           <Box mt={4}>
-            {filtered.map((p) => (
-              <WritingListRow
-                key={p.slug}
-                href={`/blog/${p.slug}`}
-                title={p.title}
-                dek={p.dek}
-                tags={p.tags}
-                date={p.date}
-                readingTime={p.readingTime}
-                series={p.series}
-                thumbnail={p.thumbnail}
-              />
-            ))}
+            {visible.map((p) => {
+              const matchesTags =
+                selectedTags.length === 0 || selectedTags.every((t) => p.tags.includes(t));
+              return (
+                <Box key={p.slug} opacity={matchesTags ? 1 : 0.5} transition="opacity 150ms">
+                  <WritingListRow
+                    href={`/blog/${p.slug}`}
+                    title={p.title}
+                    dek={p.dek}
+                    tags={p.tags}
+                    date={p.date}
+                    readingTime={p.readingTime}
+                    series={p.series}
+                    thumbnail={p.thumbnail}
+                  />
+                </Box>
+              );
+            })}
           </Box>
         </Box>
       </PageContainer>

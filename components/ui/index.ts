@@ -33,3 +33,4 @@ export { Sparkline } from "./Sparkline";
 export type { SparklineProps } from "./Sparkline";
 export { ProjectCard } from "./ProjectCard";
 export type { ProjectItem } from "./ProjectCard";
+export { ProjectListRow } from "./ProjectListRow";

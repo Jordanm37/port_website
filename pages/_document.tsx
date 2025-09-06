@@ -8,6 +8,8 @@ class MyDocument extends Document {
           <link rel="alternate" type="application/rss+xml" href="/rss.xml" />
           <link rel="alternate" type="application/feed+json" href="/feed.json" />
           <link rel="alternate" type="application/atom+xml" href="/atom.xml" />
+          <link rel="stylesheet" href="/katex.min.css" />
+          <link rel="stylesheet" href="/print.css" media="print" />
         </Head>
         <body>
           <Main />

@@ -7,6 +7,9 @@ readingTime: 1
 ---
 
 import PostLayoutWrapper from "../../components/PostLayoutWrapper";
+import { FanChart } from "../../components/ui";
+import { Sparkline } from "../../components/ui";
+import { Callout } from "../../components/ui";
 
 export default ({ children, ...props }) => (
   <PostLayoutWrapper frontmatter={props.frontmatter}>{children}</PostLayoutWrapper>
@@ -23,6 +26,11 @@ export const x = 42;
 ## Section one
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer feugiat, urna at porta semper, justo turpis tincidunt lectus, in dictum mauris nulla sit amet elit. Cras id mattis leo. Integer gravida purus eu nibh fermentum, vitae pulvinar velit porta.
+
+<Callout type="info" title="Perlin noise factoid">
+  Perlin noise (Ken Perlin, early 1980s) shaped film CGI and video-game terrain; it gives natural
+  structure without grid artefacts.
+</Callout>
 
 ### Subsection one A
 
@@ -56,6 +64,22 @@ export function distance(a: Point, b: Point): number {
 }
 ```
 
+<FanChart
+  title="Uncertainty band demo"
+  data={Array.from({ length: 21 }).map((_, i) => ({
+    x: i,
+    median: Math.sin(i / 3) * 2,
+    p10: Math.sin(i / 3) * 2 - 1.2,
+    p25: Math.sin(i / 3) * 2 - 0.6,
+    p75: Math.sin(i / 3) * 2 + 0.6,
+    p90: Math.sin(i / 3) * 2 + 1.2,
+  }))}
+  width={640}
+  height={260}
+  xLabel="t"
+  yLabel="y"
+/>
+
 ### Subsection two A
 
 1. First step with additional commentary for two lines to check spacing.
@@ -66,6 +90,20 @@ export function distance(a: Point, b: Point): number {
 
 Morbi sit amet pulvinar purus. Integer suscipit, justo at imperdiet lobortis, orci libero consequat nibh, non accumsan ante odio at lacus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.
 
+### Math and footnote demo
+
+Inline math: $\\mathbb{E}[X] = \\mu$ shows expectation notation.
+
+Block math:
+
+$$
+\\operatorname{Var}(X) = \\mathbb{E}\big[(X-\\mu)^2\big].
+$$
+
+This identity follows from centering and linearity.[^var]
+
 #### Deep heading
 
 Suspendisse potenti. Nulla facilisi. Vivamus eget ullamcorper neque, id dictum lectus. Proin tempus, elit non rutrum ullamcorper, leo odio ullamcorper diam, in lacinia tortor nibh vitae nisl.
+
+[^var]: Variance equals the second central moment; derivable from $\\mathbb{E}[X^2]-\\mu^2$.

@@ -167,7 +167,7 @@ export default function PostLayout({
                     Related
                   </Heading>
                   <HStack spacing={3} flexWrap="wrap">
-                    {related.map((p) => (
+                    {related.slice(0, 3).map((p) => (
                       <NextLink key={p.slug} href={`/blog/${p.slug}`}>
                         {p.title}
                       </NextLink>
@@ -181,9 +181,9 @@ export default function PostLayout({
               position="sticky"
               top={24}
               flexShrink={0}
-              w="280px"
+              w="240px"
             >
-              <Box borderLeftWidth="1px" borderColor="border" pl={5}>
+              <Box borderLeftWidth="1px" borderColor="border" pl={7}>
                 <TOC />
               </Box>
             </Box>

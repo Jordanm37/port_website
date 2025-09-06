@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { MainLayout } from "../components/layout";
 import { PageContainer, Prose, Hero, Reveal } from "../components/ui";
-import { Heading, Text, VStack, HStack, Divider } from "@chakra-ui/react";
+import { Heading, Text, VStack, HStack, Divider, Button } from "@chakra-ui/react";
 import { ImLinkedin2, ImMail4, ImGithub } from "react-icons/im";
 import SocialButton from "../components/SocialButton";
 import { bookingUrl } from "../lib/site";
@@ -54,6 +54,19 @@ const AboutPage: NextPage = () => {
             structured planning, and robust evaluation. I question trends and ship systems with
             measurable gains.
           </Text>
+        </Prose>
+
+        <Heading as="h2" size="xl" mt={12} mb={3}>
+          Services
+        </Heading>
+        <Prose>
+          <Text color="muted">
+            Fractional hands-on help: technical strategy, evaluation rigs, platform design, and
+            production delivery.
+          </Text>
+          <Button as="a" href="https://jordanmoshcovitis.com" variant="solid" mt={4}>
+            Visit consulting site
+          </Button>
         </Prose>
       </PageContainer>
     </MainLayout>

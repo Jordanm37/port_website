@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React from "react";
 import {
   Box,
   Container,
@@ -13,6 +13,7 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { motion } from "framer-motion";
 import { SkipLink } from "../ui";
 import { NavLink } from "../ui/NavLink";
 import { useScrollNav } from "../../hooks/useScrollNav";
@@ -26,51 +27,15 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const scrolled = useScrollNav(12);
   const router = useRouter();
 
-  const navWrapRef = useRef<HTMLDivElement | null>(null);
-  const writingRef = useRef<HTMLAnchorElement | null>(null);
-  const ideasRef = useRef<HTMLAnchorElement | null>(null);
-  const projectsRef = useRef<HTMLAnchorElement | null>(null);
-  const hireRef = useRef<HTMLAnchorElement | null>(null);
-  const [underline, setUnderline] = useState<{ left: number; width: number }>({
-    left: 0,
-    width: 0,
-  });
-
-  function measure(el: HTMLElement | null) {
-    if (!el || !navWrapRef.current) return;
-    const wrapRect = navWrapRef.current.getBoundingClientRect();
-    const rect = el.getBoundingClientRect();
-    setUnderline({ left: rect.left - wrapRect.left, width: rect.width });
-  }
-
-  const updateFromActive = useCallback(() => {
-    const refs = [
-      { path: "/writing", ref: writingRef },
-      { path: "/projects", ref: projectsRef },
-      { path: "/ideas", ref: ideasRef },
-      { path: "/hire", ref: hireRef },
-    ];
-    const active = refs.find((r) => router.pathname.startsWith(r.path));
-    measure(active?.ref.current || null);
-  }, [router.pathname]);
-
-  useEffect(() => {
-    const onResize = () => updateFromActive();
-    requestAnimationFrame(updateFromActive);
-    window.addEventListener("resize", onResize);
-
-    // Add null check for router.events
-    if (router.events) {
-      router.events.on("routeChangeComplete", updateFromActive);
-    }
-
-    return () => {
-      window.removeEventListener("resize", onResize);
-      if (router.events) {
-        router.events.off("routeChangeComplete", updateFromActive);
-      }
-    };
-  }, [router.events, updateFromActive]);
+  const isWritingActive = router.pathname === "/" || router.pathname.startsWith("/writing");
+  const isIdeasActive = router.pathname.startsWith("/ideas");
+  const isProjectsActive = router.pathname.startsWith("/projects");
+  const isHireActive = router.pathname.startsWith("/hire");
+  const [hovered, setHovered] = React.useState<string | null>(null);
+  const showWriting = hovered === "writing" || (!hovered && isWritingActive);
+  const showIdeas = hovered === "ideas" || (!hovered && isIdeasActive);
+  const showProjects = hovered === "projects" || (!hovered && isProjectsActive);
+  const showHire = hovered === "hire" || (!hovered && isHireActive);
 
   return (
     <Box>
@@ -86,59 +51,105 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         backdropFilter="saturate(180%) blur(10px)"
         transition="all 200ms cubic-bezier(.2,.8,.2,1)"
       >
-        <Container maxW="container.xl" px={{ base: 4, md: 6 }}>
+        <Container maxW="container.xl" px={{ base: 4, md: 5 }}>
           <Flex h={16} align="center" justify="space-between">
             <Text fontWeight={700}>Jordan Moshcovitis</Text>
             <HStack spacing={3} align="center">
-              <Box position="relative" ref={navWrapRef}>
-                <HStack spacing={3} align="center">
-                  <NavLink
-                    href="/"
-                    activeWhen={(p) => p === "/" || p.startsWith("/writing")}
-                    ref={writingRef as any}
-                    onMouseEnter={() => measure(writingRef.current)}
-                    onMouseLeave={updateFromActive}
-                  >
+              <HStack spacing={3} align="center">
+                <Box
+                  as="span"
+                  position="relative"
+                  display="inline-block"
+                  onMouseEnter={() => setHovered("writing")}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <NavLink href="/" activeWhen={(p) => p === "/" || p.startsWith("/writing")}>
                     Writing
                   </NavLink>
-                  <Text color="muted">·</Text>
-                  <NavLink
-                    href="/ideas"
-                    ref={ideasRef as any}
-                    onMouseEnter={() => measure(ideasRef.current)}
-                    onMouseLeave={updateFromActive}
-                  >
-                    Ideas
-                  </NavLink>
-                  <Text color="muted">·</Text>
-                  <NavLink
-                    href="/projects"
-                    ref={projectsRef as any}
-                    onMouseEnter={() => measure(projectsRef.current)}
-                    onMouseLeave={updateFromActive}
-                  >
-                    Projects
-                  </NavLink>
-                  <Text color="muted">·</Text>
-                  <NavLink
-                    href="/hire"
-                    ref={hireRef as any}
-                    onMouseEnter={() => measure(hireRef.current)}
-                    onMouseLeave={updateFromActive}
-                  >
-                    Hire me
-                  </NavLink>
-                </HStack>
+                  {showWriting ? (
+                    <Box
+                      as={motion.div}
+                      layoutId="nav-underline"
+                      position="absolute"
+                      bottom={-1}
+                      left={0}
+                      right={0}
+                      height="2px"
+                      bg="link"
+                      borderRadius="1px"
+                    />
+                  ) : null}
+                </Box>
+                <Text color="muted">·</Text>
                 <Box
-                  position="absolute"
-                  bottom={-1}
-                  left={`${underline.left}px`}
-                  width={`${underline.width}px`}
-                  height="2px"
-                  bg="link"
-                  transition="left 200ms cubic-bezier(.2,.8,.2,1), width 200ms cubic-bezier(.2,.8,.2,1)"
-                />
-              </Box>
+                  as="span"
+                  position="relative"
+                  display="inline-block"
+                  onMouseEnter={() => setHovered("ideas")}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <NavLink href="/ideas">Ideas</NavLink>
+                  {showIdeas ? (
+                    <Box
+                      as={motion.div}
+                      layoutId="nav-underline"
+                      position="absolute"
+                      bottom={-1}
+                      left={0}
+                      right={0}
+                      height="2px"
+                      bg="link"
+                      borderRadius="1px"
+                    />
+                  ) : null}
+                </Box>
+                <Text color="muted">·</Text>
+                <Box
+                  as="span"
+                  position="relative"
+                  display="inline-block"
+                  onMouseEnter={() => setHovered("projects")}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <NavLink href="/projects">Projects</NavLink>
+                  {showProjects ? (
+                    <Box
+                      as={motion.div}
+                      layoutId="nav-underline"
+                      position="absolute"
+                      bottom={-1}
+                      left={0}
+                      right={0}
+                      height="2px"
+                      bg="link"
+                      borderRadius="1px"
+                    />
+                  ) : null}
+                </Box>
+                <Text color="muted">·</Text>
+                <Box
+                  as="span"
+                  position="relative"
+                  display="inline-block"
+                  onMouseEnter={() => setHovered("hire")}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <NavLink href="/hire">Hire me</NavLink>
+                  {showHire ? (
+                    <Box
+                      as={motion.div}
+                      layoutId="nav-underline"
+                      position="absolute"
+                      bottom={-1}
+                      left={0}
+                      right={0}
+                      height="2px"
+                      bg="link"
+                      borderRadius="1px"
+                    />
+                  ) : null}
+                </Box>
+              </HStack>
               <IconButton
                 as={ChakraLink}
                 href="https://github.com/Jordanm37"

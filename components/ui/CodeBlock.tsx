@@ -47,7 +47,13 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ children }) => {
   const showLineNumbers = lineCount > 5;
 
   return (
-    <Box borderWidth="1px" borderColor="border" borderRadius="md" overflow="hidden" bg="bg">
+    <Box
+      borderWidth="1px"
+      borderColor="border"
+      borderRadius="md"
+      overflow="hidden"
+      bg={{ base: "bg", _dark: "neutral.800" }}
+    >
       <HStack
         justify="space-between"
         align="center"
