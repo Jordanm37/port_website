@@ -46,21 +46,27 @@ export default function TOC() {
         Outline
       </Box>
       <List spacing={1}>
-        {items.map((i) => (
-          <ListItem
-            key={i.id}
-            ml={`${(i.level - 1) * 12}px`}
-            display={items.length > 14 && i.level >= 3 ? { base: "none", xl: "none" } : "block"}
-          >
-            <ChakraLink
-              href={`#${i.id}`}
-              color={activeId === i.id ? "link" : "muted"}
-              _hover={{ color: "link" }}
+        {items.map((i) => {
+          // More intelligent collapsing: only hide H3s if there are many AND they make up a large portion
+          const h3Count = items.filter(item => item.level >= 3).length;
+          const shouldCollapseH3s = items.length > 14 && h3Count > 8 && i.level >= 3;
+          
+          return (
+            <ListItem
+              key={i.id}
+              ml={`${(i.level - 1) * 12}px`}
+              display={shouldCollapseH3s ? { base: "none", xl: "none" } : "block"}
             >
-              {i.text}
-            </ChakraLink>
-          </ListItem>
-        ))}
+              <ChakraLink
+                href={`#${i.id}`}
+                color={activeId === i.id ? "link" : "muted"}
+                _hover={{ color: "link" }}
+              >
+                {i.text}
+              </ChakraLink>
+            </ListItem>
+          );
+        })}
       </List>
     </Box>
   );
