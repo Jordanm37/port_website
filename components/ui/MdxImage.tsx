@@ -21,15 +21,15 @@ export const MdxImage: React.FC<MdxImageProps> = ({
   aspectRatio,
   ...rest
 }) => {
-  const resolvedWidth = width ?? (aspectRatio ? 1200 : 1200);
-  const resolvedHeight = height ?? (aspectRatio ? Math.round(1200 / aspectRatio) : 630);
+  const resolvedWidth = width ?? (aspectRatio ? 1200 : 800);
+  const resolvedHeight = height ?? (aspectRatio ? Math.round(1200 / aspectRatio) : 450);
   return (
     <ChakraNextImage
       src={src}
       alt={alt}
       width={resolvedWidth}
       height={resolvedHeight}
-      sizes={sizes ?? "(min-width: 768px) 720px, 100vw"}
+      sizes={sizes ?? "(min-width: 1280px) 720px, (min-width: 768px) 600px, 100vw"}
       style={{ width: "100%", height: "auto" }}
       borderRadius="md"
       my={2}

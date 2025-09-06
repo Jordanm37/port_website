@@ -111,7 +111,7 @@ export default function PostLayout({
           </Head>
           {frontmatter?.title ? (
             <Reveal>
-              <Heading as="h1" size="xl" mb={1}>
+              <Heading as="h1" size="xl" mb={1} maxW="72ch">
                 {frontmatter.title}
               </Heading>
             </Reveal>
@@ -136,11 +136,11 @@ export default function PostLayout({
           {frontmatter?.masthead ? (
             <MastheadSignature kind={frontmatter.masthead} seed={frontmatter?.slug} />
           ) : null}
-          {frontmatter?.assumptions ? (
+          {frontmatter?.assumptions && Object.keys(frontmatter.assumptions || {}).length ? (
             <AssumptionInspector assumptions={frontmatter.assumptions} />
           ) : null}
           <chakra.div my={4} />
-          <Flex gap={10} align="flex-start" pb={{ base: 10, md: 14 }}>
+          <Flex gap={8} align="flex-start" pb={{ base: 10, md: 14 }}>
             <Box flex="1">
               <Prose mt={0}>
                 <Box
@@ -181,9 +181,9 @@ export default function PostLayout({
               position="sticky"
               top={24}
               flexShrink={0}
-              w="240px"
+              w="220px"
             >
-              <Box borderLeftWidth="1px" borderColor="border" pl={7}>
+              <Box borderLeftWidth="1px" borderColor="border" pl={5}>
                 <TOC />
               </Box>
             </Box>

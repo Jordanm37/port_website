@@ -157,8 +157,8 @@ const components = {
       textDecoration: "underline",
       textUnderlineOffset: "0.12em",
       textDecorationThickness: "0.08em",
-      transition: "color var(--t-fast, 140ms), text-underline-offset var(--t-fast, 140ms)",
-      _hover: { textDecoration: "underline", textUnderlineOffset: "0.25em", opacity: 0.9 },
+      transition: "color 150ms ease-out, text-underline-offset 150ms ease-out",
+      _hover: { textDecoration: "underline", textUnderlineOffset: "0.3em", opacity: 0.9 },
       _focusVisible: {
         outline: "2px solid currentColor",
         outlineOffset: "3px",

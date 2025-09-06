@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box } from "@chakra-ui/react";
 
 export interface ConfidenceInterval {
@@ -28,6 +28,20 @@ export const FanChart: React.FC<FanChartProps> = ({
   title,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [measuredWidth, setMeasuredWidth] = useState<number>(width);
+
+  // Measure container to avoid overflow when a fixed width is not suitable
+  useEffect(() => {
+    const measure = () => {
+      const w = containerRef.current?.getBoundingClientRect().width;
+      if (typeof w === "number" && w > 0) setMeasuredWidth(w);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (containerRef.current) ro.observe(containerRef.current);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!svgRef.current || !data.length) return;
@@ -36,7 +50,8 @@ export const FanChart: React.FC<FanChartProps> = ({
     svg.innerHTML = ""; // Clear previous content
 
     const margin = { top: 20, right: 20, bottom: 28, left: 40 };
-    const innerWidth = width - margin.left - margin.right;
+    const computedWidth = Math.max(280, Math.min(width, measuredWidth));
+    const innerWidth = computedWidth - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
     // Scales
@@ -99,7 +114,7 @@ export const FanChart: React.FC<FanChartProps> = ({
     const xAxis = document.createElementNS("http://www.w3.org/2000/svg", "line");
     xAxis.setAttribute("x1", margin.left.toString());
     xAxis.setAttribute("y1", (height - margin.bottom).toString());
-    xAxis.setAttribute("x2", (width - margin.right).toString());
+    xAxis.setAttribute("x2", (computedWidth - margin.right).toString());
     xAxis.setAttribute("y2", (height - margin.bottom).toString());
     xAxis.setAttribute("stroke", "var(--oklch-border)");
     svg.appendChild(xAxis);
@@ -111,10 +126,13 @@ export const FanChart: React.FC<FanChartProps> = ({
     yAxis.setAttribute("y2", (height - margin.bottom).toString());
     yAxis.setAttribute("stroke", "var(--oklch-border)");
     svg.appendChild(yAxis);
-  }, [data, width, height]);
+    // Ensure svg reflects computed size
+    svg.setAttribute("width", String(computedWidth));
+    svg.setAttribute("height", String(height));
+  }, [data, width, measuredWidth, height]);
 
   return (
-    <Box>
+    <Box ref={containerRef} w="full">
       {title && (
         <Box as="h3" fontSize="sm" color="muted" mb={2}>
           {title}
@@ -130,7 +148,7 @@ export const FanChart: React.FC<FanChartProps> = ({
       >
         <svg
           ref={svgRef}
-          width={width}
+          width="100%"
           height={height}
           style={{ display: "block", margin: "0 auto" }}
         />

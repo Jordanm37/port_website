@@ -32,7 +32,14 @@
         "series": null,
         "dek": "A second post to validate tags and RSS"
       },
-      "next": null
+      "next": {
+        "slug": "_template",
+        "title": "Post title (sentence case)",
+        "date": "2025-01-01",
+        "tags": ["topic", "method"],
+        "series": null,
+        "dek": "One-line summary (≤120 chars)"
+      }
     },
     "relatedPosts": [
       {
@@ -44,5 +51,19 @@
         "dek": "A second post to validate tags and RSS"
       }
     ]
+  },
+  "_template": {
+    "navigation": {
+      "prev": {
+        "slug": "hello-world",
+        "title": "Hello world",
+        "date": "2025-09-01",
+        "tags": ["notes", "intro"],
+        "series": null,
+        "dek": "Launch note"
+      },
+      "next": null
+    },
+    "relatedPosts": []
   }
 }

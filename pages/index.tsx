@@ -69,6 +69,10 @@ const Home: NextPage<HomeProps> = ({ entries, allTags, allSeries }) => {
                       key={t}
                       size="sm"
                       variant={isActive ? "solid" : "subtle"}
+                      boxShadow={isActive ? "sm" : undefined}
+                      _dark={isActive ? { boxShadow: "0 2px 8px rgba(0,0,0,0.35)" } : undefined}
+                      transition="box-shadow 150ms ease-out, transform 150ms ease-out"
+                      _hover={{ transform: "translateY(-1px)" }}
                       cursor="pointer"
                       onClick={() =>
                         setSelectedTags((prev) =>
