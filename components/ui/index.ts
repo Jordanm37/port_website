@@ -26,8 +26,7 @@ export type { WritingListRowProps } from "./WritingListRow";
 // Lazy-loaded components for better performance
 export { LazyMastheadSignature as MastheadSignature } from "./LazyMastheadSignature";
 export type { MastheadKind, MastheadSignatureProps } from "./MastheadSignature";
-export { AssumptionInspector, FanChart } from "./LazyMathComponents";
-export type { AssumptionInspectorProps, Assumptions } from "./AssumptionInspector";
+export { FanChart } from "./LazyMathComponents";
 export type { FanChartProps, ConfidenceInterval } from "./FanChart";
 export { Sparkline } from "./Sparkline";
 export type { SparklineProps } from "./Sparkline";

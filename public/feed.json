@@ -5,22 +5,16 @@
   "feed_url": "https://port-website-indol.vercel.app/feed.json",
   "items": [
     {
-      "id": "https://port-website-indol.vercel.app/blog/_template",
-      "url": "https://port-website-indol.vercel.app/blog/_template",
-      "title": "_template",
-      "date_published": "2025-09-06T13:05:22.127Z"
-    },
-    {
       "id": "https://port-website-indol.vercel.app/blog/hello-world",
       "url": "https://port-website-indol.vercel.app/blog/hello-world",
       "title": "hello world",
-      "date_published": "2025-09-06T13:05:22.127Z"
+      "date_published": "2025-09-06T14:49:02.454Z"
     },
     {
       "id": "https://port-website-indol.vercel.app/blog/second-post",
       "url": "https://port-website-indol.vercel.app/blog/second-post",
       "title": "second post",
-      "date_published": "2025-09-06T13:05:22.127Z"
+      "date_published": "2025-09-06T14:49:02.455Z"
     }
   ]
 }

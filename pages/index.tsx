@@ -50,8 +50,8 @@ const Home: NextPage<HomeProps> = ({ entries, allTags, allSeries }) => {
           imageAlt="Jordan Moshcovitis headshot"
           primaryCtaHref="/projects"
           primaryCtaLabel="Projects"
-          secondaryCtaHref="/hire"
-          secondaryCtaLabel="Hire me"
+          secondaryCtaHref="/enquire"
+          secondaryCtaLabel="Enquire"
           variant="compact"
         />
 
@@ -86,6 +86,7 @@ const Home: NextPage<HomeProps> = ({ entries, allTags, allSeries }) => {
                 })}
               </Stack>
             </Stack>
+
             <Stack direction="row" align="center" spacing={2}>
               <Text color="muted" fontSize="sm">
                 Series

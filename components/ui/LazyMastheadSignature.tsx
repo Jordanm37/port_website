@@ -3,8 +3,8 @@ import { Box } from "@chakra-ui/react";
 import type { MastheadSignatureProps } from "./MastheadSignature";
 
 // Lazy load the MastheadSignature component
-const MastheadSignature = lazy(() => 
-  import("./MastheadSignature").then(module => ({ default: module.MastheadSignature }))
+const MastheadSignature = lazy(() =>
+  import("./MastheadSignature").then((module) => ({ default: module.MastheadSignature }))
 );
 
 // Simple loading placeholder that matches the component dimensions
