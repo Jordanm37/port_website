@@ -6,7 +6,9 @@
         "slug": "hello-world",
         "title": "Hello world",
         "date": "2025-09-01",
-        "tags": ["notes", "intro"]
+        "tags": ["notes", "intro"],
+        "series": null,
+        "dek": "Launch note"
       }
     },
     "relatedPosts": [
@@ -14,7 +16,9 @@
         "slug": "hello-world",
         "title": "Hello world",
         "date": "2025-09-01",
-        "tags": ["notes", "intro"]
+        "tags": ["notes", "intro"],
+        "series": null,
+        "dek": "Launch note"
       }
     ]
   },
@@ -24,7 +28,9 @@
         "slug": "second-post",
         "title": "Second post",
         "date": "2025-09-02",
-        "tags": ["notes", "update"]
+        "tags": ["notes", "update"],
+        "series": null,
+        "dek": "A second post to validate tags and RSS"
       },
       "next": null
     },
@@ -33,7 +39,9 @@
         "slug": "second-post",
         "title": "Second post",
         "date": "2025-09-02",
-        "tags": ["notes", "update"]
+        "tags": ["notes", "update"],
+        "series": null,
+        "dek": "A second post to validate tags and RSS"
       }
     ]
   }

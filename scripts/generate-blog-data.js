@@ -19,7 +19,9 @@ function getOrderedPosts() {
     const title = data.title || slug.replace(/-/g, " ");
     const date = data.date || null;
     const tags = data.tags || [];
-    return { slug, title, date, tags };
+    const series = data.series || null;
+    const dek = data.dek || data.summary || null;
+    return { slug, title, date, tags, series, dek };
   });
   return entries.sort((a, b) => {
     const ad = a.date ? Date.parse(a.date) : 0;

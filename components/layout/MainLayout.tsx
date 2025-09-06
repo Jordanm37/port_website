@@ -7,7 +7,6 @@ import {
   IconButton,
   Text,
   useColorMode,
-  Divider,
   Link as ChakraLink,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
@@ -28,10 +27,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const router = useRouter();
 
   const navWrapRef = useRef<HTMLDivElement | null>(null);
-  const aboutRef = useRef<HTMLAnchorElement | null>(null);
-  const talksRef = useRef<HTMLAnchorElement | null>(null);
-  const blogRef = useRef<HTMLAnchorElement | null>(null);
-  const cvRef = useRef<HTMLAnchorElement | null>(null);
+  const writingRef = useRef<HTMLAnchorElement | null>(null);
+  const ideasRef = useRef<HTMLAnchorElement | null>(null);
+  const projectsRef = useRef<HTMLAnchorElement | null>(null);
+  const hireRef = useRef<HTMLAnchorElement | null>(null);
   const [underline, setUnderline] = useState<{ left: number; width: number }>({
     left: 0,
     width: 0,
@@ -46,9 +45,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   const updateFromActive = useCallback(() => {
     const refs = [
-      { path: "/about", ref: aboutRef },
-      { path: "/talks", ref: talksRef },
-      { path: "/blog", ref: blogRef },
+      { path: "/writing", ref: writingRef },
+      { path: "/projects", ref: projectsRef },
+      { path: "/ideas", ref: ideasRef },
+      { path: "/hire", ref: hireRef },
     ];
     const active = refs.find((r) => router.pathname.startsWith(r.path));
     measure(active?.ref.current || null);
@@ -88,45 +88,45 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       >
         <Container maxW="container.xl" px={{ base: 4, md: 6 }}>
           <Flex h={16} align="center" justify="space-between">
-            <NavLink href="/" exact fontWeight={700} _hover={{ textDecoration: "none" }}>
-              Jordan Moshcovitis
-            </NavLink>
-            <HStack spacing={4} align="center">
+            <Text fontWeight={700}>Jordan Moshcovitis</Text>
+            <HStack spacing={3} align="center">
               <Box position="relative" ref={navWrapRef}>
-                <HStack spacing={4} align="center">
+                <HStack spacing={3} align="center">
                   <NavLink
-                    href="/about"
-                    ref={aboutRef as any}
-                    onMouseEnter={() => measure(aboutRef.current)}
+                    href="/"
+                    activeWhen={(p) => p === "/" || p.startsWith("/writing")}
+                    ref={writingRef as any}
+                    onMouseEnter={() => measure(writingRef.current)}
                     onMouseLeave={updateFromActive}
                   >
-                    About
+                    Writing
                   </NavLink>
+                  <Text color="muted">·</Text>
                   <NavLink
-                    href="/talks"
-                    ref={talksRef as any}
-                    onMouseEnter={() => measure(talksRef.current)}
+                    href="/ideas"
+                    ref={ideasRef as any}
+                    onMouseEnter={() => measure(ideasRef.current)}
                     onMouseLeave={updateFromActive}
                   >
-                    Talks
+                    Ideas
                   </NavLink>
+                  <Text color="muted">·</Text>
                   <NavLink
-                    href="/blog"
-                    ref={blogRef as any}
-                    onMouseEnter={() => measure(blogRef.current)}
+                    href="/projects"
+                    ref={projectsRef as any}
+                    onMouseEnter={() => measure(projectsRef.current)}
                     onMouseLeave={updateFromActive}
                   >
-                    Blog
+                    Projects
                   </NavLink>
+                  <Text color="muted">·</Text>
                   <NavLink
-                    href="/JORDAN_MOSHCOVITIS_Resume.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    ref={cvRef as any}
-                    onMouseEnter={() => measure(cvRef.current)}
+                    href="/hire"
+                    ref={hireRef as any}
+                    onMouseEnter={() => measure(hireRef.current)}
                     onMouseLeave={updateFromActive}
                   >
-                    Résumé
+                    Hire me
                   </NavLink>
                 </HStack>
                 <Box
@@ -145,6 +145,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 aria-label="GitHub"
                 icon={<FaGithub />}
                 variant="ghost"
+                size="sm"
               />
               <IconButton
                 as={ChakraLink}
@@ -152,12 +153,14 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 aria-label="LinkedIn"
                 icon={<FaLinkedin />}
                 variant="ghost"
+                size="sm"
               />
               <IconButton
                 aria-label="Toggle color mode"
                 variant="ghost"
                 onClick={toggleColorMode}
                 icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+                size="sm"
               />
             </HStack>
           </Flex>
@@ -166,60 +169,6 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
       <Box as="main" id="main-content" minH="100svh">
         {children}
-      </Box>
-
-      <Box
-        as="footer"
-        borderTopWidth="1px"
-        borderColor="border"
-        py={8}
-        bg="chromeBg"
-        backdropFilter="saturate(180%) blur(10px)"
-      >
-        <Container maxW="container.xl" px={{ base: 4, md: 6 }}>
-          <Flex
-            direction={{ base: "column", md: "row" }}
-            justify="space-between"
-            align={{ base: "flex-start", md: "center" }}
-            gap={4}
-          >
-            <Text color="muted">© {new Date().getFullYear()} Jordan Moshcovitis</Text>
-            <Box w="full">
-              <Divider my={4} display={{ base: "none", md: "block" }} />
-              <HStack spacing={4} color="muted">
-                <ChakraLink
-                  as={NextLink}
-                  href="/"
-                  _hover={{ textDecoration: "none", opacity: 0.8 }}
-                >
-                  Home
-                </ChakraLink>
-                <ChakraLink
-                  as={NextLink}
-                  href="/blog"
-                  _hover={{ textDecoration: "none", opacity: 0.8 }}
-                >
-                  Blog
-                </ChakraLink>
-                {null}
-                <ChakraLink
-                  as={NextLink}
-                  href="/privacy"
-                  _hover={{ textDecoration: "none", opacity: 0.8 }}
-                >
-                  Privacy
-                </ChakraLink>
-                <ChakraLink
-                  as={NextLink}
-                  href="mailto:jordan.moshcovitis@gmail.com"
-                  _hover={{ textDecoration: "none", opacity: 0.8 }}
-                >
-                  Contact
-                </ChakraLink>
-              </HStack>
-            </Box>
-          </Flex>
-        </Container>
       </Box>
     </Box>
   );

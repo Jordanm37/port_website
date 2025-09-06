@@ -1,0 +1,24 @@
+@media print {
+  header,
+  nav,
+  footer {
+    display: none !important;
+  }
+  a {
+    text-decoration: none;
+    color: black;
+  }
+  pre,
+  code {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  img {
+    max-width: 100% !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt;
+  }
+}

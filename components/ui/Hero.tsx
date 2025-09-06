@@ -18,6 +18,7 @@ export interface HeroProps {
   primaryCtaLabel?: string;
   secondaryCtaHref?: string;
   secondaryCtaLabel?: string;
+  variant?: "default" | "compact";
 }
 
 export const Hero: React.FC<HeroProps> = ({
@@ -30,47 +31,61 @@ export const Hero: React.FC<HeroProps> = ({
   primaryCtaLabel,
   secondaryCtaHref,
   secondaryCtaLabel,
+  variant = "default",
 }) => {
   return (
     <Box
       position="relative"
       overflow="hidden"
       borderRadius="lg"
-      borderWidth="1px"
-      borderColor="border"
       transition="border-color 200ms, box-shadow 200ms"
-      boxShadow="sm"
-      _hover={{ boxShadow: "md" }}
-      bgGradient="linear(to-b, primary.50 0%, primary.50 12%, white 70%)"
-      _dark={{ bgGradient: "linear(to-b, neutral.800 0%, neutral.800 20%, neutral.900 70%)" }}
-      // Avoid motion-specific props to satisfy strict Chakra types in CI
-      px={{ base: 6, md: 10 }}
-      py={{ base: 10, md: 16 }}
-      _before={{
-        content: '""',
-        position: "absolute",
-        inset: 0,
-        bgGradient: {
-          base: "radial(primary.200 1px, transparent 1px)",
-          _dark: "radial(neutral.700 1px, transparent 1px)",
-        },
-        backgroundSize: "24px 24px",
-        opacity: 0.15,
-        pointerEvents: "none",
-      }}
+      boxShadow={variant === "compact" ? undefined : "sm"}
+      _hover={variant === "compact" ? undefined : { boxShadow: "md" }}
+      bg={variant === "compact" ? "bg" : undefined}
+      bgGradient={
+        variant === "compact" ? undefined : "linear(to-b, primary.50 0%, primary.50 12%, white 70%)"
+      }
+      _dark={
+        variant === "compact"
+          ? undefined
+          : { bgGradient: "linear(to-b, neutral.800 0%, neutral.800 20%, neutral.900 70%)" }
+      }
+      px={{ base: variant === "compact" ? 4 : 6, md: variant === "compact" ? 5 : 10 }}
+      py={{ base: variant === "compact" ? 6 : 10, md: variant === "compact" ? 10 : 16 }}
+      _before={
+        variant === "compact"
+          ? undefined
+          : {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              bgGradient: {
+                base: "radial(primary.200 1px, transparent 1px)",
+                _dark: "radial(neutral.700 1px, transparent 1px)",
+              },
+              backgroundSize: "24px 24px",
+              opacity: 0.15,
+              pointerEvents: "none",
+            }
+      }
     >
-      <CanvasBackground color="rgba(0, 102, 204, 0.4)" />
-      <Flex direction={{ base: "column", md: "row" }} align="center" gap={{ base: 6, md: 10 }}>
+      {variant === "default" ? <CanvasBackground color="rgba(0, 102, 204, 0.4)" /> : null}
+      <Flex direction={{ base: "column", md: "row" }} align="center" gap={{ base: 5, md: 8 }}>
         <Box flex="1" textAlign={{ base: "center", md: "left" }}>
-          <Heading as="h1" size="3xl" mb={2}>
+          <Heading as="h1" size={variant === "compact" ? "2xl" : "3xl"} mb={2}>
             {title}
           </Heading>
           {subtitle ? (
-            <Text color="muted" fontSize="lg">
+            <Text color="muted" fontSize={variant === "compact" ? "md" : "lg"}>
               {subtitle}
             </Text>
           ) : null}
-          <Flex mt={6} justify={{ base: "center", md: "flex-start" }} gap={3} wrap="wrap">
+          <Flex
+            mt={variant === "compact" ? 4 : 6}
+            justify={{ base: "center", md: "flex-start" }}
+            gap={3}
+            wrap="wrap"
+          >
             {primaryCtaHref && primaryCtaLabel ? (
               <Button as="a" href={primaryCtaHref} variant="solid">
                 {primaryCtaLabel}
@@ -88,7 +103,7 @@ export const Hero: React.FC<HeroProps> = ({
               </Button>
             ) : null}
           </Flex>
-          {chips && chips.length ? (
+          {variant === "default" && chips && chips.length ? (
             <HStack spacing={2} mt={4} flexWrap="wrap">
               {chips.slice(0, 3).map((c) => (
                 <Tag key={c} size="sm">
@@ -103,9 +118,9 @@ export const Hero: React.FC<HeroProps> = ({
             flexShrink={0}
             borderRadius="lg"
             overflow="hidden"
-            boxShadow="md"
-            ring={1}
-            ringColor="border"
+            boxShadow={variant === "compact" ? undefined : "md"}
+            ring={variant === "compact" ? undefined : 1}
+            ringColor={variant === "compact" ? undefined : "border"}
             transition="transform 400ms, box-shadow 200ms, outline-color 200ms, ring-color 200ms"
             transform="translateY(0)"
             _hover={{ transform: "translateY(-2px)" }}
@@ -113,9 +128,13 @@ export const Hero: React.FC<HeroProps> = ({
             <Image
               src={imageSrc}
               alt={imageAlt || ""}
-              width={156}
-              height={170}
-              sizes="(min-width: 768px) 170px, 140px"
+              width={variant === "compact" ? 120 : 156}
+              height={variant === "compact" ? 130 : 170}
+              sizes={
+                variant === "compact"
+                  ? "(min-width: 768px) 130px, 110px"
+                  : "(min-width: 768px) 170px, 140px"
+              }
               priority
             />
           </Box>

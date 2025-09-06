@@ -35,7 +35,13 @@ export default function TOC() {
 
   if (!items.length) return null;
   return (
-    <Box as="nav" aria-label="Table of contents" position="sticky" top={20}>
+    <Box
+      as="nav"
+      aria-label="Table of contents"
+      position="sticky"
+      top={20}
+      display={{ base: "none", xl: "block" }}
+    >
       <List spacing={1}>
         {items.map((i) => (
           <ListItem key={i.id} ml={`${(i.level - 1) * 12}px`}>

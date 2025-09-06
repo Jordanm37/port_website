@@ -1,0 +1,347 @@
+Title: List-first, monochrome, stochastic signature
+
+Goal
+Design a writing-first site for an AI/physics engineer focused on modelling, evaluation, understanding, and optimisation of stochastic systems across domains (physics, LLMs, RL). Home equals the Writing index with a short bio at the top. Keep Projects and About (with Services folded in). Header includes a Contact button (booking) and a quiet Hire me link to a consulting site.
+
+Structure and navigation
+
+- Home = /writing (index shows on the root). Short bio at top, then the post list.
+- Header: Writing · Projects · About. Right side: Contact button (booking), Hire me link, theme toggle, RSS.
+- About page includes a Services section with a single external button to the consulting site.
+
+Typography and rhythm
+
+- Typeface: Inter for UI/prose, JetBrains Mono for code.
+- Body: 1.15rem font size, 1.65 line height; prose max-width ~72ch for 50–75 characters per line.
+- Headings set with clamp():
+  - H1: clamp(2.6rem, 4vw + 1rem, 3.2rem)
+  - H2: clamp(2.0rem, 2.5vw + 1rem, 2.3rem)
+  - H3: clamp(1.5rem, 1.2vw + 1rem, 1.7rem)
+- Sentence case headings. Use tabular numerals for dates, equation numbers, and metrics.
+
+Colour and theme
+
+- Monochrome base (bg, surface, text, muted, border) with one spectral accent reserved for uncertainty fills and selection states.
+- Light and dark themes. Meet WCAG AA for body and large type.
+
+Home / writing index visuals
+
+- Date (natural form, e.g., “5 September 2025”) + read time + optional series pill in a left meta rail.
+- Main column: title and one-line dek.
+- Desktop shows a 16:9 thumbnail on the right; hide thumbnails on mobile.
+- Filters: Tag and Series. No search box.
+- Show RSS and JSON Feed links near the filters.
+
+Post page visuals
+
+- Layout: H1 → meta row (natural date · read time · tags) → top progress bar.
+- Sticky table of contents at ≥1280 px; hidden below that width.
+- Code blocks: Shiki highlight, copy button, language label.
+- Maths: KaTeX. Support footnotes and figure captions. Allow full-bleed diagrams where marked.
+- Related posts (3) at the end.
+
+Physics / UQ signature
+
+- Seeded SVG masthead under the title per post. Kinds: Perlin, Brownian, OU, GP. Seed = slug for deterministic fingerprints.
+  - Perlin factoid (use as a small aside once): Perlin noise (Ken Perlin, early 1980s) shaped film CGI and video-game terrain; it gives natural structure without grid artefacts.
+- Assumption inspector panel near the top of each post:
+  - Fields: noise model, priors, solver, uncertainty type chips (Aleatoric, Epistemic) with one-line tooltips.
+- Uncertainty bands as first-class visuals (fan charts for intervals). Use the spectral accent for interval fills.
+- Sparklines in the margin for residuals/score traces. Equation numbers in the gutter via CSS counters.
+
+Components, states, and motion
+
+- Links keep underlines with increased offset and thickness.
+- Focus ring on every interactive element: 2px outline with 3px offset.
+- Cards and list rows use hairline borders, 10–12px radius, and light elevation.
+- Motion set low: 120–180ms hovers, small card lift, underline offset shift on link hover.
+
+Projects log visuals
+
+- Research-style list grouped by organisation or theme.
+- Show client/employer names when permitted.
+- Each item shows role/period, short scope, technique chips inside the project page, artefacts (code/talk/demo/paper), and links back to related posts.
+
+Discoverability and share
+
+- Dynamic OG images for posts and projects.
+- RSS, Atom, and JSON feeds. Sitemap.
+- Theme toggle visible. Include a skip link and full keyboard path through all controls.
+
+Anti-goals
+
+- No separate Notes section; short notes live in the unified Writing stream.
+- No method chips on Writing cards.
+- No free-text search.
+
+Content model (front matter shape)
+
+- Post
+  - title
+  - dek
+  - tags[]
+  - series (optional)
+  - published (ISO date renders as natural)
+  - readingTime (minutes)
+  - masthead: "perlin" | "brownian" | "ou" | "gp"
+  - assumptions:
+    - noise
+    - priors
+    - solver
+    - uncertainty: ["aleatoric","epistemic"]
+
+Visual tokens (OKLCH sketch)
+
+- Define: --bg, --surface, --text, --muted, --border
+- Accent: one spectral hue used for interval bands and selected states
+- Keep AA contrast in default and focus/hover states across light and dark
+
+Layout rules
+
+- List row (desktop): grid 120px | 1fr | 240px; gap 16px; border-bottom 1px; padding 16px 0.
+- Mobile: single column; hide thumbnail.
+- Prose container: max-width 72ch; grids use 1100–1200px on wide screens.
+
+Interactivity
+
+- JS widgets for small experiments: Monte Carlo sliders that update FanChart; re-seed buttons for OU/Brownian paths.
+- Python route for selected posts: JupyterLite/Pyodide cells with numpy/scipy preloaded. Seed from URL for reproducible runs.
+
+Acceptance checks
+
+- Home shows bio then the writing list, date-first, with read time and series pills where present.
+- Desktop thumbnails render, mobile hides them.
+- Progress bar, sticky TOC (≥1280 px), Shiki, KaTeX, footnotes all present on posts.
+- Assumption inspector renders the four fields with tooltips. Masthead uses the slug seed.
+- Focus styles visible on all controls; links underlined; AA contrast passes.
+- RSS/Atom/JSON links visible on the index; sitemap shipped.## Comprehensive v0 prompt for your stochastic systems portfolio
+
+````
+Create a minimalist writing-first portfolio site for an AI/physics engineer specialising in stochastic systems and uncertainty quantification. The design should be monochrome with thoughtful typography and subtle stochastic visual signatures.
+
+CORE ARCHITECTURE:
+- Next.js 14 with App Router, TypeScript, Tailwind CSS
+- MDX for writing with custom components
+- Static generation with dynamic OG images
+- Full keyboard navigation and AA contrast compliance
+
+NAVIGATION STRUCTURE:
+Header (sticky, blur backdrop on scroll):
+- Left: "Jordan Moshcovitis" (links to home)
+- Centre: Writing · Projects · About (clean dots as separators)
+- Right: Contact button (primary, links to cal.com), "Hire me" link (subtle, external), theme toggle (sun/moon icons), RSS icon
+
+HOME PAGE (routes to /writing):
+Bio section (2 sentences, max-width 65ch):
+"I model and evaluate stochastic systems across physics, language models, and RL. I publish experiments, notes, and tools you can question, run, and extend."
+Include inline links to GitHub and Google Scholar.
+
+Writing list (date-first, reverse chronological):
+Desktop grid: grid-template-columns: 120px 1fr 240px;
+Mobile: single column, no thumbnails
+
+Each row contains:
+- Natural date format ("5 September 2025") with tabular numerals
+- Read time ("10 min read")
+- Optional series pill (subtle border, small text)
+- Title (Inter, sentence case, 1.3rem)
+- Dek/subtitle (muted text, 0.95rem, max 2 lines)
+- 16:9 thumbnail (desktop only, lazy loaded, 12px radius)
+
+Filters above list:
+- Tag dropdown (multi-select)
+- Series dropdown (single-select)
+- RSS and JSON Feed icons with labels
+
+POST TEMPLATE:
+Structure:
+1. H1 title (sentence case)
+2. Meta row: natural date · read time · tags (clickable)
+3. Thin progress bar (2px, accent colour, position: fixed top)
+4. Stochastic masthead SVG (150px height, full width)
+5. Assumption Inspector panel (if assumptions in frontmatter)
+6. Article content
+7. Related posts (3 max)
+
+Sticky TOC (visible ≥1280px):
+- Position: fixed left at 1280px+
+- Shows H2 and H3 headings
+- Active section highlighting
+- Smooth scroll on click
+
+STOCHASTIC MASTHEAD COMPONENT:
+Seeded SVG generating deterministic patterns from post slug:
+- Types: perlin | brownian | ou (Ornstein-Uhlenbeck) | gp (Gaussian process)
+- Height: 150px, full width
+- Thin strokes (0.5-1px), low opacity (0.15-0.3)
+- Use slug as seed for reproducible patterns
+- Include subtle Perlin noise caption on hover: "Perlin noise (Ken Perlin, 1980s) shaped film CGI and game terrain"
+
+ASSUMPTION INSPECTOR COMPONENT:
+Compact panel showing model assumptions:
+```yaml
+assumptions:
+  noise: "Gaussian"
+  priors: "Weakly informative, N(0, 5²)"
+  solver: "Euler-Maruyama, Δt=1e-3"
+  uncertainty: ["aleatoric", "epistemic"]
+````
+
+Display as subtle bordered card with:
+
+- Noise model chip
+- Priors chip
+- Solver chip
+- Aleatoric/Epistemic badges with tooltips:
+  - Aleatoric: "Variability from process or data generation"
+  - Epistemic: "Uncertainty from limited knowledge or model form"
+
+TYPOGRAPHY SYSTEM:
+Font stack:
+
+- UI/Prose: Inter (variable font)
+- Code: JetBrains Mono
+- Math: KaTeX default
+
+Sizing (using clamp for responsive scaling):
+
+- Body: 1.15rem, line-height 1.65
+- H1: clamp(2.6rem, 4vw + 1rem, 3.2rem)
+- H2: clamp(2.0rem, 2.5vw + 1rem, 2.3rem)
+- H3: clamp(1.5rem, 1.2vw + 1rem, 1.7rem)
+- Prose max-width: 72ch
+- All headings: sentence case
+- Dates/metrics: tabular numerals
+
+COLOUR SYSTEM (CSS variables):
+Light theme:
+--bg: oklch(98% 0 0)
+--surface: oklch(96% 0 0)  
+--text: oklch(20% 0 0)
+--muted: oklch(45% 0 0)
+--border: oklch(90% 0 0)
+--accent: oklch(65% 0.15 260) // Spectral blue-violet, ONLY for uncertainty bands
+
+Dark theme:
+--bg: oklch(10% 0 0)
+--surface: oklch(15% 0 0)
+--text: oklch(90% 0 0)
+--muted: oklch(65% 0 0)  
+--border: oklch(25% 0 0)
+--accent: oklch(70% 0.15 260)
+
+CODE BLOCKS:
+
+- Shiki syntax highlighting (github-dark/light themes)
+- Language label (top-right corner)
+- Copy button (appears on hover)
+- Filename support
+- Line numbers for blocks >5 lines
+- Border: 1px solid var(--border)
+- Border-radius: 8px
+
+UNCERTAINTY VISUALISATIONS:
+FanChart component for confidence intervals:
+
+- X-axis: time or parameter space
+- Bands: 10%, 25%, 50%, 75%, 90% quantiles
+- Use accent colour ONLY here (varying opacity)
+- Median line: solid 2px
+- Include D3.js for smooth paths
+
+Margin sparklines:
+
+- 60px width, 20px height
+- For residuals or score traces
+- Position: absolute in margin on wide screens
+
+PROJECTS PAGE:
+Research-style listing grouped by organisation:
+Each project shows:
+
+- Organisation/client name (when permitted)
+- Role and period
+- Brief scope (2-3 lines)
+- Techniques used (chips INSIDE project page only)
+- Artefacts: [Code] [Paper] [Talk] [Demo] links
+- Related writing backlinks
+
+ABOUT PAGE:
+
+- Short bio (3-4 paragraphs)
+- Portrait photo (circle, 200px)
+- Services section:
+  - Brief description of consulting offerings
+  - Single CTA button to external consulting site
+  - No detailed service listings
+
+INTERACTIVE ELEMENTS:
+Focus states:
+
+- 2px focus ring with 3px offset on ALL interactive elements
+- Use accent colour for focus ring
+
+Links:
+
+- Keep underlines (text-underline-offset: 3px)
+- On hover: increase offset to 4px (transition: 120ms)
+
+Cards/buttons:
+
+- Border: 1px solid var(--border)
+- Border-radius: 10-12px
+- On hover: subtle transform: translateY(-2px)
+- Box-shadow: 0 1px 3px rgba(0,0,0,0.05)
+
+Motion:
+
+- All transitions: 120-180ms
+- Use ease-out timing
+- Respect prefers-reduced-motion
+
+TECHNICAL REQUIREMENTS:
+
+- Generate RSS, Atom, and JSON feeds
+- Dynamic OG images per post
+- Sitemap.xml
+- Skip link for accessibility
+- Print styles (hide nav, clean typography)
+- Service worker for offline reading
+- Search: NO free-text search (by design)
+- Reading progress saved to localStorage
+
+FRONTMATTER STRUCTURE:
+
+```yaml
+title: "OU control with budgeted uncertainty"
+dek: "Optimal control under OU noise with calibrated intervals"
+tags: [sde, calibration, control]
+series: "Stochastic diary"
+published: 2025-09-05
+readingTime: 10
+masthead: "perlin"
+assumptions:
+  noise: "Ornstein-Uhlenbeck"
+  priors: "Γ(α=2, β=1) on diffusion"
+  solver: "Euler-Maruyama, Δt=1e-3"
+  uncertainty: ["aleatoric", "epistemic"]
+```
+
+ANTI-PATTERNS TO AVOID:
+
+- No gradient backgrounds or neon effects
+- No particle animations or WebGL
+- No method chips on writing list cards
+- No separate Notes section
+- No free-text search box
+- No comments section
+- No social media icons
+- No loading spinners (use skeleton states)
+- No modal dialogs (use pages)
+- No infinite scroll
+
+The final result should feel like reading a well-typeset research paper combined with the clarity of Observable notebooks, maintaining academic rigour while being technically sophisticated through thoughtful simplicity rather than visual excess.
+
+```
+
+```

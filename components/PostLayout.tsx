@@ -18,7 +18,8 @@ import NextLink from "next/link";
 import { MainLayout } from "./layout";
 import TOC from "./TOC";
 import { ReadingProgress } from "./ui/ReadingProgress";
-import { Reveal, Prose } from "./ui";
+import { Reveal, Prose, MastheadSignature, AssumptionInspector } from "./ui";
+import { formatDateNatural } from "../lib/date";
 import siteUrl from "../lib/site";
 
 type BlogMeta = {
@@ -41,6 +42,13 @@ type PostLayoutProps = {
     ogImageAlt?: string;
     ogImageWidth?: number;
     ogImageHeight?: number;
+    masthead?: "perlin" | "brownian" | "ou" | "gp";
+    assumptions?: {
+      noise?: string;
+      priors?: string;
+      solver?: string;
+      uncertainty?: ("aleatoric" | "epistemic")[];
+    };
   };
   navigation?: {
     prev: BlogMeta | null;
@@ -59,11 +67,18 @@ export default function PostLayout({
   const description = frontmatter?.description || frontmatter?.summary || "";
   const url = frontmatter?.slug ? `${siteUrl}/blog/${frontmatter.slug}` : undefined;
   const ogImagePath = frontmatter?.ogImage || frontmatter?.image;
+  const ogFallback = frontmatter?.slug
+    ? `${siteUrl}/api/og?title=${encodeURIComponent(title)}&dek=${encodeURIComponent(
+        description || ""
+      )}&date=${encodeURIComponent(frontmatter?.date || "")}&tags=${encodeURIComponent(
+        (frontmatter?.tags || []).join(",")
+      )}`
+    : undefined;
   const ogImage = ogImagePath
     ? ogImagePath.startsWith("http")
       ? ogImagePath
       : `${siteUrl}${ogImagePath.startsWith("/") ? "" : "/"}${ogImagePath}`
-    : undefined;
+    : ogFallback;
   const ogImageAlt = frontmatter?.ogImageAlt || title;
   const { hasCopied, onCopy } = useClipboard(url || "");
   const nav = navigation || { prev: null, next: null };
@@ -71,8 +86,8 @@ export default function PostLayout({
 
   return (
     <MainLayout>
-      <ReadingProgress />
-      <Container maxW="container.lg" px={{ base: 4, md: 6 }} bg="readingBg">
+      <ReadingProgress storageKey={frontmatter?.slug} />
+      <Container maxW="container.xl" px={{ base: 4, md: 6 }} bg="readingBg">
         <chakra.main p={0} mx="auto">
           <Head>
             <title>{title}</title>
@@ -96,15 +111,20 @@ export default function PostLayout({
           </Head>
           {frontmatter?.title ? (
             <Reveal>
-              <Heading as="h1" size="2xl" mb={2}>
+              <Heading as="h1" size="xl" mb={1}>
                 {frontmatter.title}
               </Heading>
             </Reveal>
           ) : null}
-          <HStack spacing={3} mb={6} align="center">
+          <HStack spacing={3} mb={3} align="center">
             {frontmatter?.date ? (
-              <Text as="time" color="muted" fontSize="sm">
-                Last updated: {frontmatter.date}
+              <Text
+                as="time"
+                color="muted"
+                fontSize="sm"
+                sx={{ fontVariantNumeric: "tabular-nums" }}
+              >
+                {formatDateNatural(frontmatter.date)}
               </Text>
             ) : null}
             {frontmatter?.tags?.map((t) => (
@@ -113,80 +133,61 @@ export default function PostLayout({
               </Tag>
             ))}
           </HStack>
-          <Box position="relative">
-            <TOC />
-          </Box>
+          {frontmatter?.masthead ? (
+            <MastheadSignature kind={frontmatter.masthead} seed={frontmatter?.slug} />
+          ) : null}
+          {frontmatter?.assumptions ? (
+            <AssumptionInspector assumptions={frontmatter.assumptions} />
+          ) : null}
           <chakra.div my={4} />
-          <Prose mt={0}>
-            <Box sx={frontmatter?.title ? { "h1:first-of-type": { display: "none" } } : undefined}>
-              {children}
+          <Flex gap={10} align="flex-start" pb={{ base: 10, md: 14 }}>
+            <Box flex="1">
+              <Prose mt={0}>
+                <Box
+                  sx={frontmatter?.title ? { "h1:first-of-type": { display: "none" } } : undefined}
+                >
+                  {children}
+                </Box>
+              </Prose>
+              <Flex mt={8} justify="space-between">
+                {nav.prev ? (
+                  <NextLink href={`/blog/${nav.prev.slug}`}>← {nav.prev.title}</NextLink>
+                ) : (
+                  <span />
+                )}
+                {nav.next ? (
+                  <NextLink href={`/blog/${nav.next.slug}`}>{nav.next.title} →</NextLink>
+                ) : (
+                  <span />
+                )}
+              </Flex>
+              {related.length > 0 && (
+                <Box mt={10}>
+                  <Heading as="h2" size="md" mb={2} color="muted">
+                    Related
+                  </Heading>
+                  <HStack spacing={3} flexWrap="wrap">
+                    {related.map((p) => (
+                      <NextLink key={p.slug} href={`/blog/${p.slug}`}>
+                        {p.title}
+                      </NextLink>
+                    ))}
+                  </HStack>
+                </Box>
+              )}
             </Box>
-          </Prose>
-          <HStack spacing={2} mt={8}>
-            <Tooltip label={hasCopied ? "Copied" : "Copy link"} openDelay={200}>
-              <IconButton
-                aria-label="Copy link"
-                onClick={onCopy}
-                size="sm"
-                variant="ghost"
-                icon={<chakra.span>🔗</chakra.span>}
-              />
-            </Tooltip>
-            {url ? (
-              <>
-                <IconButton
-                  as="a"
-                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
-                    url
-                  )}&text=${encodeURIComponent(title)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Share on Twitter"
-                  size="sm"
-                  variant="ghost"
-                  icon={<FaTwitter />}
-                />
-                <IconButton
-                  as="a"
-                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-                    url
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Share on LinkedIn"
-                  size="sm"
-                  variant="ghost"
-                  icon={<FaLinkedin />}
-                />
-              </>
-            ) : null}
-          </HStack>
-          <Flex mt={8} justify="space-between">
-            {nav.prev ? (
-              <NextLink href={`/blog/${nav.prev.slug}`}>← {nav.prev.title}</NextLink>
-            ) : (
-              <span />
-            )}
-            {nav.next ? (
-              <NextLink href={`/blog/${nav.next.slug}`}>{nav.next.title} →</NextLink>
-            ) : (
-              <span />
-            )}
+            <Box
+              display={{ base: "none", lg: "block" }}
+              position="sticky"
+              top={24}
+              flexShrink={0}
+              w="280px"
+            >
+              <Box borderLeftWidth="1px" borderColor="border" pl={5}>
+                <TOC />
+              </Box>
+            </Box>
           </Flex>
-          {related.length > 0 && (
-            <Box mt={8}>
-              <Heading as="h2" size="lg" mb={3}>
-                Related posts
-              </Heading>
-              <HStack spacing={4} flexWrap="wrap">
-                {related.map((p) => (
-                  <NextLink key={p.slug} href={`/blog/${p.slug}`}>
-                    {p.title}
-                  </NextLink>
-                ))}
-              </HStack>
-            </Box>
-          )}
         </chakra.main>
       </Container>
     </MainLayout>

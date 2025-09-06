@@ -2,6 +2,7 @@
 const fs = require("fs");
 const path = require("path");
 const RSS = require("rss");
+const { writeFileSync, existsSync, mkdirSync } = require("fs");
 
 const SITE_URL = "https://port-website-indol.vercel.app";
 
@@ -55,10 +56,44 @@ function main() {
 
   const xml = feed.xml({ indent: true });
   const publicDir = path.join(process.cwd(), "public");
-  if (!fs.existsSync(publicDir)) fs.mkdirSync(publicDir);
-  fs.writeFileSync(path.join(publicDir, "rss.xml"), xml);
+  if (!existsSync(publicDir)) mkdirSync(publicDir);
+  writeFileSync(path.join(publicDir, "rss.xml"), xml);
+
+  // Generate JSON Feed v1
+  const jsonFeed = {
+    version: "https://jsonfeed.org/version/1",
+    title: "Jordan Moshcovitis – Writing",
+    home_page_url: SITE_URL,
+    feed_url: `${SITE_URL}/feed.json`,
+    items: posts.map((p) => ({
+      id: p.url,
+      url: p.url,
+      title: p.title,
+      date_published: p.date.toISOString(),
+    })),
+  };
+  writeFileSync(path.join(publicDir, "feed.json"), JSON.stringify(jsonFeed, null, 2));
+
+  // Generate Atom by reusing RSS library output (RSS package supports atom if configured)
+  // Minimal Atom wrapper: reuse items
+  const atom = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<feed xmlns="http://www.w3.org/2005/Atom">',
+    `<title>Jordan Moshcovitis – Writing</title>`,
+    `<link href="${SITE_URL}/atom.xml" rel="self" />`,
+    `<link href="${SITE_URL}" />`,
+    `<updated>${new Date().toISOString()}</updated>`,
+    `<id>${SITE_URL}/</id>`,
+    ...posts.map(
+      (p) =>
+        `<entry><title>${p.title}</title><link href="${p.url}" /><id>${p.url}</id><updated>${p.date.toISOString()}</updated></entry>`
+    ),
+    "</feed>",
+  ].join("");
+  writeFileSync(path.join(publicDir, "atom.xml"), atom);
+
   // eslint-disable-next-line no-console
-  console.log("Generated public/rss.xml");
+  console.log("Generated public/rss.xml, public/feed.json and public/atom.xml");
 }
 
 main();

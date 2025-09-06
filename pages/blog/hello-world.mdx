@@ -3,6 +3,7 @@ title: "Hello world"
 date: "2025-09-01"
 tags: ["notes", "intro"]
 summary: "Launch note"
+readingTime: 1
 ---
 
 import PostLayoutWrapper from "../../components/PostLayoutWrapper";
@@ -18,3 +19,53 @@ Some text. Code:
 ```ts
 export const x = 42;
 ```
+
+## Section one
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer feugiat, urna at porta semper, justo turpis tincidunt lectus, in dictum mauris nulla sit amet elit. Cras id mattis leo. Integer gravida purus eu nibh fermentum, vitae pulvinar velit porta.
+
+### Subsection one A
+
+Aliquam erat volutpat. Maecenas vel leo et libero aliquet rhoncus. Donec non odio eget neque egestas placerat. Mauris id dapibus risus. Aenean vitae eros ac urna molestie efficitur.
+
+```python
+def simulate(n: int) -> list[int]:
+    acc: list[int] = []
+    for i in range(n):
+        acc.append(i * i)
+    return acc
+```
+
+### Subsection one B
+
+- Item one with a bit of detail to wrap the line for visual rhythm.
+- Item two with even more detail to ensure multi-line list items render well.
+- Item three with a final note.
+
+## Section two
+
+Quisque hendrerit, dui non vulputate fermentum, leo nibh hendrerit orci, a faucibus nisl sem a quam. Integer feugiat nisl et dignissim finibus. Sed a ex eget quam hendrerit bibendum. Pellentesque habitant morbi tristique senectus et netus.
+
+```tsx
+type Point = { x: number; y: number };
+
+export function distance(a: Point, b: Point): number {
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+```
+
+### Subsection two A
+
+1. First step with additional commentary for two lines to check spacing.
+2. Second step that also wraps sufficiently.
+3. Third step concise.
+
+## Section three
+
+Morbi sit amet pulvinar purus. Integer suscipit, justo at imperdiet lobortis, orci libero consequat nibh, non accumsan ante odio at lacus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.
+
+#### Deep heading
+
+Suspendisse potenti. Nulla facilisi. Vivamus eget ullamcorper neque, id dictum lectus. Proin tempus, elit non rutrum ullamcorper, leo odio ullamcorper diam, in lacinia tortor nibh vitae nisl.
