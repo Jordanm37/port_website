@@ -52,19 +52,19 @@ function generatePath(
     .join(" ");
 }
 
-export const MastheadSignature: React.FC<MastheadSignatureProps> = React.memo(({
+const MastheadSignatureComponent: React.FC<MastheadSignatureProps> = ({
   kind = "brownian",
   seed = "seed",
   height = 150,
 }) => {
   const width = 1200; // will scale to container width
-  
+
   // Memoize expensive path calculation
   const d = React.useMemo(() => {
     const rng = mulberry32(hashStringToInt(`${kind}:${seed}`));
     return generatePath(kind, width, height, rng);
   }, [kind, seed, height]);
-  
+
   const stroke = "var(--oklch-accent, currentColor)";
 
   return (
@@ -74,7 +74,7 @@ export const MastheadSignature: React.FC<MastheadSignatureProps> = React.memo(({
         width="100%"
         height={height}
         preserveAspectRatio="none"
-        style={{ willChange: 'transform' }}
+        style={{ willChange: "transform" }}
       >
         {kind === "perlin" ? (
           <title>Perlin noise (Ken Perlin, 1980s) shaped film CGI and game terrain</title>
@@ -83,6 +83,10 @@ export const MastheadSignature: React.FC<MastheadSignatureProps> = React.memo(({
       </svg>
     </Box>
   );
-});
+};
+
+MastheadSignatureComponent.displayName = "MastheadSignature";
+
+export const MastheadSignature = React.memo(MastheadSignatureComponent);
 
 export default MastheadSignature;

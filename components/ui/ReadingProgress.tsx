@@ -25,56 +25,61 @@ function throttle<T extends (...args: any[]) => any>(func: T, delay: number): T 
   }) as T;
 }
 
-export const ReadingProgress: React.FC<{ targetId?: string; storageKey?: string }> = React.memo(
-  ({ targetId = "main-content", storageKey }) => {
-    const [progress, setProgress] = useState(0);
-    const lastSavedRef = useRef<number>(0);
+const ReadingProgressComponent: React.FC<{ targetId?: string; storageKey?: string }> = ({
+  targetId = "main-content",
+  storageKey,
+}) => {
+  const [progress, setProgress] = useState(0);
+  const lastSavedRef = useRef<number>(0);
 
-    const onScroll = useCallback(() => {
-      const el = document.getElementById(targetId) || document.documentElement;
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const height = el.scrollHeight - window.innerHeight;
-      const pct = height > 0 ? Math.min(100, Math.max(0, (scrollTop / height) * 100)) : 0;
-      setProgress(pct);
-      if (storageKey) {
-        const now = Date.now();
-        if (now - lastSavedRef.current > 500) {
-          try {
-            localStorage.setItem(`reading-progress:${storageKey}`, pct.toFixed(2));
-            lastSavedRef.current = now;
-          } catch (_e) {
-            // ignore storage errors
-          }
+  const onScroll = useCallback(() => {
+    const el = document.getElementById(targetId) || document.documentElement;
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const height = el.scrollHeight - window.innerHeight;
+    const pct = height > 0 ? Math.min(100, Math.max(0, (scrollTop / height) * 100)) : 0;
+    setProgress(pct);
+    if (storageKey) {
+      const now = Date.now();
+      if (now - lastSavedRef.current > 500) {
+        try {
+          localStorage.setItem(`reading-progress:${storageKey}`, pct.toFixed(2));
+          lastSavedRef.current = now;
+        } catch (_e) {
+          // ignore storage errors
         }
       }
-    }, [targetId, storageKey]);
+    }
+  }, [targetId, storageKey]);
 
-    // Throttle scroll events to improve performance
-    const throttledOnScroll = useCallback(
-      throttle(onScroll, 16), // ~60fps
-      [onScroll]
-    );
+  // Throttle scroll events to improve performance
+  const throttledOnScroll = useCallback(
+    () => throttle(onScroll, 16), // ~60fps
+    [onScroll]
+  );
 
-    useEffect(() => {
-      onScroll(); // Initial calculation
-      window.addEventListener("scroll", throttledOnScroll, { passive: true });
-      return () => window.removeEventListener("scroll", throttledOnScroll);
-    }, [onScroll, throttledOnScroll]);
+  useEffect(() => {
+    onScroll(); // Initial calculation
+    window.addEventListener("scroll", throttledOnScroll(), { passive: true });
+    return () => window.removeEventListener("scroll", throttledOnScroll());
+  }, [onScroll, throttledOnScroll]);
 
-    return (
-      <Box
-        position="fixed"
-        top={16}
-        left={0}
-        height="2px"
-        width={`${progress}%`}
-        bg="link"
-        zIndex={50}
-        transition="width 80ms linear"
-        style={{ willChange: "width" }}
-      />
-    );
-  }
-);
+  return (
+    <Box
+      position="fixed"
+      top={16}
+      left={0}
+      height="2px"
+      width={`${progress}%`}
+      bg="link"
+      zIndex={50}
+      transition="width 80ms linear"
+      style={{ willChange: "width" }}
+    />
+  );
+};
+
+ReadingProgressComponent.displayName = "ReadingProgress";
+
+export const ReadingProgress = React.memo(ReadingProgressComponent);
 
 export default ReadingProgress;
