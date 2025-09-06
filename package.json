@@ -35,7 +35,8 @@
     "remark-math": "^6.0.0",
     "remark-mdx-frontmatter": "5.2.0",
     "remark-slug": "7.0.1",
-    "rss": "1.2.2"
+    "rss": "1.2.2",
+    "shiki": "^3.12.2"
   },
   "devDependencies": {
     "@types/node": "22.7.4",
