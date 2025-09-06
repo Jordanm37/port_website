@@ -18,7 +18,7 @@ import NextLink from "next/link";
 import { MainLayout } from "./layout";
 import TOC from "./TOC";
 import { ReadingProgress } from "./ui/ReadingProgress";
-import { Reveal, Prose, MastheadSignature, AssumptionInspector } from "./ui";
+import { Reveal, Prose, MastheadSignature } from "./ui";
 import type { MastheadKind } from "./ui/MastheadSignature";
 import { formatDateNatural } from "../lib/date";
 import siteUrl from "../lib/site";
