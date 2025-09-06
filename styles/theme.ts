@@ -157,8 +157,12 @@ const components = {
       textDecoration: "underline",
       textUnderlineOffset: "0.12em",
       textDecorationThickness: "0.08em",
-      transition: "color 150ms ease-out, text-underline-offset 150ms ease-out",
-      _hover: { textDecoration: "underline", textUnderlineOffset: "0.3em", opacity: 0.9 },
+      transition: "color 120ms ease-out, text-underline-offset 120ms ease-out",
+      _hover: {
+        textDecoration: "underline",
+        textUnderlineOffset: "0.3em",
+        opacity: 0.95,
+      },
       _focusVisible: {
         outline: "2px solid currentColor",
         outlineOffset: "3px",
@@ -241,8 +245,8 @@ const styles = {
       "--oklch-surface": "oklch(0.96 0.006 260)",
       "--oklch-text": "oklch(0.16 0.03 260)",
       "--oklch-muted": "oklch(0.55 0.02 260)",
-      "--oklch-accent": "oklch(0.68 0.16 280)",
-      "--oklch-accent-hover": "oklch(0.64 0.18 280)",
+      "--oklch-accent": "oklch(0.68 0.17 286)",
+      "--oklch-accent-hover": "oklch(0.64 0.19 286)",
       "--oklch-border": "oklch(0.86 0.01 260)",
     } as any,
     'html[data-theme="dark"]': {
@@ -250,13 +254,14 @@ const styles = {
       "--oklch-surface": "oklch(0.20 0.02 260)",
       "--oklch-text": "oklch(0.95 0.02 260)",
       "--oklch-muted": "oklch(0.72 0.02 260)",
-      "--oklch-accent": "oklch(0.68 0.16 280)",
-      "--oklch-accent-hover": "oklch(0.64 0.18 280)",
+      "--oklch-accent": "oklch(0.68 0.17 286)",
+      "--oklch-accent-hover": "oklch(0.64 0.19 286)",
       "--oklch-border": "oklch(0.30 0.01 260)",
     } as any,
     ".prose": {
       maxWidth: "72ch",
     },
+
     "h1, h2": {
       transition: "font-variation-settings var(--t-fast, 140ms) var(--easing, ease)",
     },

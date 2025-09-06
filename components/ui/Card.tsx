@@ -11,12 +11,12 @@ export const Card: React.FC<CardProps> = ({ children, ...props }) => {
       role={props.role || "group"}
       borderWidth="1px"
       borderColor="border"
-      borderRadius="lg"
+      borderRadius="md"
       p={6}
       bg="bg"
-      boxShadow="sm"
-      transition="transform 200ms, box-shadow 200ms"
-      _hover={{ boxShadow: "md", transform: "translateY(-1px) scale(1.005)" }}
+      boxShadow="none"
+      transition="transform 180ms, box-shadow 180ms"
+      _hover={{ boxShadow: "sm", transform: "translateY(-1px)" }}
       _focusWithin={{ outline: "2px solid", outlineColor: "link", outlineOffset: "2px" }}
       {...props}
     >

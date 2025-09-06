@@ -6,11 +6,13 @@ import Head from "next/head";
 import { MDXProvider } from "@mdx-js/react";
 import CodeBlock from "../components/ui/CodeBlock";
 import { MdxImage } from "../components/ui";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import FootnoteRef from "../components/ui/FootnoteRef";
+import { Inter, JetBrains_Mono, Fraunces } from "next/font/google";
 import theme from "../styles/theme";
 
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
 const jbmono = JetBrains_Mono({ subsets: ["latin"], display: "swap", variable: "--font-jbmono" });
+const fraunces = Fraunces({ subsets: ["latin"], display: "swap", variable: "--font-fraunces" });
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -29,7 +31,15 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <MDXProvider
         components={{
-          h1: (p: any) => <chakra.h1 fontSize="3xl" fontWeight="bold" my={4} {...p} />,
+          h1: (p: any) => (
+            <chakra.h1
+              fontSize="3xl"
+              fontWeight="bold"
+              my={4}
+              sx={{ fontFamily: "var(--font-fraunces), var(--chakra-fonts-heading)" }}
+              {...p}
+            />
+          ),
           h2: (p: any) => <chakra.h2 fontSize="2xl" fontWeight="semibold" my={4} {...p} />,
           h3: (p: any) => <chakra.h3 fontSize="xl" fontWeight="semibold" my={3} {...p} />,
           p: (p: any) => <chakra.p my={3} lineHeight={1.65} {...p} />,
@@ -40,9 +50,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           code: (p: any) => <chakra.code {...p} />,
           pre: (p: any) => <CodeBlock {...p} />,
           img: (p: any) => <MdxImage {...p} />,
+          sup: (p: any) => <FootnoteRef {...p} />,
         }}
       >
-        <chakra.div className={`${inter.variable} ${jbmono.variable}`}>
+        <chakra.div className={`${inter.variable} ${jbmono.variable} ${fraunces.variable}`}>
           <Component {...pageProps} />
         </chakra.div>
       </MDXProvider>

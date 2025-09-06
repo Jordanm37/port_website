@@ -13,7 +13,7 @@ function getPosts() {
       .readdirSync(appBlogDir, { withFileTypes: true })
       .filter((d) => d.isDirectory())
       .map((d) => d.name)
-      .filter((name) => fs.existsSync(path.join(appBlogDir, name, "page.mdx")));
+      .filter((name) => fs.existsSync(path.join(appBlogDir, name, "page.mdx")) && !name.startsWith("_"));
     return dirs.map((slug) => {
       const raw = fs.readFileSync(path.join(appBlogDir, slug, "page.mdx"), "utf8");
       const matter = require("gray-matter");
@@ -26,7 +26,7 @@ function getPosts() {
   }
   const pagesBlogDir = path.join(process.cwd(), "pages", "blog");
   if (!fs.existsSync(pagesBlogDir)) return [];
-  const files = fs.readdirSync(pagesBlogDir).filter((f) => f.endsWith(".mdx"));
+  const files = fs.readdirSync(pagesBlogDir).filter((f) => f.endsWith(".mdx") && !f.startsWith("_"));
   return files.map((filename) => {
     const slug = filename.replace(/\.mdx$/, "");
     const title = slug.replace(/-/g, " ");

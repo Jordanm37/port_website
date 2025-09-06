@@ -71,13 +71,13 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                       as={motion.div}
                       layoutId="nav-underline"
                       position="absolute"
-                      bottom={-1}
+                      top={-1}
                       left={0}
                       right={0}
-                      height="2px"
+                      height="1px"
                       bg="link"
                       borderRadius="1px"
-                      style={{ willChange: 'transform, opacity' }}
+                      style={{ willChange: "transform, opacity" }}
                     />
                   ) : null}
                 </Box>
@@ -95,13 +95,13 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                       as={motion.div}
                       layoutId="nav-underline"
                       position="absolute"
-                      bottom={-1}
+                      top={-1}
                       left={0}
                       right={0}
-                      height="2px"
+                      height="1px"
                       bg="link"
                       borderRadius="1px"
-                      style={{ willChange: 'transform, opacity' }}
+                      style={{ willChange: "transform, opacity" }}
                     />
                   ) : null}
                 </Box>
@@ -119,13 +119,13 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                       as={motion.div}
                       layoutId="nav-underline"
                       position="absolute"
-                      bottom={-1}
+                      top={-1}
                       left={0}
                       right={0}
-                      height="2px"
+                      height="1px"
                       bg="link"
                       borderRadius="1px"
-                      style={{ willChange: 'transform, opacity' }}
+                      style={{ willChange: "transform, opacity" }}
                     />
                   ) : null}
                 </Box>
@@ -137,19 +137,19 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                   onMouseEnter={() => setHovered("hire")}
                   onMouseLeave={() => setHovered(null)}
                 >
-                  <NavLink href="/hire">Hire me</NavLink>
+                  <NavLink href="/hire">Enquire</NavLink>
                   {showHire ? (
                     <Box
                       as={motion.div}
                       layoutId="nav-underline"
                       position="absolute"
-                      bottom={-1}
+                      top={-1}
                       left={0}
                       right={0}
-                      height="2px"
+                      height="1px"
                       bg="link"
                       borderRadius="1px"
-                      style={{ willChange: 'transform, opacity' }}
+                      style={{ willChange: "transform, opacity" }}
                     />
                   ) : null}
                 </Box>
@@ -170,6 +170,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 variant="ghost"
                 size="sm"
               />
+
               <IconButton
                 aria-label="Toggle color mode"
                 variant="ghost"

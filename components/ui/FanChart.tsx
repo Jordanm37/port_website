@@ -79,10 +79,10 @@ export const FanChart: React.FC<FanChartProps> = ({
 
     // Draw bands with varying opacity
     const bands = [
-      { accessor: (d: ConfidenceInterval) => d.p90, fill: "var(--oklch-accent)", opacity: 0.1 },
-      { accessor: (d: ConfidenceInterval) => d.p75, fill: "var(--oklch-accent)", opacity: 0.15 },
-      { accessor: (d: ConfidenceInterval) => d.p25, fill: "var(--oklch-accent)", opacity: 0.15 },
-      { accessor: (d: ConfidenceInterval) => d.p10, fill: "var(--oklch-accent)", opacity: 0.1 },
+      { accessor: (d: ConfidenceInterval) => d.p90, fill: "var(--oklch-accent)", opacity: 0.08 },
+      { accessor: (d: ConfidenceInterval) => d.p75, fill: "var(--oklch-accent)", opacity: 0.12 },
+      { accessor: (d: ConfidenceInterval) => d.p25, fill: "var(--oklch-accent)", opacity: 0.12 },
+      { accessor: (d: ConfidenceInterval) => d.p10, fill: "var(--oklch-accent)", opacity: 0.08 },
     ];
 
     bands.forEach(({ accessor, fill, opacity }) => {
@@ -106,7 +106,8 @@ export const FanChart: React.FC<FanChartProps> = ({
       createPath((d) => d.median)
     );
     medianPath.setAttribute("stroke", "var(--oklch-accent)");
-    medianPath.setAttribute("stroke-width", "2");
+    medianPath.setAttribute("stroke-width", "0.75");
+    medianPath.setAttribute("stroke-linecap", "round");
     medianPath.setAttribute("fill", "none");
     svg.appendChild(medianPath);
 
