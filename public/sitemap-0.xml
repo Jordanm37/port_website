@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://port-website-indol.vercel.app/blog/hello-world</loc><lastmod>2025-09-06T08:55:44.831Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-<url><loc>https://port-website-indol.vercel.app/blog/second-post</loc><lastmod>2025-09-06T08:55:44.832Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-<url><loc>https://port-website-indol.vercel.app</loc><lastmod>2025-09-06T08:55:44.832Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-<url><loc>https://port-website-indol.vercel.app/blog/tags/notes</loc><lastmod>2025-09-06T08:55:44.832Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-<url><loc>https://port-website-indol.vercel.app/blog/tags/intro</loc><lastmod>2025-09-06T08:55:44.832Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-<url><loc>https://port-website-indol.vercel.app/blog/tags/update</loc><lastmod>2025-09-06T08:55:44.832Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-<url><loc>https://port-website-indol.vercel.app/blog</loc><lastmod>2025-09-06T08:55:44.832Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app</loc><lastmod>2025-09-06T13:03:40.485Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/about</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/blog</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/blog/_template</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/blog/hello-world</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/blog/second-post</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/hire</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/ideas</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/privacy</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/projects</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/talks</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/writing</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/blog/tags/topic</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/blog/tags/method</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/blog/tags/notes</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/blog/tags/intro</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://port-website-indol.vercel.app/blog/tags/update</loc><lastmod>2025-09-06T13:03:40.486Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
 </urlset>
