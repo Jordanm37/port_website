@@ -52,7 +52,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ children }) => {
       borderColor="border"
       borderRadius="md"
       overflow="hidden"
-      bg={{ base: "bg", _dark: "#0f1116" }}
+      bg="readingBg"
     >
       <HStack
         justify="space-between"
