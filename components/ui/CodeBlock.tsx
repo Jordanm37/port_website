@@ -44,7 +44,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ children }) => {
       ).length
     : 0;
   const lineCount = lineCountFromSpans || (codeString ? codeString.split(/\n/).length : 0);
-  const showLineNumbers = lineCount > 5;
+  const showLineNumbers = lineCount > 10;
 
   return (
     <Box
@@ -52,7 +52,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ children }) => {
       borderColor="border"
       borderRadius="md"
       overflow="hidden"
-      bg={{ base: "bg", _dark: "neutral.800" }}
+      bg={{ base: "bg", _dark: "#0f1116" }}
     >
       <HStack
         justify="space-between"
@@ -67,15 +67,34 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ children }) => {
             {language}
           </Text>
           {dataFilename ? (
-            <Text fontSize="xs" color="muted">
+            <Box
+              as="span"
+              px={2}
+              py={0.5}
+              borderRadius="sm"
+              bg={{ base: "neutral.100", _dark: "neutral.800" }}
+              color={{ base: "neutral.800", _dark: "neutral.100" }}
+              fontFamily="mono"
+              fontSize="xs"
+              textTransform="uppercase"
+              letterSpacing="wider"
+            >
               {dataFilename}
-            </Text>
+            </Box>
           ) : null}
         </HStack>
       </HStack>
       <Box display="grid" gridTemplateColumns={showLineNumbers ? "3rem 1fr" : "1fr"}>
         {showLineNumbers ? (
-          <Box bg="bg" color="muted" px={3} py={3} userSelect="none">
+          <Box
+            bg="bg"
+            color="muted"
+            px={3}
+            py={3}
+            userSelect="none"
+            borderRightWidth="1px"
+            borderColor="border"
+          >
             <VStack align="stretch" spacing={0}>
               {Array.from({ length: lineCount }).map((_, i) => (
                 <Text key={i} fontSize="xs" textAlign="right" lineHeight={1.7}>
@@ -85,7 +104,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ children }) => {
             </VStack>
           </Box>
         ) : null}
-        <Box overflowX="auto">
+        <Box overflowX="auto" position="relative">
           <chakra.pre
             className={`${className ?? ""}`}
             my={0}
@@ -93,6 +112,18 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ children }) => {
             px={3}
             py={3}
             lineHeight={1.7}
+            sx={{
+              "& > code > span[data-line]": {
+                display: "block",
+                px: 1,
+              },
+              "& > code > span[data-line]:hover": {
+                backgroundColor: "rgba(255,255,255,0.04)",
+              },
+              "&:hover": {
+                cursor: "text",
+              },
+            }}
           >
             {child}
           </chakra.pre>

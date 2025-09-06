@@ -127,11 +127,6 @@ export default function PostLayout({
                 {formatDateNatural(frontmatter.date)}
               </Text>
             ) : null}
-            {frontmatter?.tags?.map((t) => (
-              <Tag key={t} size="sm">
-                {t}
-              </Tag>
-            ))}
           </HStack>
           {frontmatter?.masthead ? (
             <MastheadSignature kind={frontmatter.masthead} seed={frontmatter?.slug} />
@@ -161,6 +156,15 @@ export default function PostLayout({
                   <span />
                 )}
               </Flex>
+              {frontmatter?.tags && frontmatter.tags.length ? (
+                <HStack spacing={2} mt={6} align="center">
+                  {frontmatter.tags.map((t) => (
+                    <Tag key={t} size="sm">
+                      {t}
+                    </Tag>
+                  ))}
+                </HStack>
+              ) : null}
               {related.length > 0 && (
                 <Box mt={10}>
                   <Heading as="h2" size="md" mb={2} color="muted">

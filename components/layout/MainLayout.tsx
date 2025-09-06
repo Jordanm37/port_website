@@ -71,10 +71,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                       as={motion.div}
                       layoutId="nav-underline"
                       position="absolute"
-                      bottom={-1}
+                      top={-1}
                       left={0}
                       right={0}
-                      height="2px"
+                      height="1px"
                       bg="link"
                       borderRadius="1px"
                     />
@@ -94,10 +94,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                       as={motion.div}
                       layoutId="nav-underline"
                       position="absolute"
-                      bottom={-1}
+                      top={-1}
                       left={0}
                       right={0}
-                      height="2px"
+                      height="1px"
                       bg="link"
                       borderRadius="1px"
                     />
@@ -117,10 +117,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                       as={motion.div}
                       layoutId="nav-underline"
                       position="absolute"
-                      bottom={-1}
+                      top={-1}
                       left={0}
                       right={0}
-                      height="2px"
+                      height="1px"
                       bg="link"
                       borderRadius="1px"
                     />
@@ -140,10 +140,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                       as={motion.div}
                       layoutId="nav-underline"
                       position="absolute"
-                      bottom={-1}
+                      top={-1}
                       left={0}
                       right={0}
-                      height="2px"
+                      height="1px"
                       bg="link"
                       borderRadius="1px"
                     />

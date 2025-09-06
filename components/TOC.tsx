@@ -42,9 +42,16 @@ export default function TOC() {
       top={20}
       display={{ base: "none", xl: "block" }}
     >
+      <Box as="div" fontSize="xs" color="muted" mb={2}>
+        Outline
+      </Box>
       <List spacing={1}>
         {items.map((i) => (
-          <ListItem key={i.id} ml={`${(i.level - 1) * 12}px`}>
+          <ListItem
+            key={i.id}
+            ml={`${(i.level - 1) * 12}px`}
+            display={items.length > 14 && i.level >= 3 ? { base: "none", xl: "none" } : "block"}
+          >
             <ChakraLink
               href={`#${i.id}`}
               color={activeId === i.id ? "link" : "muted"}
