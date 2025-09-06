@@ -83,6 +83,12 @@ export default function PostLayout({
   const { hasCopied, onCopy } = useClipboard(url || "");
   const nav = navigation || { prev: null, next: null };
   const related = relatedPosts || [];
+  const updated = (frontmatter as any)?.updated as string | undefined;
+  const showUpdated = !!(
+    updated &&
+    frontmatter?.date &&
+    Date.parse(updated) > Date.parse(frontmatter.date)
+  );
 
   return (
     <MainLayout>
@@ -125,6 +131,11 @@ export default function PostLayout({
                 sx={{ fontVariantNumeric: "tabular-nums" }}
               >
                 {formatDateNatural(frontmatter.date)}
+              </Text>
+            ) : null}
+            {showUpdated ? (
+              <Text color="muted" fontSize="sm" sx={{ fontVariantNumeric: "tabular-nums" }}>
+                · Updated {formatDateNatural(updated as string)}
               </Text>
             ) : null}
           </HStack>

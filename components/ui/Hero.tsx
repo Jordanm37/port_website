@@ -59,13 +59,11 @@ export const Hero: React.FC<HeroProps> = ({
               content: '""',
               position: "absolute",
               inset: 0,
-              bgGradient: {
-                base: "radial(primary.200 1px, transparent 1px)",
-                _dark: "radial(neutral.700 1px, transparent 1px)",
-              },
+              bgGradient: "radial(primary.200 1px, transparent 1px)",
               backgroundSize: "24px 24px",
               opacity: 0.15,
               pointerEvents: "none",
+              _dark: { display: "none" },
             }
       }
     >

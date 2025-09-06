@@ -6,7 +6,6 @@ export interface ProseProps extends BoxProps {}
 
 export const Prose: React.FC<ProseProps> = ({ children, ...props }) => {
   const router = useRouter();
-  const seed = typeof router?.asPath === "string" ? router.asPath : "";
   return (
     <Box
       sx={{
@@ -23,20 +22,6 @@ export const Prose: React.FC<ProseProps> = ({ children, ...props }) => {
         img: { borderRadius: "md" },
         figure: { maxWidth: "100%" },
         "figure.full-bleed": { marginLeft: "calc(50% - 50vw)", marginRight: "calc(50% - 50vw)" },
-        // H2 margin tick marks on wide viewports
-        "@media (min-width: 80em)": {
-          "h2::before": {
-            content: '""',
-            position: "absolute",
-            left: "-28px",
-            top: "0.9em",
-            width: "12px",
-            height: "1px",
-            background: "currentColor",
-            opacity: 0.25,
-            transform: `translateX(${(seed.length % 5) - 2}px)`,
-          },
-        },
       }}
       {...props}
     >

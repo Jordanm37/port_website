@@ -261,6 +261,7 @@ const styles = {
     ".prose": {
       maxWidth: "72ch",
     },
+
     "h1, h2": {
       transition: "font-variation-settings var(--t-fast, 140ms) var(--easing, ease)",
     },

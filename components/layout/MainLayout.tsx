@@ -166,6 +166,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 variant="ghost"
                 size="sm"
               />
+
               <IconButton
                 aria-label="Toggle color mode"
                 variant="ghost"
