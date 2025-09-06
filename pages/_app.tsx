@@ -6,6 +6,7 @@ import Head from "next/head";
 import { MDXProvider } from "@mdx-js/react";
 import CodeBlock from "../components/ui/CodeBlock";
 import { MdxImage } from "../components/ui";
+import FootnoteRef from "../components/ui/FootnoteRef";
 import { Inter, JetBrains_Mono, Fraunces } from "next/font/google";
 import theme from "../styles/theme";
 
@@ -49,6 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           code: (p: any) => <chakra.code {...p} />,
           pre: (p: any) => <CodeBlock {...p} />,
           img: (p: any) => <MdxImage {...p} />,
+          sup: (p: any) => <FootnoteRef {...p} />,
         }}
       >
         <chakra.div className={`${inter.variable} ${jbmono.variable} ${fraunces.variable}`}>

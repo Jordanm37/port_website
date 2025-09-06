@@ -25,8 +25,7 @@ export { WritingListRow } from "./WritingListRow";
 export type { WritingListRowProps } from "./WritingListRow";
 export { MastheadSignature } from "./MastheadSignature";
 export type { MastheadKind, MastheadSignatureProps } from "./MastheadSignature";
-export { AssumptionInspector } from "./AssumptionInspector";
-export type { AssumptionInspectorProps, Assumptions } from "./AssumptionInspector";
+// AssumptionInspector removed
 export { FanChart } from "./FanChart";
 export type { FanChartProps, ConfidenceInterval } from "./FanChart";
 export { Sparkline } from "./Sparkline";

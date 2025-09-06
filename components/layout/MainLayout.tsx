@@ -134,7 +134,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                   onMouseEnter={() => setHovered("hire")}
                   onMouseLeave={() => setHovered(null)}
                 >
-                  <NavLink href="/hire">Hire me</NavLink>
+                  <NavLink href="/hire">Enquire</NavLink>
                   {showHire ? (
                     <Box
                       as={motion.div}

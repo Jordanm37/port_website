@@ -20,9 +20,9 @@ Key files to touch most often:
 
 ### Quick picks for the first review branch (suggested)
 
-- [ ] Accent hue/chroma nudge + darker code bg in dark mode
-- [ ] Code readability: filename badges + hovered line highlight
-- [ ] H2 tick marks in the margin (seeded) for a “lab notebook” feel
+- [x] Accent hue/chroma nudge + darker code bg in dark mode
+- [x] Code readability: filename badges + hovered line highlight
+- [ ] H2 tick marks in the margin (seeded) for a “lab notebook” feel (removed)
 
 Rationale: low-risk, self-contained visuals with high perceived polish; all reversible.
 
@@ -30,7 +30,7 @@ Rationale: low-risk, self-contained visuals with high perceived polish; all reve
 
 ### Bold typographic identity
 
-- [ ] Swap H1–H3 to a serif/high‑contrast display (H1 only to start)
+- [x] Swap H1–H3 to a serif/high‑contrast display (H1 only to start)
 
   - Files: `pages/_app.tsx`, `styles/theme.ts`
   - Steps:
@@ -52,26 +52,26 @@ Rationale: low-risk, self-contained visuals with high perceived polish; all reve
 
 ### Color and light
 
-- [ ] Nudge accent hue a few degrees (blue→blue‑violet) and increase chroma slightly
+- [x] Nudge accent hue a few degrees (blue→blue‑violet) and increase chroma slightly
 
   - Files: `styles/theme.ts` (`:root` and `html[data-theme="dark"]` OKLCH vars)
   - Steps: Adjust `--oklch-accent` and `--oklch-accent-hover` (e.g., H 280→286, slightly higher C).
   - Acceptance: Links/buttons feel a touch more violet; other tokens unchanged.
 
-- [ ] Add a tinted “reading surface” background
+- [x] Add a tinted “reading surface” background
 
   - Files: `styles/theme.ts` (`readingBg`), `components/ui/Prose.tsx`
   - Steps: Use `readingBg` for article body container; keep outer bg flat.
   - Acceptance: Subtle 1–2% delta from bg; borders can be removed in content areas.
 
-- [ ] Dark mode: raise code/bg contrast and lower pure white text
+- [x] Dark mode: raise code/bg contrast and lower pure white text
   - Files: `styles/theme.ts`, `components/ui/CodeBlock.tsx`
   - Steps: Darken code block bg; reduce text luminance slightly; preserve AA contrast.
   - Acceptance: Code is legible without glare; body text less stark.
 
 ### Layout rhythm
 
-- [ ] Title + lead paragraph as a “stack”
+- [x] Title + lead paragraph as a “stack”
 
   - Files: `components/ui/Prose.tsx`
   - Steps: Smaller gap under `h1`; tighter `h1 + p` lead; then normal flow.
@@ -96,7 +96,7 @@ Rationale: low-risk, self-contained visuals with high perceived polish; all reve
   - Steps: Change `Flex` layout; nav links centered as a group; keep brand left, actions right.
   - Acceptance: Balanced header without breaking responsive behavior.
 
-- [ ] Move motion underline above text (magazine feel)
+- [x] Move motion underline above text (magazine feel)
   - Files: `components/layout/MainLayout.tsx`
   - Steps: Position motion `Box` at top edge; reduce height to 1px.
   - Acceptance: Underline animates above labels consistently.
@@ -109,14 +109,14 @@ Rationale: low-risk, self-contained visuals with high perceived polish; all reve
   - Steps: CSS grid with alternating row backgrounds every 8 rows.
   - Acceptance: Clear scanability; thumbnails only at ≥xl; alt rows subtly tinted.
 
-- [ ] “Digest” mode toggle (titles/dates only)
+- [ ] “Digest” mode toggle (titles/dates only) (removed)
   - Files: `pages/writing/index.tsx`
   - Steps: Add UI toggle; render condensed list without excerpts.
   - Acceptance: Reduces cognitive load; persists per session.
 
 ### Post page structure
 
-- [ ] Move tags to the end (postscript style)
+- [x] Move tags to the end (postscript style)
 
   - Files: `components/PostLayout.tsx`
   - Steps: Reposition tag render after content.
@@ -129,13 +129,13 @@ Rationale: low-risk, self-contained visuals with high perceived polish; all reve
 
 ### Motion and micro‑interactions
 
-- [ ] Link hover: 1px underline offset shift; 120ms ease‑out
+- [x] Link hover: 1px underline offset shift; 120ms ease‑out
 
   - Files: `styles/theme.ts` (Link baseStyle)
   - Steps: Adjust `textUnderlineOffset`/transition; slightly boost luminance on hover.
   - Acceptance: Crisp, quick hover without jitter.
 
-- [ ] “Reading mode” toggle dims chrome and TOC
+- [ ] “Reading mode” toggle dims chrome and TOC (removed)
   - Files: `components/layout/MainLayout.tsx`, `components/TOC.tsx`
   - Steps: Add UI toggle; apply reduced opacity to header/TOC; persist state.
   - Acceptance: Content prominence increases; still accessible.
@@ -148,14 +148,14 @@ Rationale: low-risk, self-contained visuals with high perceived polish; all reve
   - Steps: Map frontmatter category→`kind`; pass slug as seed.
   - Acceptance: Deterministic signature per post; type varies by category.
 
-- [ ] Add tiny seeded H2 margin tick marks (lab notebook feel)
+- [ ] Add tiny seeded H2 margin tick marks (lab notebook feel) (removed)
   - Files: `components/ui/Prose.tsx` (or small helper), `components/PostLayout.tsx`
   - Steps: Insert thin marks aligned to H2s using seeded RNG by slug; visible ≥xl.
   - Acceptance: Subtle ticks align to headings; no overlap with content.
 
 ### Data‑viz tone
 
-- [ ] Fan‑chart lines: 0.75px, softer opacity, round endcaps
+- [x] Fan‑chart lines: 0.75px, softer opacity, round endcaps
 
   - Files: `components/ui/FanChart.tsx`
   - Steps: Reduce stroke width; `strokeLinecap="round"`; lower opacity.
@@ -168,20 +168,20 @@ Rationale: low-risk, self-contained visuals with high perceived polish; all reve
 
 ### Code readability
 
-- [ ] Subtle hovered line highlight; slim left rail for line numbers on >10‑line blocks
+- [x] Subtle hovered line highlight; slim left rail for line numbers on >10‑line blocks
 
   - Files: `components/ui/CodeBlock.tsx`
   - Steps: Only show line numbers if lineCount > 10; add hover background for current line.
   - Acceptance: Highlight follows mouse/focus; no flicker; keyboard accessible.
 
-- [ ] Filename badges with monospace caps
+- [x] Filename badges with monospace caps
   - Files: `components/ui/CodeBlock.tsx`
   - Steps: Render filename badge when `data-filename` present; monospace uppercase style.
   - Acceptance: Fast scanning; no collision with language label.
 
 ### Components depth (minimal)
 
-- [ ] Hairline borders + 10–12px radius + small shadow on interactive blocks only
+- [x] Hairline borders + 10–12px radius + small shadow on interactive blocks only
 
   - Files: `styles/theme.ts` (Card/Button variants), `components/ui/*Card.tsx`
   - Steps: Add subtle depth; keep content sections borderless with layered bg.
@@ -194,27 +194,27 @@ Rationale: low-risk, self-contained visuals with high perceived polish; all reve
 
 ### Content cues
 
-- [ ] Add “Outline” subheading above TOC (xs); collapse H3 by default for long lists
+- [x] Add “Outline” subheading above TOC (xs); collapse H3 by default for long lists
 
   - Files: `components/TOC.tsx`
   - Steps: Render heading label; collapse deeper levels if item count exceeds threshold.
   - Acceptance: TOC is scannable; avoids overwhelming long posts.
 
-- [ ] Show “Updated on …” when a post is edited (tabular numerals)
+- [x] Show “Updated on …” when a post is edited (tabular numerals)
   - Files: `components/PostLayout.tsx`, `lib/blog.ts`
   - Steps: Compare `updated` vs `date` frontmatter; render label with tabular nums.
   - Acceptance: Only appears when `updated > date`.
 
 ### Brand texture (still minimalist)
 
-- [ ] Subtle halftone/dot‑grid behind hero in light mode only
+- [x] Subtle halftone/dot‑grid behind hero in light mode only
   - Files: `components/ui/Hero.tsx`, `styles/theme.ts`
   - Steps: Add background layer at 1–2% opacity in light; disable in dark.
   - Acceptance: Adds texture without noise; respects contrast.
 
 ### Accessibility and comfort
 
-- [ ] “High legibility” toggle: boost text size, increase line‑height, disable underline animation
+- [ ] “High legibility” toggle: boost text size, increase line‑height, disable underline animation (removed)
 
   - Files: `MainLayout`, global state (context or localStorage), `styles/theme.ts`
   - Steps: Provide toggle; apply overrides class to `html` or root container.

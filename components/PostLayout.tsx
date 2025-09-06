@@ -19,6 +19,7 @@ import { MainLayout } from "./layout";
 import TOC from "./TOC";
 import { ReadingProgress } from "./ui/ReadingProgress";
 import { Reveal, Prose, MastheadSignature, AssumptionInspector } from "./ui";
+import type { MastheadKind } from "./ui/MastheadSignature";
 import { formatDateNatural } from "../lib/date";
 import siteUrl from "../lib/site";
 
@@ -36,13 +37,14 @@ type PostLayoutProps = {
     summary?: string;
     date?: string;
     tags?: string[];
+    series?: string;
     slug?: string;
     image?: string; // relative or absolute
     ogImage?: string; // relative or absolute
     ogImageAlt?: string;
     ogImageWidth?: number;
     ogImageHeight?: number;
-    masthead?: "perlin" | "brownian" | "ou" | "gp";
+    masthead?: true | MastheadKind | "none" | false;
     assumptions?: {
       noise?: string;
       priors?: string;
@@ -89,6 +91,17 @@ export default function PostLayout({
     frontmatter?.date &&
     Date.parse(updated) > Date.parse(frontmatter.date)
   );
+
+  function pickRandomMastheadKind(slug?: string): MastheadKind {
+    const kinds: MastheadKind[] = ["perlin", "brownian", "ou", "gp"];
+    const s = slug || "seed";
+    let h = 0;
+    for (let i = 0; i < s.length; i++) {
+      h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    }
+    const idx = h % kinds.length;
+    return kinds[idx];
+  }
 
   return (
     <MainLayout>
@@ -139,12 +152,21 @@ export default function PostLayout({
               </Text>
             ) : null}
           </HStack>
-          {frontmatter?.masthead ? (
-            <MastheadSignature kind={frontmatter.masthead} seed={frontmatter?.slug} />
-          ) : null}
-          {frontmatter?.assumptions && Object.keys(frontmatter.assumptions || {}).length ? (
-            <AssumptionInspector assumptions={frontmatter.assumptions} />
-          ) : null}
+          {(() => {
+            const setting = frontmatter?.masthead;
+            // Default: disabled unless explicitly true or specific kind
+            if (setting === false || setting === "none" || typeof setting === "undefined")
+              return null;
+            const validKinds: MastheadKind[] = ["perlin", "brownian", "ou", "gp"];
+            const explicit =
+              typeof setting === "string" &&
+              (validKinds as readonly string[]).includes(setting as string)
+                ? (setting as MastheadKind)
+                : undefined;
+            const chosen = explicit || pickRandomMastheadKind(frontmatter?.slug);
+            return <MastheadSignature kind={chosen} seed={frontmatter?.slug} />;
+          })()}
+
           <chakra.div my={4} />
           <Flex gap={8} align="flex-start" pb={{ base: 10, md: 14 }}>
             <Box flex="1">
