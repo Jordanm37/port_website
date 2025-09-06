@@ -77,6 +77,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                       height="1px"
                       bg="link"
                       borderRadius="1px"
+                      style={{ willChange: "transform, opacity" }}
                     />
                   ) : null}
                 </Box>
@@ -100,6 +101,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                       height="1px"
                       bg="link"
                       borderRadius="1px"
+                      style={{ willChange: "transform, opacity" }}
                     />
                   ) : null}
                 </Box>
@@ -123,6 +125,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                       height="1px"
                       bg="link"
                       borderRadius="1px"
+                      style={{ willChange: "transform, opacity" }}
                     />
                   ) : null}
                 </Box>
@@ -146,6 +149,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                       height="1px"
                       bg="link"
                       borderRadius="1px"
+                      style={{ willChange: "transform, opacity" }}
                     />
                   ) : null}
                 </Box>

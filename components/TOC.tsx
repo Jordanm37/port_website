@@ -19,18 +19,30 @@ export default function TOC() {
     setItems(filtered);
 
     if (!filtered.length) return;
+
     const io = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
+        // Find the most visible heading (closest to top of viewport)
+        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
+        if (visibleEntries.length > 0) {
+          const mostVisible = visibleEntries.reduce((prev, current) =>
+            prev.intersectionRatio > current.intersectionRatio ? prev : current
+          );
+          setActiveId(mostVisible.target.id);
+        }
       },
-      { rootMargin: "0px 0px -70% 0px", threshold: 0.1 }
+      { rootMargin: "0px 0px -70% 0px", threshold: [0.1, 0.5, 1.0] }
     );
-    heads.forEach((h) => io.observe(h));
-    return () => io.disconnect();
+
+    // Observe only filtered headings
+    filtered.forEach((item) => {
+      const element = document.getElementById(item.id);
+      if (element) io.observe(element);
+    });
+
+    return () => {
+      io.disconnect();
+    };
   }, []);
 
   if (!items.length) return null;
@@ -48,9 +60,9 @@ export default function TOC() {
       <List spacing={1}>
         {items.map((i) => {
           // More intelligent collapsing: only hide H3s if there are many AND they make up a large portion
-          const h3Count = items.filter(item => item.level >= 3).length;
+          const h3Count = items.filter((item) => item.level >= 3).length;
           const shouldCollapseH3s = items.length > 14 && h3Count > 8 && i.level >= 3;
-          
+
           return (
             <ListItem
               key={i.id}

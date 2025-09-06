@@ -23,8 +23,11 @@ export type { RevealProps } from "./Reveal";
 export { default as MdxImage } from "./MdxImage";
 export { WritingListRow } from "./WritingListRow";
 export type { WritingListRowProps } from "./WritingListRow";
-export { MastheadSignature } from "./MastheadSignature";
+// Lazy-loaded components for better performance
+export { LazyMastheadSignature as MastheadSignature } from "./LazyMastheadSignature";
 export type { MastheadKind, MastheadSignatureProps } from "./MastheadSignature";
+export { AssumptionInspector, FanChart } from "./LazyMathComponents";
+export type { AssumptionInspectorProps, Assumptions } from "./AssumptionInspector";
 // AssumptionInspector removed
 export { FanChart } from "./FanChart";
 export type { FanChartProps, ConfidenceInterval } from "./FanChart";
