@@ -47,13 +47,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ children }) => {
   const showLineNumbers = lineCount > 10;
 
   return (
-    <Box
-      borderWidth="1px"
-      borderColor="border"
-      borderRadius="md"
-      overflow="hidden"
-      bg="readingBg"
-    >
+    <Box borderWidth="1px" borderColor="border" borderRadius="md" overflow="hidden" bg="readingBg">
       <HStack
         justify="space-between"
         align="center"
@@ -127,6 +121,26 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ children }) => {
           >
             {child}
           </chakra.pre>
+          <Box position="absolute" right={2} bottom={2}>
+            <Text
+              as="button"
+              onClick={() => {
+                try {
+                  navigator.clipboard.writeText(codeString);
+                } catch {}
+              }}
+              aria-label="Copy code"
+              fontSize="xs"
+              px={2}
+              py={0.5}
+              borderRadius="sm"
+              bg={{ base: "neutral.100", _dark: "neutral.800" }}
+              color={{ base: "neutral.800", _dark: "neutral.100" }}
+              _hover={{ opacity: 0.9 }}
+            >
+              Copy
+            </Text>
+          </Box>
         </Box>
       </Box>
     </Box>

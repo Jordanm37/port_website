@@ -11,6 +11,7 @@ import {
   IconButton,
   Tooltip,
   Flex,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { useClipboard } from "@chakra-ui/react";
 import { FaTwitter, FaLinkedin } from "react-icons/fa";
@@ -18,7 +19,8 @@ import NextLink from "next/link";
 import { MainLayout } from "./layout";
 import TOC from "./TOC";
 import { ReadingProgress } from "./ui/ReadingProgress";
-import { Reveal, Prose, MastheadSignature } from "./ui";
+import { Reveal, Prose, MastheadSignature, BlogCard } from "./ui";
+import { FigureNumberProvider } from "./ui/FigureNumberProvider";
 import type { MastheadKind } from "./ui/MastheadSignature";
 import { formatDateNatural } from "../lib/date";
 import siteUrl from "../lib/site";
@@ -38,6 +40,7 @@ type PostLayoutProps = {
     date?: string;
     tags?: string[];
     series?: string;
+    readingTime?: number;
     slug?: string;
     image?: string; // relative or absolute
     ogImage?: string; // relative or absolute
@@ -56,7 +59,7 @@ type PostLayoutProps = {
     prev: BlogMeta | null;
     next: BlogMeta | null;
   };
-  relatedPosts?: BlogMeta[];
+  relatedPosts?: any[];
 };
 
 export default function PostLayout({
@@ -135,7 +138,7 @@ export default function PostLayout({
               </Heading>
             </Reveal>
           ) : null}
-          <HStack spacing={3} mb={3} align="center">
+          <HStack spacing={3} mb={3} align="center" flexWrap="wrap">
             {frontmatter?.date ? (
               <Text
                 as="time"
@@ -146,6 +149,16 @@ export default function PostLayout({
                 {formatDateNatural(frontmatter.date)}
               </Text>
             ) : null}
+            {typeof (frontmatter as any)?.readingTime === "number" ? (
+              <Text color="muted" fontSize="sm" sx={{ fontVariantNumeric: "tabular-nums" }}>
+                · {Math.max(1, Math.round((frontmatter as any).readingTime))} min read
+              </Text>
+            ) : null}
+            {frontmatter?.tags?.map((t) => (
+              <Tag key={t} size="sm">
+                {t}
+              </Tag>
+            ))}
             {showUpdated ? (
               <Text color="muted" fontSize="sm" sx={{ fontVariantNumeric: "tabular-nums" }}>
                 · Updated {formatDateNatural(updated as string)}
@@ -170,13 +183,17 @@ export default function PostLayout({
           <chakra.div my={4} />
           <Flex gap={8} align="flex-start" pb={{ base: 10, md: 14 }}>
             <Box flex="1">
-              <Prose mt={0}>
-                <Box
-                  sx={frontmatter?.title ? { "h1:first-of-type": { display: "none" } } : undefined}
-                >
-                  {children}
-                </Box>
-              </Prose>
+              <FigureNumberProvider>
+                <Prose mt={0}>
+                  <Box
+                    sx={
+                      frontmatter?.title ? { "h1:first-of-type": { display: "none" } } : undefined
+                    }
+                  >
+                    {children}
+                  </Box>
+                </Prose>
+              </FigureNumberProvider>
               <Flex mt={8} justify="space-between">
                 {nav.prev ? (
                   <NextLink href={`/blog/${nav.prev.slug}`}>← {nav.prev.title}</NextLink>
@@ -200,16 +217,23 @@ export default function PostLayout({
               ) : null}
               {related.length > 0 && (
                 <Box mt={10}>
-                  <Heading as="h2" size="md" mb={2} color="muted">
-                    Related
+                  <Heading as="h2" size="md" mb={3} color="muted">
+                    Related Posts
                   </Heading>
-                  <HStack spacing={3} flexWrap="wrap">
-                    {related.slice(0, 3).map((p) => (
-                      <NextLink key={p.slug} href={`/blog/${p.slug}`}>
-                        {p.title}
-                      </NextLink>
+                  <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
+                    {related.slice(0, 3).map((p: any) => (
+                      <BlogCard
+                        key={p.slug}
+                        href={`/blog/${p.slug}`}
+                        title={p.title}
+                        excerpt={p.dek || p.summary || null}
+                        tags={p.tags || []}
+                        date={p.date}
+                        readingTime={p.readingTime}
+                        thumbnail={p.thumbnail || null}
+                      />
                     ))}
-                  </HStack>
+                  </SimpleGrid>
                 </Box>
               )}
             </Box>

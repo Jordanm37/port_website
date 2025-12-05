@@ -21,7 +21,9 @@ function getOrderedPosts() {
     const tags = data.tags || [];
     const series = data.series || null;
     const dek = data.dek || data.summary || null;
-    return { slug, title, date, tags, series, dek };
+    const readingTime = data.readingTime || null;
+    const thumbnail = data.thumbnail || null;
+    return { slug, title, date, tags, series, dek, readingTime, thumbnail };
   });
   return entries.sort((a, b) => {
     const ad = a.date ? Date.parse(a.date) : 0;
@@ -44,7 +46,17 @@ function getRelatedPosts(slug, tags, posts) {
   const allPosts = posts || getOrderedPosts();
   return allPosts
     .filter((p) => p.slug !== slug && p.tags?.some((t) => tags.includes(t)))
-    .slice(0, 3);
+    .slice(0, 3)
+    .map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      date: p.date,
+      tags: p.tags,
+      series: p.series || null,
+      summary: p.dek || null,
+      readingTime: p.readingTime || null,
+      thumbnail: p.thumbnail || null,
+    }));
 }
 
 function generateBlogData() {

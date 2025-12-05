@@ -54,8 +54,15 @@ export default function TOC() {
       top={20}
       display={{ base: "none", xl: "block" }}
     >
-      <Box as="div" fontSize="xs" color="muted" mb={2}>
-        Outline
+      <Box
+        as="div"
+        fontSize="xs"
+        color="muted"
+        mb={2}
+        textTransform="uppercase"
+        letterSpacing="wider"
+      >
+        TABLE OF CONTENTS
       </Box>
       <List spacing={1}>
         {items.map((i) => {

@@ -14,6 +14,7 @@ export { Callout } from "./Callout";
 export type { CalloutProps } from "./Callout";
 export { Figure } from "./Figure";
 export type { FigureProps } from "./Figure";
+export { FigureNumberProvider } from "./FigureNumberProvider";
 export { Prose } from "./Prose";
 export type { ProseProps } from "./Prose";
 export { CTAButton } from "./CTAButton";
