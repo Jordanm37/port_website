@@ -8,15 +8,14 @@ import {
   Text,
   useColorMode,
   Link as ChakraLink,
+  Divider,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
-import { motion } from "framer-motion";
 import { SkipLink } from "../ui";
 import { NavLink } from "../ui/NavLink";
-import { useScrollNav } from "../../hooks/useScrollNav";
 
 export interface MainLayoutProps {
   children: React.ReactNode;
@@ -24,167 +23,149 @@ export interface MainLayoutProps {
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const scrolled = useScrollNav(12);
   const router = useRouter();
-
-  const isWritingActive = router.pathname === "/" || router.pathname.startsWith("/writing");
-  const isIdeasActive = router.pathname.startsWith("/ideas");
-  const isProjectsActive = router.pathname.startsWith("/projects");
-  const isHireActive = router.pathname.startsWith("/hire");
-  const [hovered, setHovered] = React.useState<string | null>(null);
-  const showWriting = hovered === "writing" || (!hovered && isWritingActive);
-  const showIdeas = hovered === "ideas" || (!hovered && isIdeasActive);
-  const showProjects = hovered === "projects" || (!hovered && isProjectsActive);
-  const showHire = hovered === "hire" || (!hovered && isHireActive);
 
   return (
     <Box>
       <SkipLink />
-      <Box
-        as="header"
-        position="sticky"
-        top={0}
-        zIndex={100}
-        bg="chromeBg"
-        borderBottomWidth="1px"
-        borderColor="border"
-        backdropFilter="saturate(180%) blur(10px)"
-        transition="all 200ms cubic-bezier(.2,.8,.2,1)"
-      >
-        <Container maxW="container.xl" px={{ base: 4, md: 5 }}>
-          <Flex h={16} align="center" justify="space-between">
-            <Text fontWeight={700}>Jordan Moshcovitis</Text>
-            <HStack spacing={3} align="center">
-              <HStack spacing={3} align="center">
-                <Box
-                  as="span"
-                  position="relative"
-                  display="inline-block"
-                  onMouseEnter={() => setHovered("writing")}
-                  onMouseLeave={() => setHovered(null)}
+
+      {/* Static header — not sticky, no backdrop-blur */}
+      <Box as="header" bg="bg">
+        <Container maxW="680px" px={{ base: 4, md: 5 }}>
+          <Flex
+            pt={{ base: 6, md: 8 }}
+            pb={{ base: 3, md: 4 }}
+            align="baseline"
+            justify="space-between"
+            wrap="wrap"
+            gap={2}
+          >
+            {/* Name as logotype */}
+            <ChakraLink
+              as={NextLink}
+              href="/"
+              textDecoration="none"
+              _hover={{ textDecoration: "none" }}
+            >
+              <Text
+                fontFamily="heading"
+                fontSize={{ base: "xl", md: "2xl" }}
+                fontWeight={700}
+                color="text"
+                letterSpacing="tighter"
+              >
+                Jordan Moshcovitis
+              </Text>
+            </ChakraLink>
+
+            {/* Right-aligned nav + icons */}
+            <HStack spacing={{ base: 2, md: 3 }} align="center">
+              <HStack spacing={{ base: 2, md: 3 }} align="center">
+                <NavLink
+                  href="/writing"
+                  activeWhen={(p) => p.startsWith("/writing") || p.startsWith("/blog")}
+                  fontSize="sm"
                 >
-                  <NavLink href="/" activeWhen={(p) => p === "/" || p.startsWith("/writing")}>
-                    Writing
-                  </NavLink>
-                  {showWriting ? (
-                    <Box
-                      as={motion.div}
-                      layoutId="nav-underline"
-                      position="absolute"
-                      top={-1}
-                      left={0}
-                      right={0}
-                      height="1px"
-                      bg="link"
-                      borderRadius="1px"
-                      style={{ willChange: "transform, opacity" }}
-                    />
-                  ) : null}
-                </Box>
-                <Text color="muted">·</Text>
-                <Box
-                  as="span"
-                  position="relative"
-                  display="inline-block"
-                  onMouseEnter={() => setHovered("ideas")}
-                  onMouseLeave={() => setHovered(null)}
-                >
-                  <NavLink href="/ideas">Ideas</NavLink>
-                  {showIdeas ? (
-                    <Box
-                      as={motion.div}
-                      layoutId="nav-underline"
-                      position="absolute"
-                      top={-1}
-                      left={0}
-                      right={0}
-                      height="1px"
-                      bg="link"
-                      borderRadius="1px"
-                      style={{ willChange: "transform, opacity" }}
-                    />
-                  ) : null}
-                </Box>
-                <Text color="muted">·</Text>
-                <Box
-                  as="span"
-                  position="relative"
-                  display="inline-block"
-                  onMouseEnter={() => setHovered("projects")}
-                  onMouseLeave={() => setHovered(null)}
-                >
-                  <NavLink href="/projects">Projects</NavLink>
-                  {showProjects ? (
-                    <Box
-                      as={motion.div}
-                      layoutId="nav-underline"
-                      position="absolute"
-                      top={-1}
-                      left={0}
-                      right={0}
-                      height="1px"
-                      bg="link"
-                      borderRadius="1px"
-                      style={{ willChange: "transform, opacity" }}
-                    />
-                  ) : null}
-                </Box>
-                <Text color="muted">·</Text>
-                <Box
-                  as="span"
-                  position="relative"
-                  display="inline-block"
-                  onMouseEnter={() => setHovered("hire")}
-                  onMouseLeave={() => setHovered(null)}
-                >
-                  <NavLink href="/hire">Enquire</NavLink>
-                  {showHire ? (
-                    <Box
-                      as={motion.div}
-                      layoutId="nav-underline"
-                      position="absolute"
-                      top={-1}
-                      left={0}
-                      right={0}
-                      height="1px"
-                      bg="link"
-                      borderRadius="1px"
-                      style={{ willChange: "transform, opacity" }}
-                    />
-                  ) : null}
-                </Box>
+                  Writing
+                </NavLink>
+                <Text color="muted" fontSize="xs" userSelect="none">
+                  &middot;
+                </Text>
+                <NavLink href="/research" fontSize="sm">
+                  Research
+                </NavLink>
+                <Text color="muted" fontSize="xs" userSelect="none">
+                  &middot;
+                </Text>
+                <NavLink href="/about" fontSize="sm">
+                  About
+                </NavLink>
+                <Text color="muted" fontSize="xs" userSelect="none">
+                  &middot;
+                </Text>
+                <NavLink href="/contact" fontSize="sm">
+                  Contact
+                </NavLink>
               </HStack>
+
               <IconButton
                 as={ChakraLink}
                 href="https://github.com/Jordanm37"
                 aria-label="GitHub"
-                icon={<FaGithub />}
+                icon={<FaGithub size={14} />}
                 variant="ghost"
-                size="sm"
+                size="xs"
+                minW="auto"
+                p={1}
               />
               <IconButton
                 as={ChakraLink}
-                href="https://www.linkedin.com/in/jordan-m-ab5a4010b/"
+                href="https://www.linkedin.com/in/jordan-moshcovitis"
                 aria-label="LinkedIn"
-                icon={<FaLinkedin />}
+                icon={<FaLinkedin size={14} />}
                 variant="ghost"
-                size="sm"
+                size="xs"
+                minW="auto"
+                p={1}
               />
-
               <IconButton
                 aria-label="Toggle color mode"
                 variant="ghost"
                 onClick={toggleColorMode}
-                icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-                size="sm"
+                icon={colorMode === "light" ? <MoonIcon boxSize={3} /> : <SunIcon boxSize={3} />}
+                size="xs"
+                minW="auto"
+                p={1}
               />
             </HStack>
           </Flex>
+
+          {/* Full-width thin rule */}
+          <Divider borderColor="border" />
         </Container>
       </Box>
 
-      <Box as="main" id="main-content" minH="100svh">
+      {/* Main content */}
+      <Box as="main" id="main-content" minH="70vh">
         {children}
+      </Box>
+
+      {/* Footer */}
+      <Box as="footer" mt={16} pb={8}>
+        <Container maxW="680px" px={{ base: 4, md: 5 }}>
+          <Divider borderColor="border" mb={6} />
+          <Flex
+            direction={{ base: "column", md: "row" }}
+            justify="space-between"
+            align={{ base: "flex-start", md: "center" }}
+            gap={3}
+          >
+            <HStack spacing={3} fontSize="sm" color="muted">
+              <ChakraLink as={NextLink} href="/writing" color="muted" textDecoration="none">
+                Writing
+              </ChakraLink>
+              <Text>&middot;</Text>
+              <ChakraLink as={NextLink} href="/research" color="muted" textDecoration="none">
+                Research
+              </ChakraLink>
+              <Text>&middot;</Text>
+              <ChakraLink as={NextLink} href="/about" color="muted" textDecoration="none">
+                About
+              </ChakraLink>
+              <Text>&middot;</Text>
+              <ChakraLink as={NextLink} href="/contact" color="muted" textDecoration="none">
+                Contact
+              </ChakraLink>
+              <Text>&middot;</Text>
+              <ChakraLink as={NextLink} href="/privacy" color="muted" textDecoration="none">
+                Privacy
+              </ChakraLink>
+            </HStack>
+            <Text fontSize="xs" color="muted">
+              &copy; {new Date().getFullYear()} Jordan Moshcovitis
+            </Text>
+          </Flex>
+        </Container>
       </Box>
     </Box>
   );

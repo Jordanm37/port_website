@@ -9,7 +9,7 @@ export const Prose: React.FC<ProseProps> = ({ children, ...props }) => {
   return (
     <Box
       sx={{
-        "h1, h2, h3, h4": { scrollMarginTop: "80px" },
+        "h1, h2, h3, h4": { scrollMarginTop: "32px" },
         // Title + lead stack: tighter gap under h1 and lead paragraph
         h1: { marginTop: 7, marginBottom: 2 },
         "h1 + p": { marginTop: 2, marginBottom: 4, lineHeight: 1.6 },

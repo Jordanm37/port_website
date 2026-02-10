@@ -12,7 +12,6 @@ const NavLinkComponent = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
     const path = typeof href === "string" ? href : (href as any)?.pathname || "";
     const defaultActive = exact ? router.pathname === path : router.pathname.startsWith(path || "");
     const isActive = typeof activeWhen === "function" ? activeWhen(router.pathname) : defaultActive;
-    // wobble handlers removed
 
     return (
       <ChakraLink
@@ -20,12 +19,10 @@ const NavLinkComponent = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
         href={href}
         ref={ref as React.Ref<HTMLAnchorElement>}
         position="relative"
-        color={isActive ? "link" : undefined}
+        color={isActive ? "accent" : "text"}
         aria-current={isActive ? "page" : undefined}
-        // no motion handlers
-        transition="color 150ms cubic-bezier(.2,.8,.2,1)"
         textDecoration="none"
-        _hover={{ textDecoration: "none", opacity: 0.9 }}
+        _hover={{ textDecoration: "none", color: "accent" }}
         {...props}
       >
         {children}

@@ -17,7 +17,6 @@ import { FaTwitter, FaLinkedin } from "react-icons/fa";
 import NextLink from "next/link";
 import { MainLayout } from "./layout";
 import TOC from "./TOC";
-import { ReadingProgress } from "./ui/ReadingProgress";
 import { Reveal, Prose, MastheadSignature } from "./ui";
 import type { MastheadKind } from "./ui/MastheadSignature";
 import { formatDateNatural } from "../lib/date";
@@ -105,8 +104,7 @@ export default function PostLayout({
 
   return (
     <MainLayout>
-      <ReadingProgress storageKey={frontmatter?.slug} />
-      <Container maxW="container.xl" px={{ base: 4, md: 6 }} bg="readingBg">
+      <Container maxW="680px" px={{ base: 4, md: 6 }} bg="readingBg">
         <chakra.main p={0} mx="auto">
           <Head>
             <title>{title}</title>

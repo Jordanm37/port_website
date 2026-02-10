@@ -1,9 +1,9 @@
 import { extendTheme, ThemeConfig } from "@chakra-ui/react";
 
-// Chakra theme configuration and design tokens
-// - Provides a coherent type scale, color system, spacing, radii, and shadows
-// - Defines semantic tokens for background/text to support light/dark modes
-// - Adds accessible, branded component variants
+// Classical design system — gwern.net-inspired
+// Typography: EB Garamond (headings), Source Serif 4 (body), IBM Plex Mono (code)
+// Scale: Perfect Fourth (1.333), base 1.125rem (18px)
+// Line height: 1.618 (golden ratio) for body text
 
 const config: ThemeConfig = {
   initialColorMode: "system",
@@ -12,74 +12,81 @@ const config: ThemeConfig = {
 
 const fonts = {
   heading:
-    "var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
-  body: "var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
-  mono: "var(--font-jbmono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas",
+    "var(--font-garamond), 'EB Garamond', 'Garamond', 'Georgia', 'Times New Roman', serif",
+  body: "var(--font-sourceserif), 'Source Serif 4', 'Source Serif Pro', 'Georgia', 'Times New Roman', serif",
+  mono: "var(--font-ibmplex), 'IBM Plex Mono', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', monospace",
 };
 
+// Perfect Fourth scale (1.333 ratio), base 1.125rem
 const fontSizes = {
   xs: "0.75rem",
-  sm: "0.875rem",
-  md: "1rem",
-  lg: "clamp(1.125rem, 0.6vw + 1rem, 1.25rem)",
-  // Fluid headings per visual spec
-  xl: "clamp(1.5rem, 1.2vw + 1rem, 1.7rem)", // h3
-  "2xl": "clamp(2.0rem, 2.5vw + 1rem, 2.4rem)", // h2
-  "3xl": "clamp(2.6rem, 4vw + 1rem, 3.4rem)", // h1
-  "4xl": "clamp(2.6rem, 3vw + 1rem, 3.6rem)",
+  sm: "0.844rem",
+  md: "1.125rem",
+  lg: "1.25rem",
+  xl: "1.5rem", // h3
+  "2xl": "2rem", // h2
+  "3xl": "2.665rem", // h1
+  "4xl": "3.553rem",
 };
 
 const lineHeights = {
   short: 1.2,
-  base: 1.65,
-  tall: 1.7,
+  base: 1.618, // golden ratio
+  tall: 1.75,
 };
 
 const letterSpacings = {
   tighter: "-0.01em",
   normal: "0",
-  wider: "0.01em",
+  wider: "0.02em",
+  widest: "0.08em",
 };
 
 const colors = {
-  primary: {
-    50: "#e6f3ff",
-    100: "#cce7ff",
-    200: "#99cfff",
-    300: "#66b7ff",
-    400: "#339eff",
-    500: "#0066cc",
-    600: "#005bb5",
-    700: "#004a94",
-    800: "#003b76",
-    900: "#002a54",
+  // Light theme: "The Study"
+  paper: {
+    50: "#faf8f5",
+    100: "#f5f2ed",
+    200: "#e8dfd0",
+    300: "#d4cfc7",
+    400: "#8a8578",
+    500: "#4a4a4a",
+    600: "#1a1a1a",
+    700: "#6b3d3d",
+    800: "#522a2a",
+    900: "#1a1a1a",
   },
-  neutral: {
-    50: "#fafafa",
-    100: "#f5f5f5",
-    200: "#e5e5e5",
-    300: "#d4d4d4",
-    400: "#a3a3a3",
-    500: "#737373",
-    600: "#525252",
-    700: "#404040",
-    800: "#262626",
-    900: "#171717",
+  // Dark theme: "The Blackboard"
+  slate: {
+    50: "#e8e4dc",
+    100: "#9a9690",
+    200: "#3a3d3a",
+    300: "#2a2d2a",
+    400: "#252825",
+    500: "#1c1f1c",
+    600: "#c4a882",
+    700: "#d4b892",
+    800: "#1c1f1c",
+    900: "#161816",
   },
-  success: { 500: "#16a34a" },
-  warning: { 500: "#d97706" },
-  danger: { 500: "#dc2626" },
 };
 
 const semanticTokens = {
   colors: {
-    bg: { default: "var(--oklch-bg, white)", _dark: "var(--oklch-bg, #0f0f10)" },
-    text: { default: "var(--oklch-text, #171717)", _dark: "var(--oklch-text, #f3f4f6)" },
-    muted: { default: "var(--oklch-muted, #737373)", _dark: "var(--oklch-muted, #9ca3af)" },
-    border: { default: "var(--oklch-border, #d4d4d4)", _dark: "var(--oklch-border, #374151)" },
-    link: { default: "var(--oklch-accent, #2563eb)", _dark: "var(--oklch-accent, #60a5fa)" },
-    readingBg: { default: "var(--oklch-surface, #fafafa)", _dark: "var(--oklch-surface, #111114)" },
-    chromeBg: { default: "rgba(255,255,255,0.7)", _dark: "rgba(23,23,23,0.6)" },
+    bg: { default: "#faf8f5", _dark: "#1c1f1c" },
+    surface: { default: "#f5f2ed", _dark: "#252825" },
+    text: { default: "#1a1a1a", _dark: "#e8e4dc" },
+    muted: { default: "#8a8578", _dark: "#9a9690" },
+    secondary: { default: "#4a4a4a", _dark: "#c4c0b8" },
+    accent: { default: "#6b3d3d", _dark: "#c4a882" },
+    accentHover: { default: "#522a2a", _dark: "#d4b892" },
+    border: { default: "#d4cfc7", _dark: "#3a3d3a" },
+    codeBg: { default: "#f5f2ed", _dark: "#2a2d2a" },
+    selection: { default: "#e8dfd0", _dark: "rgba(196, 168, 130, 0.3)" },
+    // Keep 'link' as alias for accent for backward compat
+    link: { default: "#6b3d3d", _dark: "#c4a882" },
+    readingBg: { default: "#faf8f5", _dark: "#1c1f1c" },
+    chromeBg: { default: "#faf8f5", _dark: "#1c1f1c" },
   },
 };
 
@@ -97,100 +104,81 @@ const space = {
 };
 
 const radii = {
-  sm: "6px",
-  md: "10px",
-  lg: "14px",
+  sm: "2px",
+  md: "4px",
+  lg: "6px",
   full: "9999px",
 };
 
 const shadows = {
-  sm: "0 1px 2px rgba(0,0,0,0.06)",
-  md: "0 4px 12px rgba(0,0,0,0.08)",
+  sm: "none",
+  md: "none",
 };
 
 const components = {
   Button: {
     baseStyle: {
-      borderRadius: "md",
-      fontWeight: 600,
-      transition: "transform var(--t-fast, 140ms), box-shadow var(--t-fast, 140ms)",
+      borderRadius: "sm",
+      fontWeight: 500,
+      fontFamily: "body",
       _focusVisible: {
         outline: "2px solid",
-        outlineColor: "link",
+        outlineColor: "accent",
         outlineOffset: "3px",
       },
     },
     variants: {
       solid: {
-        bg: "var(--oklch-accent, var(--chakra-colors-primary-600))",
+        bg: "accent",
         color: "white",
-        _hover: { bg: "var(--oklch-accent-hover, var(--chakra-colors-primary-700))" },
-        _active: { bg: "var(--oklch-accent, var(--chakra-colors-primary-800))" },
+        _hover: { bg: "accentHover" },
+        _active: { bg: "accentHover" },
       },
       outline: {
-        borderColor: "var(--oklch-accent, var(--chakra-colors-primary-600))",
-        color: "var(--oklch-accent, var(--chakra-colors-primary-700))",
-        _hover: { bg: "primary.50" },
-        _active: { bg: "primary.100" },
+        borderColor: "accent",
+        color: "accent",
+        _hover: { bg: "surface" },
+        _active: { bg: "surface" },
       },
       ghost: {
-        color: "var(--oklch-accent, var(--chakra-colors-primary-700))",
-        _hover: { bg: "primary.50" },
-        _active: { bg: "primary.100" },
-      },
-      neon: {
-        bgGradient: "linear(to-r, primary.500, primary.700)",
-        color: "white",
-        _dark: { bgGradient: "linear(to-r, primary.400, primary.600)" },
-        boxShadow: "0 8px 24px rgba(0,102,204,0.25)",
-        _hover: {
-          transform: "translateY(-1px) scale(1.02)",
-          boxShadow: "0 10px 28px rgba(0,102,204,0.35)",
-        },
-        _active: { transform: "translateY(0) scale(0.99)" },
+        color: "accent",
+        _hover: { bg: "surface" },
+        _active: { bg: "surface" },
       },
     },
   },
   Link: {
     baseStyle: {
-      color: "link",
+      color: "accent",
       textDecoration: "underline",
-      textUnderlineOffset: "0.12em",
-      textDecorationThickness: "0.08em",
-      transition: "color 120ms ease-out, text-underline-offset 120ms ease-out",
+      textUnderlineOffset: "0.15em",
+      textDecorationThickness: "0.06em",
+      textDecorationColor: "accent",
+      transition: "color 120ms ease-out",
       _hover: {
+        color: "accentHover",
         textDecoration: "underline",
-        textUnderlineOffset: "0.3em",
-        opacity: 0.95,
       },
       _focusVisible: {
         outline: "2px solid currentColor",
         outlineOffset: "3px",
       },
-      _dark: { textShadow: "0 0 0.35em rgba(0, 102, 204, 0.35)" },
     },
   },
   IconButton: {
     baseStyle: {
       _focusVisible: {
         outline: "2px solid",
-        outlineColor: "link",
+        outlineColor: "accent",
         outlineOffset: "3px",
-      },
-    },
-  },
-  Card: {
-    baseStyle: {
-      _focusWithin: {
-        outline: "2px solid",
-        outlineColor: "primary.300",
-        outlineOffset: "2px",
       },
     },
   },
   Heading: {
     baseStyle: {
+      fontFamily: "heading",
       letterSpacing: "tighter",
+      color: "text",
     },
     sizes: {
       xl: { fontSize: "xl", lineHeight: "short" },
@@ -204,7 +192,7 @@ const components = {
   },
   Tag: {
     baseStyle: {
-      container: { borderRadius: "full" },
+      container: { borderRadius: "sm" },
     },
   },
   Code: {
@@ -212,13 +200,20 @@ const components = {
       px: 1,
       py: 0.5,
       borderRadius: "sm",
-      bg: { base: "neutral.800", _light: "neutral.100" },
-      color: { base: "white", _light: "neutral.800" },
+      bg: "codeBg",
+      color: "text",
+      fontFamily: "mono",
+      fontSize: "0.9em",
     },
   },
   Container: {
     sizes: {
-      prose: { maxW: "72ch" },
+      prose: { maxW: "65ch" },
+    },
+  },
+  Divider: {
+    baseStyle: {
+      borderColor: "border",
     },
   },
 };
@@ -229,44 +224,15 @@ const styles = {
       bg: "bg",
       color: "text",
       lineHeight: "base",
-      fontSize: "1.15rem",
+      fontSize: "1.125rem",
+      fontFamily:
+        "var(--font-sourceserif), 'Source Serif 4', 'Georgia', 'Times New Roman', serif",
     },
     "::selection": {
-      background: "primary.200",
+      background: "selection",
     },
-    ":root": {
-      // Motion tokens
-      "--t-fast": ".14s",
-      "--t-med": ".22s",
-      "--easing": "cubic-bezier(.2,.8,.2,1)",
-
-      // OKLCH color variables (light defaults)
-      "--oklch-bg": "oklch(0.98 0.005 260)",
-      "--oklch-surface": "oklch(0.96 0.006 260)",
-      "--oklch-text": "oklch(0.16 0.03 260)",
-      "--oklch-muted": "oklch(0.55 0.02 260)",
-      "--oklch-accent": "oklch(0.68 0.17 286)",
-      "--oklch-accent-hover": "oklch(0.64 0.19 286)",
-      "--oklch-border": "oklch(0.86 0.01 260)",
-    } as any,
-    'html[data-theme="dark"]': {
-      "--oklch-bg": "oklch(0.16 0.02 260)",
-      "--oklch-surface": "oklch(0.20 0.02 260)",
-      "--oklch-text": "oklch(0.95 0.02 260)",
-      "--oklch-muted": "oklch(0.72 0.02 260)",
-      "--oklch-accent": "oklch(0.68 0.17 286)",
-      "--oklch-accent-hover": "oklch(0.64 0.19 286)",
-      "--oklch-border": "oklch(0.30 0.01 260)",
-    } as any,
     ".prose": {
-      maxWidth: "72ch",
-    },
-
-    "h1, h2": {
-      transition: "font-variation-settings var(--t-fast, 140ms) var(--easing, ease)",
-    },
-    "h1:hover, h2:hover": {
-      fontVariationSettings: "'wght' 750",
+      maxWidth: "65ch",
     },
   },
 };

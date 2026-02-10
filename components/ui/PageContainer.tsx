@@ -11,7 +11,7 @@ export const PageContainer: React.FC<PageContainerProps> = ({
   children,
   stackSpacing = { base: 8, md: 12 },
   stackPy = { base: 12, md: 16 },
-  maxW = "container.xl",
+  maxW = "680px",
   px = { base: 4, md: 5 },
   ...props
 }) => {

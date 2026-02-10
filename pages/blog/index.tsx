@@ -1,19 +1,18 @@
 import fs from "fs";
 import path from "path";
-import Link from "next/link";
-import { Heading, SimpleGrid, Text, Box, HStack, Tag } from "@chakra-ui/react";
+import NextLink from "next/link";
+import { Heading, Text, Box, Container, Link as ChakraLink } from "@chakra-ui/react";
 import { MainLayout } from "../../components/layout";
-import { PageContainer, BlogCard } from "../../components/ui";
 import matter from "gray-matter";
 import type { GetStaticProps, NextPage } from "next";
+import Head from "next/head";
+import { formatDateNatural } from "../../lib/date";
 
 type PostEntry = {
   slug: string;
   title: string;
   date: string | null;
-  tags: string[];
   summary?: string | null;
-  readingTime?: number | null;
 };
 
 type BlogIndexProps = {
@@ -21,44 +20,59 @@ type BlogIndexProps = {
 };
 
 const BlogIndexPage: NextPage<BlogIndexProps> = ({ entries }) => {
-  const tagSet = new Set<string>();
-  entries.forEach((e) => e.tags.forEach((t) => tagSet.add(t)));
-  const tags = Array.from(tagSet);
   return (
     <MainLayout>
-      <PageContainer>
-        <Heading as="h1" size="2xl">
+      <Head>
+        <title>Blog — Jordan Moshcovitis</title>
+        <meta name="description" content="Blog posts by Jordan Moshcovitis." />
+      </Head>
+
+      <Container maxW="680px" px={{ base: 4, md: 5 }} py={{ base: 10, md: 14 }}>
+        <Heading as="h1" size="3xl" fontFamily="heading" mb={8}>
           Blog
         </Heading>
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-          {entries.map((p) => (
-            <BlogCard
-              key={p.slug}
-              href={`/blog/${p.slug}`}
-              title={p.title}
-              excerpt={p?.summary as any}
-              tags={p.tags}
-              date={p.date}
-              readingTime={p.readingTime}
-            />
-          ))}
-        </SimpleGrid>
 
-        {tags.length ? (
-          <Box>
-            <Text color="muted" mb={2}>
-              Tags
+        <Box>
+          {entries.map((post, i) => (
+            <Box
+              key={post.slug}
+              py={4}
+              borderBottomWidth={i < entries.length - 1 ? "1px" : "0"}
+              borderColor="border"
+            >
+              <ChakraLink
+                as={NextLink}
+                href={`/blog/${post.slug}`}
+                color="accent"
+                fontWeight={500}
+                fontSize="lg"
+                textDecoration="underline"
+                textUnderlineOffset="0.15em"
+                textDecorationThickness="0.06em"
+                _hover={{ color: "accentHover" }}
+              >
+                {post.title}
+              </ChakraLink>
+              {post.date ? (
+                <Text color="muted" fontSize="sm" mt={1}>
+                  {formatDateNatural(post.date)}
+                </Text>
+              ) : null}
+              {post.summary ? (
+                <Text color="secondary" fontSize="sm" mt={1} noOfLines={1}>
+                  {post.summary}
+                </Text>
+              ) : null}
+            </Box>
+          ))}
+
+          {entries.length === 0 ? (
+            <Text color="muted" fontStyle="italic">
+              No posts yet.
             </Text>
-            <HStack flexWrap="wrap" spacing={2}>
-              {tags.map((t) => (
-                <Tag key={t} size="sm" as={Link} href={`/blog/tags/${t}`}>
-                  #{t}
-                </Tag>
-              ))}
-            </HStack>
-          </Box>
-        ) : null}
-      </PageContainer>
+          ) : null}
+        </Box>
+      </Container>
     </MainLayout>
   );
 };
@@ -71,15 +85,12 @@ export const getStaticProps: GetStaticProps<BlogIndexProps> = async () => {
     .map((name) => {
       const fullPath = path.join(dir, name);
       const raw = fs.readFileSync(fullPath, "utf8");
-      const { data, content } = matter(raw);
+      const { data } = matter(raw);
       const slug = name.replace(/\.mdx$/, "");
       const title = (data.title as string) || slug.replace(/-/g, " ");
       const date = (data.date as string | undefined) || null;
-      const tags = (data.tags as string[]) || [];
       const summary = (data.summary as string | undefined) || null;
-      const words = content.trim().split(/\s+/).length;
-      const readingTime = Math.ceil(words / 200);
-      return { slug, title, date, tags, summary, readingTime };
+      return { slug, title, date, summary };
     })
     .sort((a, b) => {
       const ad = a.date ? Date.parse(a.date) : 0;
