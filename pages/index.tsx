@@ -33,10 +33,7 @@ const Home: NextPage<HomeProps> = ({ recentPosts }) => {
 
       <Container maxW="680px" px={{ base: 4, md: 5 }} py={{ base: 10, md: 14 }}>
         {/* Identity */}
-        <Heading as="h1" size="3xl" fontFamily="heading" mb={2}>
-          Jordan Moshcovitis
-        </Heading>
-        <Text fontSize="lg" fontStyle="italic" color="secondary" mb={8}>
+        <Text as="h1" fontSize="lg" fontStyle="italic" color="secondary" mb={8}>
           Applied AI researcher with a physics background.
         </Text>
 
@@ -145,8 +142,8 @@ const Home: NextPage<HomeProps> = ({ recentPosts }) => {
         {/* Bio */}
         <Box maxW="65ch" mb={6}>
           <Text mb={3}>
-            Jordan Moshcovitis is an applied AI researcher and engineer based in Melbourne,
-            Australia. His work spans retrieval-augmented generation, agentic LLM systems, and
+            Jordan Moshcovitis is an applied AI researcher and engineer based in San Francisco and
+            Melbourne. His work spans retrieval-augmented generation, agentic LLM systems, and
             robust evaluation methodology. Before moving into AI, he studied physics at the
             University of Melbourne, with research in computational materials science and diamond
             spectroscopy.
